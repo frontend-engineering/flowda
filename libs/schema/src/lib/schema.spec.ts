@@ -1,7 +1,7 @@
-import { schema } from './schema';
+import { sampleSchema } from './schema';
 
 describe('schema', () => {
   it('should work', () => {
-    expect(schema()).toEqual('schema');
+    expect(sampleSchema.safeParse({ title: 'demo' }).success).toBe(true)
   });
 });

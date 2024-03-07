@@ -1,3 +1,4 @@
+import * as _ from 'radash'
 export function gateway(): string {
-  return 'gateway';
+  return _.uid(4);
 }
