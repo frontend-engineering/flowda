@@ -2,9 +2,9 @@
 
 - `packages`
     - `theia-plugin-flowda`: Make theia into a SaaS
-    - `flowda-schema`: engine to implement business logic
-    - `flowda-gateway-services`: gateway to manage business logic
-    - `flowda-gateway-trpc-server`: gateway API definitions
+    - `schema`: engine to implement business logic
+    - `gateway`: gateway to manage business logic
+    - `gateway-trpc-server`: gateway API definitions
 
 ## Dependencies versions
 
