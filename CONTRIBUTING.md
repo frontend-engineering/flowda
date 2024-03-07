@@ -10,5 +10,5 @@
 
 Locking some fundamental componetns versions to reduce JavaScript fatigue, and allow for necessary customization.
 
-- `nx@15.7.2`
+- `nx@15.6.3`
 - `@pnpm/lockfile-types@^4.3.6`, `pnpm@7.33.7`
