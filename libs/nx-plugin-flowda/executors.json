@@ -6,10 +6,10 @@
       "schema": "./src/executors/build/schema.json",
       "description": "build executor"
     },
-    "echo": {
-      "implementation": "./src/executors/echo/executor",
-      "schema": "./src/executors/echo/schema.json",
-      "description": "echo executor"
+    "dev": {
+      "implementation": "./src/executors/dev/executor",
+      "schema": "./src/executors/dev/schema.json",
+      "description": "dev executor"
     }
   }
 }

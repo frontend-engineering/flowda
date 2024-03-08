@@ -4,10 +4,9 @@
   "sourceRoot": "libs/schema/src",
   "projectType": "library",
   "targets": {
-    "echo": {
-      "executor": "@flowda/nx-plugin-flowda:echo",
+    "dev": {
+      "executor": "@flowda/nx-plugin-flowda:dev",
       "options": {
-        "textToEcho": "Hello world."
       }
     },
     "build": {

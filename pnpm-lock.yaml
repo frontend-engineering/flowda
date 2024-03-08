@@ -16,6 +16,7 @@ specifiers:
   '@types/node': 18.7.1
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
+  consola: ^3.2.3
   eslint: ~8.15.0
   eslint-config-prettier: 8.1.0
   jest: 29.7.0
@@ -52,6 +53,7 @@ devDependencies:
   '@types/node': 18.7.1
   '@typescript-eslint/eslint-plugin': 5.62.0_dmi7rjhslwyt5ghsy6mhaeexru
   '@typescript-eslint/parser': 5.62.0_7q7dsmb3iolbd3c7hywsc7ehmq
+  consola: 3.2.3
   eslint: 8.15.0
   eslint-config-prettier: 8.1.0_eslint@8.15.0
   jest: 29.7.0_lpnbhgxso4u2juc7wocetwmymy
@@ -3087,6 +3089,11 @@ packages:
 
   /confusing-browser-globals/1.0.11:
     resolution: {integrity: sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==}
+    dev: true
+
+  /consola/3.2.3:
+    resolution: {integrity: sha512-I5qxpzLv+sJhTVEoLYNcTW+bThDCPsit0vLNKShZx6rLtpilNpmmeTPaeqJb9ZE9dV3DGaeby6Vuhrw38WjeyQ==}
+    engines: {node: ^14.18.0 || >=16.10.0}
     dev: true
 
   /content-disposition/0.5.4:
