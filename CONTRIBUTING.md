@@ -17,3 +17,7 @@ Locking some fundamental componetns versions to reduce JavaScript fatigue, and a
     - `@nrwl/eslint-plugin-nx`
     - `@nrwl/jest`
 - `@pnpm/lockfile-types@^4.3.6`, `pnpm@7.33.7`
+
+## Debug nx
+
+`node --inspect-brk ./node_modules/nx/bin/nx.js run schema:build --skip-nx-cache`
