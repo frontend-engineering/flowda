@@ -6,7 +6,7 @@
     - `gateway`: gateway to manage business logic
     - `gateway-trpc-server`: gateway API definitions
 
-## Dependencies versions
+## Lock some dependencies' versions
 
 Locking some fundamental componetns versions to reduce JavaScript fatigue, and allow for necessary customization.
 
@@ -18,6 +18,6 @@ Locking some fundamental componetns versions to reduce JavaScript fatigue, and a
     - `@nrwl/jest`
 - `@pnpm/lockfile-types@^5.0.0`, `pnpm@7.33.7`
 
-## Debug nx
+### Patches
 
-`node --inspect-brk ./node_modules/nx/bin/nx.js run schema:build --skip-nx-cache`
+see `patches/`
