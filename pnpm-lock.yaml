@@ -1,5 +1,10 @@
 lockfileVersion: 5.4
 
+patchedDependencies:
+  nx@15.9.7:
+    hash: 2ucxhvyz3ifuogwv5wngxaavzy
+    path: patches/nx@15.9.7.patch
+
 specifiers:
   '@nrwl/eslint-plugin-nx': 15.9.7
   '@nrwl/jest': 15.9.7
@@ -46,7 +51,7 @@ devDependencies:
   jest: 29.7.0_lpnbhgxso4u2juc7wocetwmymy
   jest-environment-jsdom: 29.7.0
   jsdom: 24.0.0
-  nx: 15.9.7
+  nx: 15.9.7_2ucxhvyz3ifuogwv5wngxaavzy
   prettier: 2.8.8
   ts-jest: 29.1.2_qxuqb4i7wvxv27lzebuai3ki4e
   ts-node: 10.9.1_ymc3o7us2bpqiju7b4bp2oguli
@@ -1688,7 +1693,7 @@ packages:
   /@nrwl/cli/15.9.7:
     resolution: {integrity: sha512-1jtHBDuJzA57My5nLzYiM372mJW0NY6rFKxlWt5a0RLsAZdPTHsd8lE3Gs9XinGC1jhXbruWmhhnKyYtZvX/zA==}
     dependencies:
-      nx: 15.9.7
+      nx: 15.9.7_2ucxhvyz3ifuogwv5wngxaavzy
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -1702,7 +1707,7 @@ packages:
     dependencies:
       ejs: 3.1.9
       ignore: 5.3.1
-      nx: 15.9.7
+      nx: 15.9.7_2ucxhvyz3ifuogwv5wngxaavzy
       semver: 7.5.4
       tmp: 0.2.3
       tslib: 2.6.2
@@ -1905,7 +1910,7 @@ packages:
     resolution: {integrity: sha512-OBnHNvQf3vBH0qh9YnvBQQWyyFZ+PWguF6dJ8+1vyQYlrLVk/XZ8nJ4ukWFb+QfPv/O8VBmqaofaOI9aFC4yTw==}
     hasBin: true
     dependencies:
-      nx: 15.9.7
+      nx: 15.9.7_2ucxhvyz3ifuogwv5wngxaavzy
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -1928,7 +1933,7 @@ packages:
       ignore: 5.3.1
       minimatch: 3.0.5
       npm-run-path: 4.0.1
-      nx: 15.9.7
+      nx: 15.9.7_2ucxhvyz3ifuogwv5wngxaavzy
       open: 8.4.2
       rxjs: 6.6.7
       tmp: 0.2.3
@@ -4455,7 +4460,7 @@ packages:
     resolution: {integrity: sha512-ub5E4+FBPKwAZx0UwIQOjYWGHTEq5sPqHQNRN8Z9e4A7u3Tj1weLJsL59yH9vmvqEtBHaOmT6cYQKIZOxp35FQ==}
     dev: true
 
-  /nx/15.9.7:
+  /nx/15.9.7_2ucxhvyz3ifuogwv5wngxaavzy:
     resolution: {integrity: sha512-1qlEeDjX9OKZEryC8i4bA+twNg+lB5RKrozlNwWx/lLJHqWPUfvUTvxh+uxlPYL9KzVReQjUuxMLFMsHNqWUrA==}
     hasBin: true
     requiresBuild: true
@@ -4516,6 +4521,7 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: true
+    patched: true
 
   /once/1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}

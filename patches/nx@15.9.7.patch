@@ -1,0 +1,18 @@
+diff --git a/src/plugins/js/lock-file/pnpm-parser.js b/src/plugins/js/lock-file/pnpm-parser.js
+index 501f5f368ca19ce08b606e757d0a95e063b0e231..02a1770ca352d5b8126131e026cd0f331063b2c3 100644
+--- a/src/plugins/js/lock-file/pnpm-parser.js
++++ b/src/plugins/js/lock-file/pnpm-parser.js
+@@ -99,9 +99,10 @@ function stringifyPnpmLockfile(graph, rootLockFileContent, packageJson) {
+     const data = (0, pnpm_normalizer_1.parseAndNormalizePnpmLockfile)(rootLockFileContent);
+     const output = {
+         lockfileVersion: data.lockfileVersion,
+-        importers: {
+-            '.': mapRootSnapshot(packageJson, data.packages, graph.externalNodes),
+-        },
++        // importers: {
++        //     '.': mapRootSnapshot(packageJson, data.packages, graph.externalNodes),
++        // },
++        ...mapRootSnapshot(packageJson, data.packages, graph.externalNodes),
+         packages: (0, object_sort_1.sortObjectByKeys)(mapSnapshots(data.packages, graph.externalNodes)),
+     };
+     return (0, pnpm_normalizer_1.stringifyToPnpmYaml)(output);
