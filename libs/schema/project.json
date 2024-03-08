@@ -4,6 +4,12 @@
   "sourceRoot": "libs/schema/src",
   "projectType": "library",
   "targets": {
+    "echo": {
+      "executor": "@flowda/nx-plugin-flowda:echo",
+      "options": {
+        "textToEcho": "Hello world."
+      }
+    },
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
