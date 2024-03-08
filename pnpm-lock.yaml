@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@nrwl/devkit': 15.9.7
   '@nrwl/eslint-plugin-nx': 15.9.7
   '@nrwl/jest': 15.9.7
   '@nrwl/js': 15.9.7
@@ -16,6 +17,7 @@ specifiers:
   jest: 29.7.0
   jest-environment-jsdom: 29.7.0
   jsdom: ~24.0.0
+  jsonc-eslint-parser: ^2.1.0
   nx: 15.9.7
   prettier: ^2.6.2
   radash: ^12.0.0
@@ -31,6 +33,7 @@ dependencies:
   zod: 3.22.4
 
 devDependencies:
+  '@nrwl/devkit': 15.9.7_nx@15.9.7
   '@nrwl/eslint-plugin-nx': 15.9.7_l3bjnw6kum6lrxq3y45ib32q6q
   '@nrwl/jest': 15.9.7_wnwqjlhxrut5op7yna4u7qpgli
   '@nrwl/js': 15.9.7_nx@15.9.7+typescript@5.4.2
@@ -46,6 +49,7 @@ devDependencies:
   jest: 29.7.0_lpnbhgxso4u2juc7wocetwmymy
   jest-environment-jsdom: 29.7.0
   jsdom: 24.0.0
+  jsonc-eslint-parser: 2.4.0
   nx: 15.9.7
   prettier: 2.8.8
   ts-jest: 29.1.2_qxuqb4i7wvxv27lzebuai3ki4e
@@ -4271,6 +4275,16 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
+    dev: true
+
+  /jsonc-eslint-parser/2.4.0:
+    resolution: {integrity: sha512-WYDyuc/uFcGp6YtM2H0uKmUwieOuzeE/5YocFJLnLfclZ4inf3mRn8ZVy1s7Hxji7Jxm6Ss8gqpexD/GlKoGgg==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dependencies:
+      acorn: 8.11.3
+      eslint-visitor-keys: 3.4.3
+      espree: 9.6.1
+      semver: 7.6.0
     dev: true
 
   /jsonc-parser/3.2.0:
