@@ -46,10 +46,5 @@
     "radash": "^12.0.0",
     "tslib": "~2.6.2",
     "zod": "^3.22.4"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "nx@15.9.7": "patches/nx@15.9.7.patch"
-    }
   }
 }
