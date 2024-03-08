@@ -5,8 +5,8 @@ specifiers:
   '@nrwl/jest': 15.9.7
   '@nrwl/js': 15.9.7
   '@nrwl/linter': 15.9.7
+  '@nrwl/nx-plugin': ^15.9.7
   '@nrwl/workspace': 15.9.7
-  '@pnpm/lockfile-types': ^5.1.5
   '@types/jest': 29.5.12
   '@types/node': 18.7.1
   '@typescript-eslint/eslint-plugin': ^5.36.1
@@ -26,7 +26,6 @@ specifiers:
   zod: ^3.22.4
 
 dependencies:
-  '@pnpm/lockfile-types': 5.1.5
   radash: 12.0.0
   tslib: 2.6.2
   zod: 3.22.4
@@ -36,6 +35,7 @@ devDependencies:
   '@nrwl/jest': 15.9.7_wnwqjlhxrut5op7yna4u7qpgli
   '@nrwl/js': 15.9.7_nx@15.9.7+typescript@5.4.2
   '@nrwl/linter': 15.9.7_jaxrm552ibtrnmw4mjuboaf6ou
+  '@nrwl/nx-plugin': 15.9.7_gz3cx6a2cpms7625hoaczjrvfm
   '@nrwl/workspace': 15.9.7
   '@types/jest': 29.5.12
   '@types/node': 18.7.1
@@ -1883,6 +1883,32 @@ packages:
     dev: true
     optional: true
 
+  /@nrwl/nx-plugin/15.9.7_gz3cx6a2cpms7625hoaczjrvfm:
+    resolution: {integrity: sha512-g9zO8O6oATglRGq5rvbg1nORvOC/xIW1R/9L7oBkhd2tn8GeNsPAt2/lhLemCwunpiPU0yEiU05oKSZS/ut3HA==}
+    dependencies:
+      '@nrwl/devkit': 15.9.7_nx@15.9.7
+      '@nrwl/jest': 15.9.7_wnwqjlhxrut5op7yna4u7qpgli
+      '@nrwl/js': 15.9.7_nx@15.9.7+typescript@5.4.2
+      '@nrwl/linter': 15.9.7_jaxrm552ibtrnmw4mjuboaf6ou
+      '@phenomnomnominal/tsquery': 4.1.1_typescript@5.4.2
+      dotenv: 10.0.0
+      fs-extra: 11.2.0
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - '@babel/traverse'
+      - '@swc-node/register'
+      - '@swc/core'
+      - '@types/node'
+      - babel-plugin-macros
+      - debug
+      - eslint
+      - node-notifier
+      - nx
+      - supports-color
+      - ts-node
+      - typescript
+    dev: true
+
   /@nrwl/nx-win32-arm64-msvc/15.9.7:
     resolution: {integrity: sha512-GSQ54hJ5AAnKZb4KP4cmBnJ1oC4ILxnrG1mekxeM65c1RtWg9NpBwZ8E0gU3xNrTv8ZNsBeKi/9UhXBxhsIh8A==}
     engines: {node: '>= 10'}
@@ -1958,18 +1984,6 @@ packages:
       esquery: 1.5.0
       typescript: 5.4.2
     dev: true
-
-  /@pnpm/lockfile-types/5.1.5:
-    resolution: {integrity: sha512-02FP0HynzX+2DcuPtuMy7PH+kLIC0pevAydAOK+zug2bwdlSLErlvSkc+4+3dw60eRWgUXUqyfO2eR/Ansdbng==}
-    engines: {node: '>=16.14'}
-    dependencies:
-      '@pnpm/types': 9.4.2
-    dev: false
-
-  /@pnpm/types/9.4.2:
-    resolution: {integrity: sha512-g1hcF8Nv4gd76POilz9gD4LITAPXOe5nX4ijgr8ixCbLQZfcpYiMfJ+C1RlMNRUDo8vhlNB4O3bUlxmT6EAQXA==}
-    engines: {node: '>=16.14'}
-    dev: false
 
   /@sinclair/typebox/0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
