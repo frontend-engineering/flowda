@@ -10,13 +10,13 @@
 
 Locking some fundamental componetns versions to reduce JavaScript fatigue, and allow for necessary customization.
 
-- `nx@15.6.3`, and only allow following plugins. Write custom plugin if not satisfied.
+- `nx@15.9.7`, and only allow following plugins. Write custom plugin if not satisfied.
     - `@nrwl/workspace`
     - `@nrlw/js`
     - `@nrwl/linter`
     - `@nrwl/eslint-plugin-nx`
     - `@nrwl/jest`
-- `@pnpm/lockfile-types@^4.3.6`, `pnpm@7.33.7`
+- `@pnpm/lockfile-types@^5.0.0`, `pnpm@7.33.7`
 
 ## Debug nx
 
