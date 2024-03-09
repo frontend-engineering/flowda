@@ -1,5 +1,9 @@
 import { z } from 'zod'
-import { buildRollupConfigInputSchema } from './build-rollup-config'
+
+export const buildRollupConfigInputSchema = z.object({
+  bundleInput: z.string(),
+  bundleFile: z.string(),
+})
 
 export const devExecutorSchema = z.object({
   yalc: z.boolean().optional(),

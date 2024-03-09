@@ -1,13 +1,28 @@
 import type { ExecutorContext } from '@nrwl/devkit'
 import { runExecutor } from '@nrwl/devkit'
-import { devExecutorSchema } from './schema'
+import { buildRollupConfigInputSchema, devExecutorSchema } from './schema'
 import { execSync } from 'child_process'
-import { buildRollupConfig, buildRollupConfigInputSchema } from './build-rollup-config'
 import * as path from 'path'
 import { z } from 'zod'
 import * as rollup from 'rollup'
 import { from } from 'rxjs'
 import { map, switchMap } from 'rxjs/operators'
+import dts from 'rollup-plugin-dts'
+
+export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSchema>): rollup.RollupOptions {
+  return {
+    input: input.bundleInput,
+    output: [
+      {
+        file: input.bundleFile,
+        format: 'es',
+      },
+    ],
+    plugins: [
+      dts({}),
+    ],
+  }
+}
 
 export default async function* devExecutor(
   options: z.infer<typeof devExecutorSchema>,

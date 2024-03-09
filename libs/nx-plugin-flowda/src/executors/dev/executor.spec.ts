@@ -1,5 +1,30 @@
+import * as rollup from 'rollup'
+import { buildRollupConfigInputSchema } from './schema'
+import * as path from 'path'
+import { buildRollupConfig } from './executor'
+import { from } from 'rxjs'
+import { switchMap } from 'rxjs/operators'
+
 describe('Dev Executor', () => {
   it('can run', async () => {
-    expect(true).toBe(true)
+    const options = buildRollupConfig(buildRollupConfigInputSchema.parse({
+      bundleInput: path.join(__dirname, '__fixtures__/schema/src/index.d.ts'),
+      bundleFile: path.join(__dirname, '__fixtures__/schema/index.bundle.d.ts'),
+    }))
+
+    const rollup$ = from(rollup.rollup(options)).pipe(
+      switchMap((bundle) => {
+        const outputOptions = Array.isArray(options.output)
+          ? options.output
+          : [options.output]
+        return from(Promise.all(
+            (<Array<rollup.OutputOptions>>outputOptions).map(o => {
+              bundle.write(o)
+            }),
+          ),
+        )
+      }),
+    )
+    rollup$.subscribe()
   })
 })
