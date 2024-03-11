@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'theia-design',
+  displayName: 'design',
   preset: '../../jest.preset.js',
   transform: {
     '^.+\\.[tj]sx?$': [
@@ -9,5 +9,5 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/theia-design',
+  coverageDirectory: '../../coverage/libs/design',
 };

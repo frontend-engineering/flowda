@@ -1,42 +1,32 @@
 {
-  "name": "theia-design",
+  "name": "design",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/theia-design/src",
+  "sourceRoot": "libs/design/src",
   "projectType": "library",
   "tags": [],
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "libs/theia-design/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["libs/design/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "bundle": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "executor": "@nrwl/rollup:rollup",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/theia-design",
-        "tsConfig": "libs/theia-design/tsconfig.lib.json",
-        "project": "libs/theia-design/package.json",
-        "entryFile": "libs/theia-design/src/index.ts",
-        "external": [
-          "react/jsx-runtime"
-        ],
+        "outputPath": "dist/libs/design",
+        "tsConfig": "libs/design/tsconfig.lib.json",
+        "project": "libs/design/package.json",
+        "entryFile": "libs/design/src/index.ts",
+        "external": ["react/jsx-runtime"],
         "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
         "compiler": "swc",
         "assets": [
           {
-            "glob": "libs/theia-design/README.md",
+            "glob": "libs/design/README.md",
             "input": ".",
             "output": "."
           }
@@ -45,11 +35,9 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/theia-design/jest.config.ts",
+        "jestConfig": "libs/design/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -63,7 +51,7 @@
       "executor": "@nrwl/storybook:storybook",
       "options": {
         "port": 4400,
-        "configDir": "libs/theia-design/.storybook",
+        "configDir": "libs/design/.storybook",
         "uiFramework": "@storybook/react"
       },
       "configurations": {
@@ -74,12 +62,10 @@
     },
     "build-storybook": {
       "executor": "@nrwl/storybook:build",
-      "outputs": [
-        "{options.outputDir}"
-      ],
+      "outputs": ["{options.outputDir}"],
       "options": {
         "outputDir": "dist/storybook/theia-design",
-        "configDir": "libs/theia-design/.storybook",
+        "configDir": "libs/design/.storybook",
         "uiFramework": "@storybook/react"
       },
       "configurations": {
@@ -91,18 +77,18 @@
     "test-storybook": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "test-storybook -c libs/theia-design/.storybook --url=http://localhost:4400"
+        "command": "test-storybook -c libs/design/.storybook --url=http://localhost:4400"
       }
     },
     "static-storybook": {
       "executor": "@nrwl/web:file-server",
       "options": {
-        "buildTarget": "theia-design:build-storybook",
+        "buildTarget": "design:build-storybook",
         "staticFilePath": "dist/storybook/theia-design"
       },
       "configurations": {
         "ci": {
-          "buildTarget": "theia-design:build-storybook:ci"
+          "buildTarget": "design:build-storybook:ci"
         }
       }
     }
