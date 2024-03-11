@@ -5,6 +5,7 @@ specifiers:
   '@babel/preset-react': ^7.14.5
   '@babel/preset-typescript': 7.12.13
   '@elastic/eui': ^93.2.0
+  '@nrwl/cli': 15.9.7
   '@nrwl/cypress': 15.9.7
   '@nrwl/devkit': 15.9.7
   '@nrwl/eslint-plugin-nx': 15.9.7
@@ -100,6 +101,7 @@ devDependencies:
   '@babel/core': 7.12.13
   '@babel/preset-react': 7.23.3_@babel+core@7.12.13
   '@babel/preset-typescript': 7.12.13_@babel+core@7.12.13
+  '@nrwl/cli': 15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m
   '@nrwl/cypress': 15.9.7_5vpzudigxs6s3hsa2scdyczyem
   '@nrwl/devkit': 15.9.7_nx@15.9.7
   '@nrwl/eslint-plugin-nx': 15.9.7_l3bjnw6kum6lrxq3y45ib32q6q
@@ -2728,6 +2730,12 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+    dev: true
+
+  /@nrwl/cli/15.9.7:
+    resolution: {integrity: sha512-1jtHBDuJzA57My5nLzYiM372mJW0NY6rFKxlWt5a0RLsAZdPTHsd8lE3Gs9XinGC1jhXbruWmhhnKyYtZvX/zA==}
+    dependencies:
+      nx: 15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m
     dev: true
 
   /@nrwl/cli/15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m:
@@ -12218,7 +12226,7 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m
+      '@nrwl/cli': 15.9.7
       '@nrwl/tao': 15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m
       '@parcel/watcher': 2.0.4
       '@swc-node/register': 1.9.0_cy5lseztbjzmzkete3zbzqe2pq
