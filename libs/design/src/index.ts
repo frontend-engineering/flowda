@@ -1,1 +1,1 @@
-export * from './lib/theia-design';
+export * from './lib/login/login';

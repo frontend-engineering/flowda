@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import TheiaDesign from './theia-design';
+import Login from './login';
 
-describe('TheiaDesign', () => {
+describe('Login', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<TheiaDesign />);
+    const { baseElement } = render(<Login />);
     expect(baseElement).toBeTruthy();
   });
 });
