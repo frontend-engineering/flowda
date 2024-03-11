@@ -64,7 +64,7 @@
       "executor": "@nrwl/storybook:build",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook/theia-design",
+        "outputDir": "dist/storybook/design",
         "configDir": "libs/design/.storybook",
         "uiFramework": "@storybook/react"
       },
@@ -84,7 +84,7 @@
       "executor": "@nrwl/web:file-server",
       "options": {
         "buildTarget": "design:build-storybook",
-        "staticFilePath": "dist/storybook/theia-design"
+        "staticFilePath": "dist/storybook/design"
       },
       "configurations": {
         "ci": {
