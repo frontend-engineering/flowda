@@ -2,14 +2,14 @@ import { createTreeWithEmptyWorkspace } from '@nrwl/devkit/testing';
 import { Tree, readProjectConfiguration } from '@nrwl/devkit';
 
 import generator from './generator';
-import { NxPluginFlowdaGeneratorSchema } from './schema';
+import { ComponentGeneratorSchema } from './schema';
 
-describe('nx-plugin-flowda generator', () => {
+describe('component generator', () => {
   let appTree: Tree;
-  const options: NxPluginFlowdaGeneratorSchema = { name: 'test' };
+  const options: ComponentGeneratorSchema = { name: 'test' };
 
   beforeEach(() => {
-    appTree = createTreeWithEmptyWorkspace({ layout: 'apps-libs' });
+    appTree = createTreeWithEmptyWorkspace({layout: 'apps-libs'});
   });
 
   it('should run successfully', async () => {
