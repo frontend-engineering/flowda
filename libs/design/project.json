@@ -5,6 +5,27 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "dev": {
+      "executor": "@flowda/nx-plugin-flowda:dev",
+      "options": {
+        "yalc": true,
+        "bundleDts": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/design",
+        "main": "libs/design/src/index.ts",
+        "tsConfig": "libs/design/tsconfig.lib.json",
+        "assets": [
+          "libs/design/*.md"
+        ]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -17,7 +38,7 @@
       "executor": "@nrwl/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/design",
+        "outputPath": "dist/libs/design-bundle",
         "tsConfig": "libs/design/tsconfig.lib.json",
         "project": "libs/design/package.json",
         "entryFile": "libs/design/src/index.ts",
