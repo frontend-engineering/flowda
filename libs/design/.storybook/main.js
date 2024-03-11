@@ -19,6 +19,12 @@ module.exports = {
     '@nrwl/react/plugins/storybook',
     'storybook-addon-swc',
   ],
+
+  // https://storybook.js.org/docs/api/main-config-typescript#skipbabel
+  typescript: {
+    check: false,
+    reactDocgen: false,
+  }
 };
 
 // To customize your webpack configuration you can use the webpackFinal field.
