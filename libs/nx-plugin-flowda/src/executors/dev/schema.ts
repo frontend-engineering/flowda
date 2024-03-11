@@ -7,6 +7,5 @@ export const buildRollupConfigInputSchema = z.object({
 
 export const devExecutorSchema = z.object({
   yalc: z.boolean().optional(),
-  buildTarget: z.string().optional(),
   bundleDts: z.boolean().optional(),
-}).merge(buildRollupConfigInputSchema.partial())
+})

@@ -7,11 +7,8 @@
     "dev": {
       "executor": "@flowda/nx-plugin-flowda:dev",
       "options": {
-        "buildTarget": "build",
-        "bundleDts": true,
         "yalc": true,
-        "bundleInput": "src/index.d.ts",
-        "bundleFile": "index.bundle.d.ts"
+        "bundleDts": true
       }
     },
     "build": {

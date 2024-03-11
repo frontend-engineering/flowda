@@ -2,8 +2,7 @@ import * as rollup from 'rollup'
 import { buildRollupConfigInputSchema } from './schema'
 import * as path from 'path'
 import { buildRollupConfig } from './executor'
-import { from } from 'rxjs'
-import { switchMap } from 'rxjs/operators'
+import { from, map, switchMap } from 'rxjs'
 
 describe('Dev Executor', () => {
   it('can run', async () => {
@@ -24,6 +23,7 @@ describe('Dev Executor', () => {
           ),
         )
       }),
+      map(() => ({ success: true })),
     )
     rollup$.subscribe()
   })
