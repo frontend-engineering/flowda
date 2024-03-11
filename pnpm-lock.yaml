@@ -34,6 +34,8 @@ specifiers:
   '@swc/helpers': ~0.4.11
   '@swc/jest': 0.2.20
   '@testing-library/react': 14.0.0
+  '@trpc/client': ^10.45.2
+  '@trpc/server': ^10.45.2
   '@types/jest': 29.5.12
   '@types/node': 18.14.2
   '@types/react': 18.0.28
@@ -83,6 +85,8 @@ specifiers:
 
 dependencies:
   '@elastic/eui': 93.2.0_y2msmjfxa5ehnyeb76ca6txwn4
+  '@trpc/client': 10.45.2_@trpc+server@10.45.2
+  '@trpc/server': 10.45.2
   ag-grid-community: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
   formik: 1.5.8_react@18.2.0
@@ -5272,6 +5276,18 @@ packages:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
     dev: true
+
+  /@trpc/client/10.45.2_@trpc+server@10.45.2:
+    resolution: {integrity: sha512-ykALM5kYWTLn1zYuUOZ2cPWlVfrXhc18HzBDyRhoPYN0jey4iQHEFSEowfnhg1RvYnrAVjNBgHNeSAXjrDbGwg==}
+    peerDependencies:
+      '@trpc/server': 10.45.2
+    dependencies:
+      '@trpc/server': 10.45.2
+    dev: false
+
+  /@trpc/server/10.45.2:
+    resolution: {integrity: sha512-wOrSThNNE4HUnuhJG6PfDRp4L2009KDVxsd+2VYH8ro6o/7/jwYZ8Uu5j+VaW+mOmc8EHerHzGcdbGNQSAUPgg==}
+    dev: false
 
   /@trysound/sax/0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
