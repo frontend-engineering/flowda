@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "cli": "nx",
+  "title": "Dev executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+  },
+  "required": []
+}

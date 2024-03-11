@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "name": "nx-plugin-flowda",
+  "version": "0.0.1",
+  "generators": {
+    "nx-plugin-flowda": {
+      "factory": "./src/generators/nx-plugin-flowda/generator",
+      "schema": "./src/generators/nx-plugin-flowda/schema.json",
+      "description": "nx-plugin-flowda generator"
+    }
+  }
+}
