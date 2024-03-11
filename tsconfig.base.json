@@ -17,8 +17,7 @@
     "paths": {
       "@flowda/gateway": ["libs/gateway/src/index.ts"],
       "@flowda/nx-plugin-flowda": ["libs/nx-plugin-flowda/src/index.ts"],
-      "@flowda/schema": ["libs/schema/src/index.ts"],
-      "@flowda/theia-design": ["libs/theia-design/src/index.ts"]
+      "@flowda/schema": ["libs/schema/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
