@@ -9,7 +9,7 @@ export class Login extends Component<LoginProps> {
   override render() {
     return (
       <div className={styles['container']}>
-        <p>Welcome to Login!</p>
+        <p>Welcome to Login.</p>
       </div>
     );
   }
