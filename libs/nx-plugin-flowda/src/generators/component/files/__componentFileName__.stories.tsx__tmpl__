@@ -1,21 +1,22 @@
 import 'reflect-metadata'
 import type { Meta } from '@storybook/react'
-import { Login } from './login'
+import { <%= componentName %> } from './<%= componentFileName %>'
 import { Container } from 'inversify'
-import { designModule } from '../../designModule'
 import { LoginModelSymbol } from '@flowda/types'
-import { LoginModel } from './login.model'
+import { designModule } from '../../designModule'
+import { <%= modelName %> } from './<%= modelFileName %>'
 
 const container = new Container()
 container.load(designModule)
 
 const Story: Meta<typeof Login> = {
-  component: Login,
-  title: 'Login',
+  component: <%= componentName %>,
+  title: '<%= componentName %>',
 }
+
 export default Story
 
-const model = container.get<LoginModel>(LoginModelSymbol)
+const model = container.get<<%= modelName %>>(<%= modelSymbolName %>)
 
 export const Primary = {
   args: {
