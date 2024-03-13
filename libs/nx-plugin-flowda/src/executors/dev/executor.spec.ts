@@ -1,5 +1,5 @@
 import * as rollup from 'rollup'
-import { buildRollupConfigInputSchema } from './schema'
+import { buildRollupConfigInputSchema } from './zod-def'
 import * as path from 'path'
 import { buildRollupConfig } from './executor'
 import { from, map, switchMap } from 'rxjs'
@@ -18,7 +18,7 @@ describe('Dev Executor', () => {
           : [options.output]
         return from(Promise.all(
             (<Array<rollup.OutputOptions>>outputOptions).map(o => {
-              bundle.write(o)
+              // bundle.write(o)
             }),
           ),
         )
