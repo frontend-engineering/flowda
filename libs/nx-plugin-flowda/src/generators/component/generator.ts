@@ -25,7 +25,7 @@ export default async function (host: Tree, options: z.infer<typeof componentGene
   const modelName = _.pascal(options.name) + 'Model'
   const modelFileName = _.dash(options.name) + '.model'
 
-  generateFiles(host, path.join(__dirname, 'files'), path.join(designProject.sourceRoot, `lib/${componentFileName}`), {
+  generateFiles(host, path.join(__dirname, 'files'), path.join(designProject.sourceRoot, `${componentFileName}`), {
     componentName: _.pascal(options.name),
     componentFileName,
     modelName,
@@ -41,13 +41,13 @@ export default async function (host: Tree, options: z.infer<typeof componentGene
   addImportHelper(
     host,
     path.join(designProject.sourceRoot, 'index.ts'),
-    `export * from './lib/${componentFileName}/${componentFileName}'`,
+    `export * from './${componentFileName}/${componentFileName}'`,
   )
 
   const typesProject = getProjects(host).get('types')
   addImportHelper(
     host,
-    path.join(typesProject.sourceRoot, 'lib/symbols.ts'),
+    path.join(typesProject.sourceRoot, 'symbols.ts'),
     `export const ${modelSymbolName} = Symbol.for('${modelName}')`,
   )
 }
@@ -121,7 +121,7 @@ function updateDesignModule(host: Tree, opt: {
     [
       ...addImport(
         sourceFile,
-        `import { ${modelName} } from './lib/${componentFileName}/${modelFileName}'`,
+        `import { ${modelName} } from './${componentFileName}/${modelFileName}'`,
       ),
       ...addBind(
         sourceFile,

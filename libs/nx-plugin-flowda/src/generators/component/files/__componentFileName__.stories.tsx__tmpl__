@@ -3,7 +3,7 @@ import type { Meta } from '@storybook/react'
 import { <%= componentName %> } from './<%= componentFileName %>'
 import { Container } from 'inversify'
 import { <%= modelSymbolName %> } from '@flowda/types'
-import { designModule } from '../../designModule'
+import { designModule } from '../designModule'
 import { <%= modelName %> } from './<%= modelFileName %>'
 
 const container = new Container()

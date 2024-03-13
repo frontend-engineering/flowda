@@ -1,1 +1,1 @@
-export * from './lib/symbols'
+export * from './symbols'

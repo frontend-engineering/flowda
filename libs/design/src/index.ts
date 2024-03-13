@@ -1,3 +1,3 @@
 
-export * from './lib/preview/preview'
-export * from './lib/login/login';
+export * from './preview/preview'
+export * from './login/login';

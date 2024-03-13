@@ -2,8 +2,8 @@ import 'reflect-metadata'
 import type { Meta } from '@storybook/react'
 import { Preview } from './preview'
 import { Container } from 'inversify'
-import { PreviewModelSymbol } from '@flowda/types'
-import { designModule } from '../../designModule'
+import { PreviewModelSymbol } from 'libs/types/src'
+import { designModule } from '../designModule'
 import { PreviewModel } from './preview.model'
 
 const container = new Container()

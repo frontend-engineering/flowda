@@ -1,8 +1,8 @@
 import { ContainerModule, interfaces } from 'inversify'
-import { LoginModel } from './lib/login/login.model'
+import { LoginModel } from './login/login.model'
 import { LoginModelSymbol, PreviewModelSymbol } from '@flowda/types'
 
-import { PreviewModel } from './lib/preview/preview.model'
+import { PreviewModel } from './preview/preview.model'
 
 export const designModule = new ContainerModule(bind => {
   bindDesignModule(bind)

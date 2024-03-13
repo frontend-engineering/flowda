@@ -2,8 +2,8 @@ import 'reflect-metadata'
 import type { Meta } from '@storybook/react'
 import { Login } from './login'
 import { Container } from 'inversify'
-import { designModule } from '../../designModule'
-import { LoginModelSymbol } from '@flowda/types'
+import { designModule } from '../designModule'
+import { LoginModelSymbol } from 'libs/types/src'
 import { LoginModel } from './login.model'
 
 const container = new Container()
