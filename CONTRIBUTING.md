@@ -58,3 +58,30 @@ rspack
 
 + ./storybook/rspack.config.js
 ```
+
+## jest
+
+use swc to speed up test
+```diff
+- '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
++ '^.+\\.[tj]sx?$': [
++   '@swc/jest', {
++     jsc: {
++       parser: {
++         decorators: true,
++       },
++       transform: {
++         legacyDecorator: true,
++         react: { runtime: 'automatic' },
++       },
++     },
++   },
++ ],
+```
+But swc cannot parse `<const>`
+```ts
+// https://stackoverflow.com/questions/37978528/typescript-type-string-is-not-assignable-to-type
+const mem = {
+  id: { filterType: <const>'number', type: <const>'equals', filter: 1 },
+}
+```

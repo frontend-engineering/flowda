@@ -1,17 +1,17 @@
 import { action, makeObservable, observable } from 'mobx'
 import type { FormikProps } from 'formik'
 import { injectable } from 'inversify'
-import { LoginInputDto, LoginOutputDto } from '@flowda/types'
+import { loginInputSchemaDto, loginOutputSchemaDto } from '@flowda/types'
 
 @injectable()
 export class LoginModel {
-  public formikProps: FormikProps<LoginInputDto> | undefined
+  public formikProps: FormikProps<loginInputSchemaDto> | undefined
 
   @observable isLogin = false
 
   handlers: Partial<{
     info: (message: string, opts: { timeout: number }) => void
-    validate: (input: LoginInputDto) => Promise<LoginOutputDto>
+    validate: (input: loginInputSchemaDto) => Promise<loginOutputSchemaDto>
   }> = {}
 
   constructor() {

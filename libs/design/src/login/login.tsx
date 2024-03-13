@@ -4,7 +4,7 @@ import { EuiFieldText, EuiForm, EuiFormRow, EuiThemeProvider } from '@elastic/eu
 import { observer } from 'mobx-react'
 import { LoginModel } from './login.model'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
-import { loginInput, loginDto } from '@flowda/types'
+import { loginInputSchema, loginInputSchemaDto } from '@flowda/types'
 
 @observer
 export class Login extends React.Component<{
@@ -28,15 +28,15 @@ export class Login extends React.Component<{
       )
     } else {
       return (
-        <Formik<loginDto>
+        <Formik<loginInputSchemaDto>
           onSubmit={() => {}}
           initialValues={{
             username: '',
             password: '',
           }}
-          validationSchema={toFormikValidationSchema(loginInput)}
+          validationSchema={toFormikValidationSchema(loginInputSchema)}
         >
-          {(formikProps: FormikProps<loginDto>) => {
+          {(formikProps: FormikProps<loginInputSchemaDto>) => {
             this.props.model.formikProps = formikProps
             const {
               values,
