@@ -18,7 +18,22 @@ module.exports = {
   addons: [
     '@storybook/addon-essentials',
     '@nrwl/react/plugins/storybook',
-    // 'storybook-addon-swc',
+    {
+      name: 'storybook-addon-swc',
+      options: {
+        swcLoaderOptions /* https://storybook.js.org/addons/storybook-addon-swc */: {
+          jsc /* https://swc.rs/docs/configuration/compilation#jsctransformlegacydecorator */: {
+            parser: {
+              decorators: true
+            },
+            transform: {
+              legacyDecorator: true
+            }
+          }
+        }
+
+      }
+    },
   ],
 
   // https://storybook.js.org/docs/api/main-config-typescript#skipbabel
@@ -38,7 +53,7 @@ module.exports = {
     }
     config.resolve.alias = {
         ...config.resolve.alias,
-        '@flowda/types': path.resolve(__dirname, '../../types/src/index.ts')
+        // '@flowda/types': path.resolve(__dirname, '../../types/src/index.ts')
     }
     return config;
   },
