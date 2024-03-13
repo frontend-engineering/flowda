@@ -6,9 +6,9 @@
   "targets": {
     "dev": {
       "executor": "@flowda/nx-plugin-flowda:dev",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "yalc": false,
-        "bundleDts": true
+        "outputPath": "dist/libs/types"
       }
     },
     "build": {

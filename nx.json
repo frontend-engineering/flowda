@@ -24,11 +24,7 @@
       "inputs": [
         "production",
         "^production"
-      ],
-      "options": {
-        "bundleDts": true,
-        "yalc": false
-      }
+      ]
     },
     "build": {
       "dependsOn": [
