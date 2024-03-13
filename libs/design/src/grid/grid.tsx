@@ -2,10 +2,12 @@ import { Component } from 'react'
 import { observer } from 'mobx-react'
 import { GridModel } from './grid.model'
 
-@observer
-export class Grid extends Component<{
+export type GridProps = {
   model: GridModel
-}> {
+}
+@observer
+export class Grid extends Component<GridProps> {
+
   override render() {
     return (
       <div>

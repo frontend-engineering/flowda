@@ -51,6 +51,7 @@ specifiers:
   consola: ^3.2.3
   core-js: ^3.36.0
   cypress: ^12.2.0
+  dayjs: ^1.11.10
   eslint: ~8.15.0
   eslint-config-prettier: 8.1.0
   eslint-plugin-cypress: ^2.10.3
@@ -97,6 +98,7 @@ dependencies:
   '@nestjs/common': 10.3.3_rcbhqa4so6dtcde4mhxkgzk6je
   ag-grid-community: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
+  dayjs: 1.11.10
   formik: 1.5.8_react@18.2.0
   inversify: 6.0.2
   mobx: 6.12.0
@@ -9099,7 +9101,6 @@ packages:
 
   /dayjs/1.11.10:
     resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
-    dev: true
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}

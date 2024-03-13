@@ -18,6 +18,7 @@
       "@flowda/design": ["libs/design/src/index.ts"],
       "@flowda/nx-plugin-flowda": ["libs/nx-plugin-flowda/src/index.ts"],
       "@flowda/schema": ["libs/schema/src/index.ts"],
+      "@flowda/shared": ["libs/shared/src/index.ts"],
       "@flowda/types": ["libs/types/src/index.ts"]
     }
   },

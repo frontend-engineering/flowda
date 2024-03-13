@@ -98,6 +98,7 @@
     "@nestjs/common": "^10.3.3",
     "ag-grid-community": "^31.1.1",
     "ag-grid-react": "^31.1.1",
+    "dayjs": "^1.11.10",
     "formik": "^1.5.8",
     "inversify": "^6.0.2",
     "mobx": "^6.6.2",
