@@ -16,7 +16,6 @@
     "baseUrl": ".",
     "paths": {
       "@flowda/design": ["libs/design/src/index.ts"],
-      "@flowda/gateway": ["libs/gateway/src/index.ts"],
       "@flowda/nx-plugin-flowda": ["libs/nx-plugin-flowda/src/index.ts"],
       "@flowda/schema": ["libs/schema/src/index.ts"],
       "@flowda/types": ["libs/types/src/index.ts"]
