@@ -5,9 +5,11 @@ module.exports = {
   },
 
   framework: {
-    name: '@storybook/react-webpack5',
-    // name: 'storybook-react-rspack',
-    options: {},
+    // name: '@storybook/react-webpack5',
+    name: 'storybook-react-rspack',
+    options: {
+      fastRefresh: true,
+    },
   },
 
   stories: [
@@ -18,45 +20,29 @@ module.exports = {
   addons: [
     '@storybook/addon-essentials',
     '@nrwl/react/plugins/storybook',
-    {
-      name: 'storybook-addon-swc',
-      options: {
-        swcLoaderOptions /* https://storybook.js.org/addons/storybook-addon-swc */: {
-          jsc /* https://swc.rs/docs/configuration/compilation#jsctransformlegacydecorator */: {
-            parser: {
-              decorators: true
-            },
-            transform: {
-              legacyDecorator: true
-            }
-          }
-        }
-
-      }
-    },
+    // {
+    //   name: 'storybook-addon-swc',
+    //   options: {
+    //     swcLoaderOptions /* https://storybook.js.org/addons/storybook-addon-swc */: {
+    //       jsc /* https://swc.rs/docs/configuration/compilation#jsctransformlegacydecorator */: {
+    //         parser: {
+    //           decorators: true
+    //         },
+    //         transform: {
+    //           legacyDecorator: true
+    //         }
+    //       }
+    //     }
+    //
+    //   }
+    // },
   ],
 
   // https://storybook.js.org/docs/api/main-config-typescript#skipbabel
   typescript: {
     check: false,
     reactDocgen: false,
-  },
-  webpackFinal: async (config, { configType }) => {
-    if (configType === 'DEVELOPMENT') {
-      // Modify config for development
-    }
-    if (configType === 'PRODUCTION') {
-      // Modify config for production
-    }
-    if(!config.resolve) {
-        config.resolve = {}
-    }
-    config.resolve.alias = {
-        ...config.resolve.alias,
-        // '@flowda/types': path.resolve(__dirname, '../../types/src/index.ts')
-    }
-    return config;
-  },
+  }
 };
 
 // To customize your webpack configuration you can use the webpackFinal field.
