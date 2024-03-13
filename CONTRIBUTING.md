@@ -1,10 +1,9 @@
 ## Project Sturcutre
 
 - `packages`
-    - `theia-plugin-flowda`: Make theia into a SaaS
-    - `schema`: engine to implement business logic
-    - `gateway`: gateway to manage business logic
-    - `gateway-trpc-server`: gateway API definitions
+    - `design`: SaaS components
+    - `schema`: parse prisma DSL to zod, zod to UI schema, parse UI schema to prisma query, etc.
+    - `types`: typescript type definitions, zod schema, symbols
 
 ## Lock some dependencies' versions
 
@@ -21,10 +20,12 @@ Locking some fundamental componetns versions to reduce JavaScript fatigue, and a
 ## Storybook
 
 Ways to speed up compilation
+
 - swc 8s -> 5s
 - rspack <800ms
 
 swc
+
 ```diff
 - ./storybook/rspack.config.js
 
@@ -50,6 +51,7 @@ swc
 ```
 
 rspack
+
 ```diff
 - name: '@storybook/react-webpack5',
 + name: 'storybook-react-rspack',
