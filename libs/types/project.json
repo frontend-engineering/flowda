@@ -4,6 +4,13 @@
   "sourceRoot": "libs/types/src",
   "projectType": "library",
   "targets": {
+    "dev": {
+      "executor": "@flowda/nx-plugin-flowda:dev",
+      "options": {
+        "yalc": false,
+        "bundleDts": true
+      }
+    },
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],

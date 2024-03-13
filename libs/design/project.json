@@ -8,8 +8,8 @@
     "dev": {
       "executor": "@flowda/nx-plugin-flowda:dev",
       "options": {
-        "yalc": true,
-        "bundleDts": true
+        "yalc": false,
+        "bundleDts": false
       }
     },
     "build": {
