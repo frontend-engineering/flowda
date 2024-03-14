@@ -21,8 +21,19 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var src_exports = {};
 __export(src_exports, {
   api: () => api_exports,
+  createComponentRequestBodyRef: () => createComponentRequestBodyRef,
+  createComponentResponseRef: () => createComponentResponseRef,
+  createComponentSchemaRef: () => createComponentSchemaRef,
+  createComponents: () => createComponents,
   createDocument: () => createDocument,
+  createExistingRef: () => createExistingRef,
+  createNewRef: () => createNewRef,
+  createNewSchema: () => createNewSchema,
+  createSchema: () => createSchema,
+  createSchemaObject: () => createSchemaObject,
+  createSchemaOrRef: () => createSchemaOrRef,
   extendZodWithOpenApi: () => extendZodWithOpenApi,
+  getDefaultComponents: () => getDefaultComponents,
   oas30: () => oas30_exports,
   oas31: () => oas31_exports
 });
@@ -2118,8 +2129,19 @@ __export(api_exports, {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   api,
+  createComponentRequestBodyRef,
+  createComponentResponseRef,
+  createComponentSchemaRef,
+  createComponents,
   createDocument,
+  createExistingRef,
+  createNewRef,
+  createNewSchema,
+  createSchema,
+  createSchemaObject,
+  createSchemaOrRef,
   extendZodWithOpenApi,
+  getDefaultComponents,
   oas30,
   oas31
 });

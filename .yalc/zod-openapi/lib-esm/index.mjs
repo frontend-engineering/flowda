@@ -2093,8 +2093,19 @@ __export(api_exports, {
 });
 export {
   api_exports as api,
+  createComponentRequestBodyRef,
+  createComponentResponseRef,
+  createComponentSchemaRef,
+  createComponents,
   createDocument,
+  createExistingRef,
+  createNewRef,
+  createNewSchema,
+  createSchema,
+  createSchemaObject,
+  createSchemaOrRef,
   extendZodWithOpenApi,
+  getDefaultComponents,
   oas30_exports as oas30,
   oas31_exports as oas31
 };
