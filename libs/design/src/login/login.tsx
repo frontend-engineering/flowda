@@ -29,7 +29,9 @@ export class Login extends React.Component<{
     } else {
       return (
         <Formik<loginInputSchemaDto>
-          onSubmit={() => {}}
+          onSubmit={() => {
+            //
+          }}
           initialValues={{
             username: '',
             password: '',
