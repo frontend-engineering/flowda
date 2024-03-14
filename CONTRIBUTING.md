@@ -86,3 +86,9 @@ const mem = {
   id: { filterType: <const>'number', type: <const>'equals', filter: 1 },
 }
 ```
+
+## Generator
+
+AST utilities alternative
+- ts-morph
+- magicast
