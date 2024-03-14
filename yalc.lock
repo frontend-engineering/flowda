@@ -8,6 +8,10 @@
     "@flowda-projects/flowda-shared-types": {
       "signature": "209ac8ded566875bf5a2df6c801b6bb2",
       "link": true
+    },
+    "zod-openapi": {
+      "signature": "71246f277fc6776aa1e083fa4ced73be",
+      "file": true
     }
   }
 }
