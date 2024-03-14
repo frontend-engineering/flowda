@@ -1,8 +1,9 @@
-## Project Sturcutre
+## Project Structure
 
 - `packages`
     - `design`: SaaS components
     - `schema`: parse prisma DSL to zod, zod to UI schema, parse UI schema to prisma query, etc.
+    - `shared`: shared utils, should not depend on node
     - `types`: typescript type definitions, zod schema, symbols
 
 ## Lock some dependencies' versions
@@ -11,10 +12,10 @@ Locking some fundamental componetns versions to reduce JavaScript fatigue, and a
 
 - `nx@15.9.7`, and only allow following plugins. Write custom plugin if not satisfied.
     - `@nrwl/workspace`
-    - `@nrlw/js`
-    - `@nrwl/linter`
-    - `@nrwl/eslint-plugin-nx`
-    - `@nrwl/jest`
+    - `@nrlw/js` - compile
+    - `@nrwl/linter` - lint
+    - `@nrwl/eslint-plugin-nx` - write custom nx plugin
+    - `@nrwl/jest` - test
 - `@pnpm/lockfile-types@^5.0.0`, `pnpm@7.33.7`
 
 ## Storybook
@@ -78,7 +79,7 @@ use swc to speed up test
 +   },
 + ],
 ```
-But swc cannot parse `<const>`
+But swc cannot parse `<const>` or `as const`
 ```ts
 // https://stackoverflow.com/questions/37978528/typescript-type-string-is-not-assignable-to-type
 const mem = {
