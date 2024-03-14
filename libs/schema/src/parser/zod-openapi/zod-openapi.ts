@@ -1,14 +1,9 @@
 import merge from 'ts-deepmerge'
-import { AnyZodObject, z, ZodDate, ZodTypeAny } from 'zod'
+import { AnyZodObject, z, ZodTypeAny } from 'zod'
 import { SchemaObject } from 'openapi3-ts'
 
-export interface ZodOpenApiMetadata<T extends ZodTypeAny,
-  TInferred = z.input<T> | z.output<T>> extends SchemaObject {
-  example?: TInferred;
-  examples?: [TInferred, ...TInferred[]];
-  default?: T extends ZodDate ? string : TInferred;
-  description?: string;
-
+// motor-admin schema
+export type FloSchemaObject = SchemaObject & {
   display_name?: string
   display_column?: string
   primary_key?: string
@@ -21,25 +16,30 @@ export interface ZodOpenApiMetadata<T extends ZodTypeAny,
 }
 
 export interface OpenApiZodAny extends ZodTypeAny {
-  metaOpenApi?: ZodOpenApiMetadata<ZodTypeAny> | ZodOpenApiMetadata<ZodTypeAny>[];
+  metaOpenApi?: FloSchemaObject | FloSchemaObject[];
 }
 
 interface OpenApiZodAnyObject extends AnyZodObject {
-  metaOpenApi?: ZodOpenApiMetadata<ZodTypeAny> | ZodOpenApiMetadata<ZodTypeAny>[];
+  metaOpenApi?: FloSchemaObject | FloSchemaObject[];
 }
 
 interface ParsingArgs<T> {
   zodRef: T;
-  schemas: ZodOpenApiMetadata<ZodTypeAny>[];
+  schemas: FloSchemaObject[];
   useOutput?: boolean;
 }
 
 export function extendApi<T extends OpenApiZodAny>(
   schema: T,
-  SchemaObject: ZodOpenApiMetadata<ZodTypeAny> = {},
+  schemaObject: FloSchemaObject = {}
 ): T {
-  schema.metaOpenApi = Object.assign(schema.metaOpenApi || {}, SchemaObject)
-  return schema
+  const newSchema = new (schema as any).constructor(schema._def);
+  newSchema.metaOpenApi = Object.assign(
+    {},
+    schema.metaOpenApi || {},
+    schemaObject
+  );
+  return newSchema;
 }
 
 function iterateZodObject({
@@ -51,7 +51,7 @@ function iterateZodObject({
       ...carry,
       [key]: generateSchema(zodRef.shape[key], useOutput),
     }),
-    {} as Record<string, ZodOpenApiMetadata<ZodTypeAny>>,
+    {} as Record<string, FloSchemaObject>,
   )
 }
 
@@ -59,7 +59,7 @@ function parseTransformation({
                                zodRef,
                                schemas,
                                useOutput,
-                             }: ParsingArgs<z.ZodTransformer<never> | z.ZodEffects<never>>): ZodOpenApiMetadata<ZodTypeAny> {
+                             }: ParsingArgs<z.ZodTransformer<never> | z.ZodEffects<never>>): FloSchemaObject {
   const input = generateSchema(zodRef._def.schema, useOutput)
 
   let output = 'undefined'
@@ -106,8 +106,8 @@ function parseTransformation({
 function parseString({
                        zodRef,
                        schemas,
-                     }: ParsingArgs<z.ZodString>): ZodOpenApiMetadata<ZodTypeAny> {
-  const baseSchema: ZodOpenApiMetadata<ZodTypeAny> = {
+                     }: ParsingArgs<z.ZodString>): FloSchemaObject {
+  const baseSchema: FloSchemaObject = {
     type: 'string',
   }
   const { checks = [] } = zodRef._def
@@ -153,8 +153,8 @@ function parseString({
 function parseNumber({
                        zodRef,
                        schemas,
-                     }: ParsingArgs<z.ZodNumber>): ZodOpenApiMetadata<ZodTypeAny> {
-  const baseSchema: ZodOpenApiMetadata<ZodTypeAny> = {
+                     }: ParsingArgs<z.ZodNumber>): FloSchemaObject {
+  const baseSchema: FloSchemaObject = {
     type: 'number',
   }
   const { checks = [] } = zodRef._def
@@ -189,8 +189,8 @@ function parseObject({
                        useOutput,
                      }: ParsingArgs<
   z.ZodObject<never, 'passthrough' | 'strict' | 'strip'>
->): ZodOpenApiMetadata<ZodTypeAny> {
-  let additionalProperties: ZodOpenApiMetadata<ZodTypeAny>['additionalProperties']
+>): FloSchemaObject {
+  let additionalProperties: FloSchemaObject['additionalProperties']
 
   // `catchall` obviates `strict`, `strip`, and `passthrough`
   if (
@@ -242,7 +242,7 @@ function parseRecord({
                        zodRef,
                        schemas,
                        useOutput,
-                     }: ParsingArgs<z.ZodRecord>): ZodOpenApiMetadata<ZodTypeAny> {
+                     }: ParsingArgs<z.ZodRecord>): FloSchemaObject {
   return merge(
     {
       type: 'object',
@@ -259,7 +259,7 @@ function parseRecord({
 function parseBigInt({
                        zodRef,
                        schemas,
-                     }: ParsingArgs<z.ZodBigInt>): ZodOpenApiMetadata<ZodTypeAny> {
+                     }: ParsingArgs<z.ZodBigInt>): FloSchemaObject {
   return merge(
     { type: 'integer', format: 'int64' },
     zodRef.description ? { description: zodRef.description } : {},
@@ -270,7 +270,7 @@ function parseBigInt({
 function parseBoolean({
                         zodRef,
                         schemas,
-                      }: ParsingArgs<z.ZodBoolean>): ZodOpenApiMetadata<ZodTypeAny> {
+                      }: ParsingArgs<z.ZodBoolean>): FloSchemaObject {
   return merge(
     { type: 'boolean' },
     zodRef.description ? { description: zodRef.description } : {},
@@ -278,7 +278,7 @@ function parseBoolean({
   )
 }
 
-function parseDate({ zodRef, schemas }: ParsingArgs<z.ZodDate>): ZodOpenApiMetadata<ZodTypeAny> {
+function parseDate({ zodRef, schemas }: ParsingArgs<z.ZodDate>): FloSchemaObject {
   return merge(
     { type: 'string', format: 'date-time' },
     zodRef.description ? { description: zodRef.description } : {},
@@ -286,7 +286,7 @@ function parseDate({ zodRef, schemas }: ParsingArgs<z.ZodDate>): ZodOpenApiMetad
   )
 }
 
-function parseNull({ zodRef, schemas }: ParsingArgs<z.ZodNull>): ZodOpenApiMetadata<ZodTypeAny> {
+function parseNull({ zodRef, schemas }: ParsingArgs<z.ZodNull>): FloSchemaObject {
   return merge(
     {
       type: 'string',
@@ -304,7 +304,7 @@ function parseOptionalNullable({
                                  useOutput,
                                }: ParsingArgs<
   z.ZodOptional<OpenApiZodAny> | z.ZodNullable<OpenApiZodAny>
->): ZodOpenApiMetadata<ZodTypeAny> {
+>): FloSchemaObject {
   return merge(
     generateSchema(zodRef.unwrap(), useOutput),
     zodRef.description ? { description: zodRef.description } : {},
@@ -316,7 +316,7 @@ function parseDefault({
                         schemas,
                         zodRef,
                         useOutput,
-                      }: ParsingArgs<z.ZodDefault<OpenApiZodAny>>): ZodOpenApiMetadata<ZodTypeAny> {
+                      }: ParsingArgs<z.ZodDefault<OpenApiZodAny>>): FloSchemaObject {
   return merge(
     {
       default: zodRef._def.defaultValue(),
@@ -331,8 +331,8 @@ function parseArray({
                       schemas,
                       zodRef,
                       useOutput,
-                    }: ParsingArgs<z.ZodArray<OpenApiZodAny>>): ZodOpenApiMetadata<ZodTypeAny> {
-  const constraints: ZodOpenApiMetadata<ZodTypeAny> = {}
+                    }: ParsingArgs<z.ZodArray<OpenApiZodAny>>): FloSchemaObject {
+  const constraints: FloSchemaObject = {}
   if (zodRef._def.exactLength != null) {
     constraints.minItems = zodRef._def.exactLength.value
     constraints.maxItems = zodRef._def.exactLength.value
@@ -357,7 +357,7 @@ function parseArray({
 function parseLiteral({
                         schemas,
                         zodRef,
-                      }: ParsingArgs<z.ZodLiteral<OpenApiZodAny>>): ZodOpenApiMetadata<ZodTypeAny> {
+                      }: ParsingArgs<z.ZodLiteral<OpenApiZodAny>>): FloSchemaObject {
   return merge(
     {
       type: typeof zodRef._def.value as 'string' | 'number' | 'boolean',
@@ -371,7 +371,7 @@ function parseLiteral({
 function parseEnum({
                      schemas,
                      zodRef,
-                   }: ParsingArgs<z.ZodEnum<never> | z.ZodNativeEnum<never>>): ZodOpenApiMetadata<ZodTypeAny> {
+                   }: ParsingArgs<z.ZodEnum<never> | z.ZodNativeEnum<never>>): FloSchemaObject {
   return merge(
     {
       type: typeof Object.values(zodRef._def.values)[0] as 'string' | 'number',
@@ -386,7 +386,7 @@ function parseIntersection({
                              schemas,
                              zodRef,
                              useOutput,
-                           }: ParsingArgs<z.ZodIntersection<z.ZodTypeAny, z.ZodTypeAny>>): ZodOpenApiMetadata<ZodTypeAny> {
+                           }: ParsingArgs<z.ZodIntersection<z.ZodTypeAny, z.ZodTypeAny>>): FloSchemaObject {
   return merge(
     {
       allOf: [
@@ -403,7 +403,7 @@ function parseUnion({
                       schemas,
                       zodRef,
                       useOutput,
-                    }: ParsingArgs<z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]>>): ZodOpenApiMetadata<ZodTypeAny> {
+                    }: ParsingArgs<z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]>>): FloSchemaObject {
   return merge(
     {
       oneOf: (
@@ -421,7 +421,7 @@ function parseDiscriminatedUnion({
                                    useOutput,
                                  }: ParsingArgs<
   z.ZodDiscriminatedUnion<string, z.ZodDiscriminatedUnionOption<string>[]>
->): ZodOpenApiMetadata<ZodTypeAny> {
+>): FloSchemaObject {
   return merge(
     {
       discriminator: {
@@ -449,7 +449,7 @@ function parseDiscriminatedUnion({
 function parseNever({
                       zodRef,
                       schemas,
-                    }: ParsingArgs<z.ZodNever>): ZodOpenApiMetadata<ZodTypeAny> {
+                    }: ParsingArgs<z.ZodNever>): FloSchemaObject {
   return merge(
     { readOnly: true },
     zodRef.description ? { description: zodRef.description } : {},
@@ -460,14 +460,14 @@ function parseNever({
 function parseBranded({
                         schemas,
                         zodRef,
-                      }: ParsingArgs<z.ZodBranded<z.ZodAny, string>>): ZodOpenApiMetadata<ZodTypeAny> {
+                      }: ParsingArgs<z.ZodBranded<z.ZodAny, string>>): FloSchemaObject {
   return merge(generateSchema(zodRef._def.type), ...schemas)
 }
 
 function catchAllParser({
                           zodRef,
                           schemas,
-                        }: ParsingArgs<ZodTypeAny>): ZodOpenApiMetadata<ZodTypeAny> {
+                        }: ParsingArgs<ZodTypeAny>): FloSchemaObject {
   return merge(
     zodRef.description ? { description: zodRef.description } : {},
     ...schemas,
@@ -514,7 +514,7 @@ type WorkerKeys = keyof typeof workerMap;
 export function generateSchema(
   zodRef: OpenApiZodAny,
   useOutput?: boolean,
-): ZodOpenApiMetadata<ZodTypeAny> {
+): FloSchemaObject {
   const { metaOpenApi = {} } = zodRef
   const schemas = [
     zodRef.isNullable && zodRef.isNullable() ? { nullable: true } : {},

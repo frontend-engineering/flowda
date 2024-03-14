@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { ZodTypeDef } from 'zod/lib/types'
-import { extendApi, ZodOpenApiMetadata } from './zod-openapi'
+import { extendApi, FloSchemaObject } from './zod-openapi'
 
 
 declare module 'zod' {
@@ -8,7 +8,7 @@ declare module 'zod' {
   interface ZodSchema<Output = any, Def extends ZodTypeDef = ZodTypeDef, Input = Output> {
     openapi<T extends ZodSchema<Output, Def, Input>>(
       this: T,
-      metadata: ZodOpenApiMetadata<T>,
+      metadata: FloSchemaObject,
     ): T;
   }
 }
