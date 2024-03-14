@@ -1,4 +1,4 @@
-import type { ExecutorContext } from '@nrwl/devkit'
+import { type ExecutorContext, readJsonFile, writeJsonFile } from '@nrwl/devkit'
 import { buildRollupConfigInputSchema, devExecutorSchema } from './zod-def'
 import { z } from 'zod'
 import * as rollup from 'rollup'
@@ -29,7 +29,7 @@ export default async function* devExecutor(
 ) {
   const options = devExecutorSchema.parse(_options)
   const tscGenerator = tscExecutor({
-    buildableProjectDepsInPackageJsonType: 'dependencies',
+    buildableProjectDepsInPackageJsonType: 'peerDependencies',
     generateLockfile: false,
     outputPath: options.outputPath,
     main: `libs/${context.projectName}/src/index.ts`,
@@ -53,6 +53,11 @@ export default async function* devExecutor(
         consola.start(`Bundling ${context.projectName} .d.ts...`)
         const bundle = await rollup.rollup(rollupOptions)
         await bundle.write(rollupOptions.output[0])
+        const packageJsonPath = path.join(options.outputPath, 'package.json')
+        const packageJson = readJsonFile(packageJsonPath)
+        packageJson.types = './index.bundle.d.ts'
+        writeJsonFile(`${options.outputPath}/package.json`, packageJson)
+        consola.info('  update package.json#types: ./input.bundle.d.ts')
         consola.success(`Bundle done.`)
       } catch (e) {
         if (e instanceof Error) {
