@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { agFilterSchema, agSortSchema } from './ag-filter-schema'
+import { agFilterSchema, agSortSchema } from './ag-grid-schema'
 
 export const selectOptionSchema = z.object({
   value: z.union([z.string(), z.number()]),
