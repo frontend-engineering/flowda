@@ -4,6 +4,13 @@
   "sourceRoot": "libs/nx-plugin-flowda/src",
   "projectType": "library",
   "targets": {
+    "dev": {
+      "executor": "@flowda/nx-plugin-flowda:dev",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/nx-plugin-flowda"
+      }
+    },
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],

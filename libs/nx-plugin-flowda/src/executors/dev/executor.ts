@@ -1,5 +1,5 @@
-import type { ExecutorContext } from '@nrwl/devkit'
-import { buildRollupConfigInputSchema, devExecutorSchema } from './schema'
+import { type ExecutorContext, readJsonFile, writeJsonFile } from '@nrwl/devkit'
+import { buildRollupConfigInputSchema, devExecutorSchema } from './zod-def'
 import { z } from 'zod'
 import * as rollup from 'rollup'
 import dts from 'rollup-plugin-dts'
@@ -24,30 +24,40 @@ export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSc
 }
 
 export default async function* devExecutor(
-  options: z.infer<typeof devExecutorSchema>,
+  _options: z.infer<typeof devExecutorSchema>,
   context?: ExecutorContext,
 ) {
-  const outputPath = `dist/libs/${context.projectName}`
+  const options = devExecutorSchema.parse(_options)
   const tscGenerator = tscExecutor({
+    buildableProjectDepsInPackageJsonType: 'peerDependencies',
+    generateLockfile: false,
+    outputPath: options.outputPath,
     main: `libs/${context.projectName}/src/index.ts`,
-    outputPath: outputPath,
     tsConfig: `libs/${context.projectName}/tsconfig.lib.json`,
-    assets: [],
-    watch: true,
+    assets: [`libs/${context.projectName}/*.md`],
+    watch: options.watch,
+    clean: true,
     transformers: [],
+    updateBuildableProjectDepsInPackageJson: true,
+    externalBuildTargets: ['build'],
   }, context)
 
   for await (const output of tscGenerator) {
     yield output
     if (options.bundleDts) {
       const rollupOptions = buildRollupConfig({
-        bundleInput: path.join(outputPath, `src/index.d.ts`),
-        bundleFile: path.join(outputPath, `index.bundle.d.ts`),
+        bundleInput: path.join(options.outputPath, `src/index.d.ts`),
+        bundleFile: path.join(options.outputPath, `index.bundle.d.ts`),
       })
       try {
         consola.start(`Bundling ${context.projectName} .d.ts...`)
         const bundle = await rollup.rollup(rollupOptions)
         await bundle.write(rollupOptions.output[0])
+        const packageJsonPath = path.join(options.outputPath, 'package.json')
+        const packageJson = readJsonFile(packageJsonPath)
+        packageJson.types = './index.bundle.d.ts'
+        writeJsonFile(`${options.outputPath}/package.json`, packageJson)
+        consola.info('  update package.json#types: ./input.bundle.d.ts')
         consola.success(`Bundle done.`)
       } catch (e) {
         if (e instanceof Error) {
@@ -59,7 +69,7 @@ export default async function* devExecutor(
       if (options.yalc) {
         consola.start(`yalc publish ${context.projectName} ...`)
         execSync(`yalc publish --push --changed`, {
-          cwd: outputPath,
+          cwd: options.outputPath,
           stdio: 'inherit',
         })
         consola.success('yalc publish done.')
