@@ -9,16 +9,16 @@ import { <%= modelName %> } from './<%= modelFileName %>'
 const container = new Container()
 container.load(designModule)
 
-const Story: Meta<typeof <%= componentName %>> = {
+const meta: Meta<typeof <%= componentName %>> = {
   component: <%= componentName %>,
   title: '<%= componentName %>',
 }
 
-export default Story
+export default meta
 
 const model = container.get<<%= modelName %>>(<%= modelSymbolName %>)
 
-export const Primary = {
+export const Primary: StoryObj<typeof <%= componentName %>> = {
   args: {
     model
   },

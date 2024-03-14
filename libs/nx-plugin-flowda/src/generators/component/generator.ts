@@ -41,7 +41,8 @@ export default async function (host: Tree, options: z.infer<typeof componentGene
   addImportHelper(
     host,
     path.join(designProject.sourceRoot, 'index.ts'),
-    `export * from './${componentFileName}/${componentFileName}'`,
+    `export * from './${componentFileName}/${componentFileName}'
+export * from './${componentFileName}/${modelFileName}'`,
   )
 
   const typesProject = getProjects(host).get('types')
