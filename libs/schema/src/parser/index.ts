@@ -1,1 +1,1 @@
-export * from './zod-to-openapi/generate-schema'
+export * from './zod-openapi/index'

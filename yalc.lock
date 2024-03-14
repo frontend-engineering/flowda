@@ -12,6 +12,10 @@
     "zod-openapi": {
       "signature": "ed3720f32d73bb4ff23282674f81a9f7",
       "file": true
+    },
+    "@prisma/client-flowda": {
+      "signature": "c9d764e63193636f8240af19fed9972f",
+      "link": true
     }
   }
 }
