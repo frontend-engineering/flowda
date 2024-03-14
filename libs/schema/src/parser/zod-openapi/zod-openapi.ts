@@ -2,8 +2,8 @@ import merge from 'ts-deepmerge'
 import { AnyZodObject, z, ZodTypeAny } from 'zod'
 import { SchemaObject } from 'openapi3-ts'
 
-// motor-admin schema
 export type FloSchemaObject = SchemaObject & {
+  // motor-admin schema
   display_name?: string
   display_column?: string
   primary_key?: string
@@ -31,15 +31,15 @@ interface ParsingArgs<T> {
 
 export function extendApi<T extends OpenApiZodAny>(
   schema: T,
-  schemaObject: FloSchemaObject = {}
+  schemaObject: FloSchemaObject = {},
 ): T {
-  const newSchema = new (schema as any).constructor(schema._def);
+  const newSchema = new (schema as any).constructor(schema._def)
   newSchema.metaOpenApi = Object.assign(
     {},
     schema.metaOpenApi || {},
-    schemaObject
-  );
-  return newSchema;
+    schemaObject,
+  )
+  return newSchema
 }
 
 function iterateZodObject({
