@@ -354,7 +354,6 @@ describe('zod openapi', () => {
         "required": [
           "id",
           "email",
-          "name",
           "tenantId",
           "tenant",
         ],
