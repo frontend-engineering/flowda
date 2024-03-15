@@ -1,0 +1,3 @@
+[submodule "zod-prisma-types"]
+	path = zod-prisma-types
+	url = git@github.com:frontend-engineering/zod-prisma-types.git
