@@ -10,7 +10,7 @@ import {
   IDatasource,
   IGetRowsParams,
 } from 'ag-grid-community'
-import { shortenDatetime } from '@flowda/shared'
+import { shortenDatetime } from '../utils/time-utils'
 import { callRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'

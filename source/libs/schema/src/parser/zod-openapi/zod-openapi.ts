@@ -3,15 +3,22 @@ import { AnyZodObject, z, ZodTypeAny } from 'zod'
 import { SchemaObject } from 'openapi3-ts'
 
 export type FloSchemaObject = SchemaObject & {
-  // motor-admin schema
-  display_name?: string
-  display_column?: string
+  // custom schema key
+  // keep same with zod-prisma-types/packages/generator/src/constants/regex.ts#JSDOC_SCHEMA_TAG_REGEX
+  id?: string
+  name?: string
+  title?: string
+  description?: string
   primary_key?: string
   searchable_columns?: string
+  display_column?: string
+  display_name?: string
+  display_primary_key?: string
+  access_type?: string
+  reference?: string
+  column_type?: string
   model_name?: string
   foreign_key?: string
-  reference?: string
-  display_primary_key?: string
   override_type?: string
 }
 
