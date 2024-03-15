@@ -12,10 +12,6 @@
     "zod-openapi": {
       "signature": "1e78bb8283957533a4d5d54309e0e78a",
       "file": true
-    },
-    "zod-prisma-types": {
-      "signature": "2ed2a10b0eab9804c104160b617ef366",
-      "file": true
     }
   }
 }

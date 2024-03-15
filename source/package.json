@@ -122,7 +122,6 @@
     "tslib": "~2.6.2",
     "zod": "^3.22.4",
     "zod-formik-adapter": "^1.2.0",
-    "zod-openapi": "file:.yalc/zod-openapi",
-    "zod-prisma-types": "file:.yalc/zod-prisma-types"
+    "zod-openapi": "file:.yalc/zod-openapi"
   }
 }
