@@ -6,7 +6,7 @@ import {
   TenantSchema,
   TenantWithRelationsSchema,
   UserWithRelationsSchema,
-} from './__features__/prisma-generated-zod-02/modelSchema/index'
+} from '../prisma-zod/__fixtures__/prisma-02/prisma/generated/zod/index'
 
 extendZodWithOpenApi(z)
 
