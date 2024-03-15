@@ -81,7 +81,7 @@ export const getResourceDataInputSchema = z.object({
 
 export const getResourceDataOutputInnerSchema = z.object({
   pagination: z.object({
-    total: z.number()
+    total: z.number(),
   }),
   data: z.array(z.any()),
 })
@@ -94,4 +94,11 @@ export const putResourceDataInputSchema = z.object({
   schemaName: z.string(),
   id: z.number(),
   updatedValue: z.any(),
+})
+
+export const resourceKeySchema = z.object({
+  origin: z.string(),
+  resource: z.string(),
+  resourceSchema: z.string(),
+  id: z.union([z.string(), z.number()]).optional(),
 })
