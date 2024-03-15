@@ -38,16 +38,16 @@ interface ParsingArgs<T> {
 
 export function extendApi<T extends OpenApiZodAny>(
   schema: T,
-  schemaObject: ExtendSchemaObject = {},
+  openapi: ExtendSchemaObject = {},
 ): T {
   const newSchema = new (schema as any).constructor({
     ...schema._def,
-    schemaObject,
+    openapi,
   })
   newSchema.metaOpenApi = Object.assign(
     {},
     schema.metaOpenApi || {},
-    schemaObject,
+    openapi,
   )
   return newSchema
 }
