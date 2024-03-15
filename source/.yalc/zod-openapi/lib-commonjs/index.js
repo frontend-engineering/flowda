@@ -32,7 +32,6 @@ __export(src_exports, {
   createSchema: () => createSchema,
   createSchemaObject: () => createSchemaObject,
   createSchemaOrRef: () => createSchemaOrRef,
-  extendZodWithOpenApi: () => extendZodWithOpenApi,
   getDefaultComponents: () => getDefaultComponents,
   oas30: () => oas30_exports,
   oas31: () => oas31_exports
@@ -2075,43 +2074,6 @@ var createDocument = (zodOpenApiObject) => {
   };
 };
 
-// src/extendZod.ts
-function extendZodWithOpenApi(zod) {
-  if (typeof zod.ZodType.prototype.openapi !== "undefined") {
-    return;
-  }
-  zod.ZodType.prototype.openapi = function(openapi) {
-    const result = new this.constructor({
-      ...this._def,
-      openapi
-    });
-    return result;
-  };
-  const zodObjectExtend = zod.ZodObject.prototype.extend;
-  zod.ZodObject.prototype.extend = function(...args) {
-    const extendResult = zodObjectExtend.apply(this, args);
-    extendResult._def.extendMetadata = {
-      extends: this
-    };
-    delete extendResult._def.openapi;
-    return extendResult;
-  };
-  const zodObjectOmit = zod.ZodObject.prototype.omit;
-  zod.ZodObject.prototype.omit = function(...args) {
-    const omitResult = zodObjectOmit.apply(this, args);
-    delete omitResult._def.extendMetadata;
-    delete omitResult._def.openapi;
-    return omitResult;
-  };
-  const zodObjectPick = zod.ZodObject.prototype.pick;
-  zod.ZodObject.prototype.pick = function(...args) {
-    const pickResult = zodObjectPick.apply(this, args);
-    delete pickResult._def.extendMetadata;
-    delete pickResult._def.openapi;
-    return pickResult;
-  };
-}
-
 // src/openapi3-ts/dist/oas30.ts
 var oas30_exports = {};
 
@@ -2140,7 +2102,6 @@ __export(api_exports, {
   createSchema,
   createSchemaObject,
   createSchemaOrRef,
-  extendZodWithOpenApi,
   getDefaultComponents,
   oas30,
   oas31
