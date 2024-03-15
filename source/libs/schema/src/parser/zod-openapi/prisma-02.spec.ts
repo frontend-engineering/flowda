@@ -3,7 +3,7 @@ import {
   TenantSchema,
   TenantWithRelationsSchema,
   UserWithRelationsSchema,
-} from '../prisma-zod/__fixtures__/prisma-02/prisma/generated/zod'
+} from '../prisma-zod/__fixtures__/prisma-02/index'
 
 describe('prisma 02 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, multi files', () => {
