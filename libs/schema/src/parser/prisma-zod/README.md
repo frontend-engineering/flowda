@@ -1,0 +1,6 @@
+考虑到实现复杂度
+
+- 继续使用 [zod-prisma-types](https://github.com/chrishoermann/zod-prisma-types) 
+  - 只要能透传并简单解析 rich comments
+  - 如果后续强类型 参考 [prisma-trpc-generator](https://github.com/omar-dulaimi/prisma-trpc-generator)
+- 
