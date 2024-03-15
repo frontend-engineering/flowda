@@ -1,30 +1,30 @@
-import { extendZodWithOpenApi } from './extend-zod';
-import { z } from 'zod';
-import { generateSchema } from './zod-openapi';
+import { extendZodWithOpenApi } from './extend-zod'
+import { z } from 'zod'
+import { generateSchema } from './zod-openapi'
+import { ProductSchema, UserSchema } from './__features__/prisma-generated-zod-01/generated-zod-def'
 import {
-  ProductSchema,
-  UserSchema,
-} from './__features__/prisma-generated-zod-01/generated-zod-def';
+  TenantSchema,
+  TenantWithRelationsSchema,
+  UserWithRelationsSchema,
+} from './__features__/prisma-generated-zod-02/modelSchema/index'
 
-extendZodWithOpenApi(z);
+extendZodWithOpenApi(z)
 
 describe('zod openapi', () => {
   it('parse a simple zod schema', () => {
-    const schema = z
-      .string()
-      .openapi({ description: 'hello world!', example: 'hello world' });
-    const output = generateSchema(schema);
+    const schema = z.string().openapi({ description: 'hello world!', example: 'hello world' })
+    const output = generateSchema(schema)
     expect(output).toMatchInlineSnapshot(`
       {
         "description": "hello world!",
         "example": "hello world",
         "type": "string",
       }
-    `);
-  });
+    `)
+  })
 
   it('parse a simple prisma generated zod schema', () => {
-    const output = generateSchema(UserSchema);
+    const output = generateSchema(UserSchema)
     expect(output).toMatchInlineSnapshot(`
       {
         "display_column": "username",
@@ -112,11 +112,11 @@ describe('zod openapi', () => {
         ],
         "type": "object",
       }
-    `);
-  });
+    `)
+  })
 
   it('parse a complex prisma generated zod schema', () => {
-    const output = generateSchema(ProductSchema);
+    const output = generateSchema(ProductSchema)
     expect(output).toMatchInlineSnapshot(`
       {
         "display_column": "name",
@@ -281,6 +281,85 @@ describe('zod openapi', () => {
         "searchable_columns": "id,name",
         "type": "object",
       }
-    `);
-  });
-});
+    `)
+  })
+
+  it('parse a prisma generated zod schema, multi files', () => {
+    const output = generateSchema(TenantSchema)
+    expect(output).toMatchInlineSnapshot(`
+      {
+        "properties": {
+          "id": {
+            "type": "integer",
+          },
+          "name": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "id",
+          "name",
+        ],
+        "type": "object",
+      }
+    `)
+  })
+
+  it('parse a prisma generated zod schema, multi files, relation, many', () => {
+    const output = generateSchema(TenantWithRelationsSchema)
+    expect(output).toMatchInlineSnapshot(`
+      {
+        "properties": {
+          "id": {
+            "type": "integer",
+          },
+          "name": {
+            "type": "string",
+          },
+          "users": {
+            "items": {},
+            "type": "array",
+          },
+        },
+        "required": [
+          "id",
+          "name",
+          "users",
+        ],
+        "type": "object",
+      }
+    `)
+  })
+
+  it('parse a prisma generated zod schema, multi files, relation', () => {
+    const output = generateSchema(UserWithRelationsSchema)
+    expect(output).toMatchInlineSnapshot(`
+      {
+        "properties": {
+          "email": {
+            "type": "string",
+          },
+          "id": {
+            "type": "integer",
+          },
+          "name": {
+            "nullable": true,
+            "type": "string",
+          },
+          "tenant": {},
+          "tenantId": {
+            "type": "integer",
+          },
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "tenantId",
+          "tenant",
+        ],
+        "type": "object",
+      }
+    `)
+  })
+})
