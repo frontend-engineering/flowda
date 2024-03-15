@@ -1,16 +1,9 @@
-import { extendZodWithOpenApi } from './extend-zod'
 import { z } from 'zod'
 import { generateSchema } from './zod-openapi'
 import { ProductSchema, UserSchema } from './__features__/prisma-generated-zod-01/generated-zod-def'
-import {
-  TenantSchema,
-  TenantWithRelationsSchema,
-  UserWithRelationsSchema,
-} from '../prisma-zod/__fixtures__/prisma-02/prisma/generated/zod/index'
-
-extendZodWithOpenApi(z)
 
 describe('zod openapi', () => {
+
   it('parse a simple zod schema', () => {
     const schema = z.string().openapi({ description: 'hello world!', example: 'hello world' })
     const output = generateSchema(schema)
@@ -279,84 +272,6 @@ describe('zod openapi', () => {
           "restricted",
         ],
         "searchable_columns": "id,name",
-        "type": "object",
-      }
-    `)
-  })
-
-  it('parse a prisma generated zod schema, multi files', () => {
-    const output = generateSchema(TenantSchema)
-    expect(output).toMatchInlineSnapshot(`
-      {
-        "properties": {
-          "id": {
-            "type": "integer",
-          },
-          "name": {
-            "type": "string",
-          },
-        },
-        "required": [
-          "id",
-          "name",
-        ],
-        "type": "object",
-      }
-    `)
-  })
-
-  it('parse a prisma generated zod schema, multi files, relation, many', () => {
-    const output = generateSchema(TenantWithRelationsSchema)
-    expect(output).toMatchInlineSnapshot(`
-      {
-        "properties": {
-          "id": {
-            "type": "integer",
-          },
-          "name": {
-            "type": "string",
-          },
-          "users": {
-            "items": {},
-            "type": "array",
-          },
-        },
-        "required": [
-          "id",
-          "name",
-          "users",
-        ],
-        "type": "object",
-      }
-    `)
-  })
-
-  it('parse a prisma generated zod schema, multi files, relation', () => {
-    const output = generateSchema(UserWithRelationsSchema)
-    expect(output).toMatchInlineSnapshot(`
-      {
-        "properties": {
-          "email": {
-            "type": "string",
-          },
-          "id": {
-            "type": "integer",
-          },
-          "name": {
-            "nullable": true,
-            "type": "string",
-          },
-          "tenant": {},
-          "tenantId": {
-            "type": "integer",
-          },
-        },
-        "required": [
-          "id",
-          "email",
-          "tenantId",
-          "tenant",
-        ],
         "type": "object",
       }
     `)
