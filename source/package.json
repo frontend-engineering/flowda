@@ -37,7 +37,6 @@
     "@nrwl/webpack": "15.9.7",
     "@nrwl/workspace": "15.9.7",
     "@prisma/client": "^4.16.2",
-    "@prisma/client-flowda": "link:.yalc/@prisma/client-flowda",
     "@rollup/plugin-url": "^7.0.0",
     "@storybook/addon-essentials": "^7.6.17",
     "@storybook/builder-webpack5": "^7.6.17",

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Prisma } from '@prisma/client-flowda';
+import { Prisma } from '@prisma/client';
 import { extendZodWithOpenApi } from '../../extend-zod'
 
 extendZodWithOpenApi(z)

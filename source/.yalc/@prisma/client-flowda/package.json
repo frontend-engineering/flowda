@@ -1,9 +1,0 @@
-{
-  "name": "@prisma/client-flowda",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "browser": "index-browser.js",
-  "sideEffects": false,
-  "version": "0.0.1",
-  "yalcSig": "c9d764e63193636f8240af19fed9972f"
-}
