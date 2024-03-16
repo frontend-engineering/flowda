@@ -1,6 +1,8 @@
 import { z } from 'zod'
 import { generateSchema } from './zod-openapi'
+import { extendZodWithOpenApi } from './extend-zod'
 
+extendZodWithOpenApi(z)
 describe('zod openapi', () => {
 
   it('parse a simple zod schema', () => {
