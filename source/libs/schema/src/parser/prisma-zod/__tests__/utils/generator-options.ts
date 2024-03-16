@@ -42,5 +42,6 @@ export function createGeneratorOptions({ dmmf }: {
     otherGenerators: [],
     schemaPath: '',
     version: '',
+    dataProxy: false,
   }
 }
