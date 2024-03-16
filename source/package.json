@@ -132,6 +132,6 @@
     "zod": "^3.22.4",
     "zod-formik-adapter": "^1.2.0",
     "zod-openapi": "file:.yalc/zod-openapi",
-    "zod-prisma-types": "link:../zod-prisma-types/packages/generator"
+    "zod-prisma-types": "file:.yalc/zod-prisma-types"
   }
 }

@@ -14,8 +14,9 @@
       "file": true
     },
     "zod-prisma-types": {
-      "signature": "e8e4fd32e2326569262285454668b213",
-      "file": true
+      "signature": "68f67220938fc4279677aebf43ee6084",
+      "file": true,
+      "replaced": "link:../zod-prisma-types/packages/generator"
     }
   }
 }

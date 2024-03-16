@@ -111,7 +111,7 @@ specifiers:
   zod: ^3.22.4
   zod-formik-adapter: ^1.2.0
   zod-openapi: file:.yalc/zod-openapi
-  zod-prisma-types: link:../zod-prisma-types/packages/generator
+  zod-prisma-types: file:.yalc/zod-prisma-types
 
 dependencies:
   '@elastic/eui': 93.2.0_y2msmjfxa5ehnyeb76ca6txwn4
@@ -142,7 +142,7 @@ dependencies:
   zod: 3.22.4
   zod-formik-adapter: 1.2.0_formik@1.5.8+zod@3.22.4
   zod-openapi: file:.yalc/zod-openapi_zod@3.22.4
-  zod-prisma-types: link:../zod-prisma-types/packages/generator
+  zod-prisma-types: file:.yalc/zod-prisma-types
 
 devDependencies:
   '@babel/core': 7.12.13
@@ -19287,4 +19287,19 @@ packages:
       zod: ^3.21.4
     dependencies:
       zod: 3.22.4
+    dev: false
+
+  file:.yalc/zod-prisma-types:
+    resolution: {directory: .yalc/zod-prisma-types, type: directory}
+    name: zod-prisma-types
+    version: 2.7.1
+    hasBin: true
+    dependencies:
+      '@prisma/generator-helper': 4.16.2
+      code-block-writer: 11.0.3
+      comment-parser: 1.4.1
+      lodash: 4.17.21
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - supports-color
     dev: false
