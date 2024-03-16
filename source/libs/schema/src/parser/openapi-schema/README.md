@@ -20,7 +20,7 @@ reference
   reference: {
     name: order
     model_name: order
-    reference_type: belongs_to
+    reference_type: belongs_to, has_one
     foreign_key: order_id
     primary_key: id 
   }
