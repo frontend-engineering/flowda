@@ -1,0 +1,40 @@
+import { DMMF } from '@prisma/generator-helper';
+import { GeneratorConfig } from '../../schemas';
+import { FormattedNames } from '../formattedNames';
+export declare class ExtendedDMMFFieldBase extends FormattedNames implements DMMF.Field {
+    protected _modelName: string;
+    protected _errorLocation: string;
+    readonly generatorConfig: GeneratorConfig;
+    readonly kind: DMMF.Field['kind'];
+    readonly name: DMMF.Field['name'];
+    readonly isRequired: DMMF.Field['isRequired'];
+    readonly isList: DMMF.Field['isList'];
+    readonly isUnique: DMMF.Field['isUnique'];
+    readonly isId: DMMF.Field['isId'];
+    readonly isReadOnly: DMMF.Field['isReadOnly'];
+    readonly type: DMMF.Field['type'];
+    readonly dbNames?: DMMF.Field['dbNames'];
+    readonly isGenerated: DMMF.Field['isGenerated'];
+    readonly isUpdatedAt: DMMF.Field['isUpdatedAt'];
+    readonly hasDefaultValue: DMMF.Field['hasDefaultValue'];
+    readonly default?: DMMF.Field['default'];
+    readonly relationToFields?: DMMF.Field['relationToFields'];
+    readonly relationOnDelete?: DMMF.Field['relationOnDelete'];
+    readonly relationName?: DMMF.Field['relationName'];
+    readonly documentation?: DMMF.Field['documentation'];
+    readonly isNullable: boolean;
+    readonly isJsonType: boolean;
+    readonly isBytesType: boolean;
+    readonly isDecimalType: boolean;
+    readonly isOptionalOnDefaultValue: boolean;
+    readonly isOptionalDefaultField: boolean;
+    constructor(field: DMMF.Field, generatorConfig: GeneratorConfig, modelName: string);
+    private _setIsJsonType;
+    private _setIsBytesType;
+    private _setIsDecimalType;
+    private _setIsNullable;
+    private _setDefaultValueOptional;
+    private _setErrorLocation;
+    private _setIsOptionalDefaultField;
+}
+//# sourceMappingURL=01_extendedDMMFFieldBase.d.ts.map
