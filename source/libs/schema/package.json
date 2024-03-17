@@ -1,8 +1,5 @@
 {
   "name": "@flowda/schema",
   "version": "0.0.1",
-  "type": "commonjs",
-  "scripts": {
-    "fixtures": "../../node_modules/.bin/tsx ./scripts/fixtures-prisma-generate.ts"
-  }
+  "type": "commonjs"
 }

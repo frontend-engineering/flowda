@@ -52,6 +52,9 @@
       }
     },
     "test": {
+      "dependsOn": [
+        "generate-fixtures"
+      ],
       "executor": "@nrwl/jest:jest",
       "outputs": [
         "{workspaceRoot}/coverage/{projectRoot}"
