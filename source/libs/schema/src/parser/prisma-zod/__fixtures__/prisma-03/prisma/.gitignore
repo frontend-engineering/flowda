@@ -1,2 +1,0 @@
-generated/@prisma/client/**/*
-!generated/@prisma/client/**/*.d.ts

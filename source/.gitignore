@@ -41,3 +41,6 @@ Thumbs.db
 .yalc/zod-prisma-types/
 
 .nx/
+
+libs/schema/src/parser/prisma-zod/__fixtures__/generated/**/@prisma/client/**/*
+!libs/schema/src/parser/prisma-zod/__fixtures__/generated/**/@prisma/client/**/*.d.ts

@@ -4,12 +4,12 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native"]
-  output        = "./generated/@prisma/client"
+  output        = "../../generated/prisma-02/@prisma/client"
 }
 
 generator zod {
   provider                  = "node ../../../../../../../node_modules/zod-prisma-types/dist/bin.js"
-  output                    = "./generated/zod" // default is ./generated/zod
+  output                    = "../../generated/prisma-02/zod" // default is ./generated/zod
   useMultipleFiles          = true // default is false
   createInputTypes          = false // default is true
   // createModelTypes                 = false // default is true
@@ -20,7 +20,7 @@ generator zod {
   // createOptionalDefaultValuesTypes = true // default is false
   createRelationValuesTypes = true // default is false
   // createPartialTypes               = true // default is false
-//  useDefaultValidators      = false // default is true
+  //  useDefaultValidators      = false // default is true
   coerceDate                = false // default is true
   writeNullishInModelTypes  = true // default is false
   // prismaClientPath                 = "./generated/client" // optional
