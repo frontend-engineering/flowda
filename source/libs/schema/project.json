@@ -6,7 +6,9 @@
   "targets": {
     "dev": {
       "executor": "@flowda/nx-plugin-flowda:dev",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/schema"
       }
@@ -34,6 +36,13 @@
         "lintFilePatterns": [
           "libs/schema/**/*.ts"
         ]
+      }
+    },
+    "generate-fixtures": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../node_modules/.bin/tsx ./scripts/fixtures-prisma-generate.ts",
+        "cwd": "libs/schema"
       }
     },
     "test": {

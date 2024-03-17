@@ -14,10 +14,12 @@ async function run() {
 
   for (const dir of dirs) {
     consola.start(`run ${dir}`)
+    console.time(dir)
     execSync(`npm run generate`, {
       cwd: path.join(FIXTURES_DIR, dir),
       stdio: 'inherit',
     })
+    console.timeEnd(dir)
     consola.success(`run ${dir}`)
   }
 }
