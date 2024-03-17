@@ -40,6 +40,12 @@
     },
     "generate-fixtures": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/parser/prisma-zod/__fixtures__/**/prisma/schema.prisma"
+      ],
+      "outputs": [
+        "{projectRoot}/src/parser/prisma-zod/__fixtures__/generated/**/*.ts"
+      ],
       "options": {
         "command": "../../node_modules/.bin/tsx ./scripts/fixtures-prisma-generate.ts",
         "cwd": "libs/schema"
