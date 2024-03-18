@@ -42,11 +42,11 @@ export function extendApi<T extends OpenApiZodAny>(
 ): T {
   const newSchema = new (schema as any).constructor({
     ...schema._def,
-    openapi,
+    openapi /* for zod-openapi */,
   })
   newSchema.metaOpenApi = Object.assign(
     {},
-    schema.metaOpenApi || {},
+    schema.metaOpenApi /* for @anatine/zod-openapi */ || {},
     openapi,
   )
   return newSchema
