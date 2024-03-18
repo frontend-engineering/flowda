@@ -9,8 +9,7 @@ import {
 } from 'zod-prisma-types'
 import { writeSingleFileModelStatements } from './utils/write-single-file-model-statements'
 import { createGeneratorOptions } from './utils/generator-options'
-import { DMMF } from '@prisma/generator-helper'
-import { GeneratorOptions } from '@prisma/generator-helper/dist/types'
+import { DMMF, GeneratorOptions } from '@prisma/generator-helper'
 
 describe('prisma-02', function () {
   let dmmf: DMMF.Document
