@@ -67,7 +67,7 @@ function iterateZodObject({
   return Object.keys(zodRef.shape).reduce(
     (carry, key) => ({
       ...carry,
-      [key]: generateSchema(zodRef.shape[key], useOutput),
+      [key]: zodToOpenAPI(zodRef.shape[key], useOutput),
     }),
     {} as Record<string, ExtendSchemaObject>,
   )
@@ -78,7 +78,7 @@ function parseTransformation({
                                schemas,
                                useOutput,
                              }: ParsingArgs<z.ZodTransformer<never> | z.ZodEffects<never>>): ExtendSchemaObject {
-  const input = generateSchema(zodRef._def.schema, useOutput)
+  const input = zodToOpenAPI(zodRef._def.schema, useOutput)
 
   let output = 'undefined'
   if (useOutput && zodRef._def.effect) {
@@ -217,7 +217,7 @@ function parseObject({
       zodRef._def.catchall?._def.typeName === 'ZodNever'
     )
   )
-    additionalProperties = generateSchema(zodRef._def.catchall, useOutput)
+    additionalProperties = zodToOpenAPI(zodRef._def.catchall, useOutput)
   else if (zodRef._def.unknownKeys === 'passthrough')
     additionalProperties = true
   else if (zodRef._def.unknownKeys === 'strict')
@@ -267,7 +267,7 @@ function parseRecord({
       additionalProperties:
         zodRef._def.valueType instanceof z.ZodUnknown
           ? {}
-          : generateSchema(zodRef._def.valueType, useOutput),
+          : zodToOpenAPI(zodRef._def.valueType, useOutput),
     },
     zodRef.description ? { description: zodRef.description } : {},
     ...schemas,
@@ -324,7 +324,7 @@ function parseOptionalNullable({
   z.ZodOptional<OpenApiZodAny> | z.ZodNullable<OpenApiZodAny>
 >): ExtendSchemaObject {
   return merge(
-    generateSchema(zodRef.unwrap(), useOutput),
+    zodToOpenAPI(zodRef.unwrap(), useOutput),
     zodRef.description ? { description: zodRef.description } : {},
     ...schemas,
   )
@@ -338,7 +338,7 @@ function parseDefault({
   return merge(
     {
       default: zodRef._def.defaultValue(),
-      ...generateSchema(zodRef._def.innerType, useOutput),
+      ...zodToOpenAPI(zodRef._def.innerType, useOutput),
     },
     zodRef.description ? { description: zodRef.description } : {},
     ...schemas,
@@ -364,7 +364,7 @@ function parseArray({
   return merge(
     {
       type: 'array',
-      items: generateSchema(zodRef.element, useOutput),
+      items: zodToOpenAPI(zodRef.element, useOutput),
       ...constraints,
     },
     zodRef.description ? { description: zodRef.description } : {},
@@ -408,8 +408,8 @@ function parseIntersection({
   return merge(
     {
       allOf: [
-        generateSchema(zodRef._def.left, useOutput),
-        generateSchema(zodRef._def.right, useOutput),
+        zodToOpenAPI(zodRef._def.left, useOutput),
+        zodToOpenAPI(zodRef._def.right, useOutput),
       ],
     },
     zodRef.description ? { description: zodRef.description } : {},
@@ -426,7 +426,7 @@ function parseUnion({
     {
       oneOf: (
         zodRef as z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]>
-      )._def.options.map((schema) => generateSchema(schema, useOutput)),
+      )._def.options.map((schema) => zodToOpenAPI(schema, useOutput)),
     },
     zodRef.description ? { description: zodRef.description } : {},
     ...schemas,
@@ -457,7 +457,7 @@ function parseDiscriminatedUnion({
             z.ZodDiscriminatedUnionOption<string>[]
           >
         )._def.options.values(),
-      ).map((schema) => generateSchema(schema, useOutput)),
+      ).map((schema) => zodToOpenAPI(schema, useOutput)),
     },
     zodRef.description ? { description: zodRef.description } : {},
     ...schemas,
@@ -479,7 +479,7 @@ function parseBranded({
                         schemas,
                         zodRef,
                       }: ParsingArgs<z.ZodBranded<z.ZodAny, string>>): ExtendSchemaObject {
-  return merge(generateSchema(zodRef._def.type), ...schemas)
+  return merge(zodToOpenAPI(zodRef._def.type), ...schemas)
 }
 
 function catchAllParser({
@@ -529,7 +529,7 @@ const workerMap = {
 }
 type WorkerKeys = keyof typeof workerMap;
 
-export function generateSchema(
+export function zodToOpenAPI(
   zodRef: OpenApiZodAny,
   useOutput?: boolean,
 ): ExtendSchemaObject {

@@ -1,9 +1,9 @@
-import { generateSchema } from '../zod-openapi'
+import { zodToOpenAPI } from '../zod-openapi'
 import { UserSchema } from '../../prisma-zod/__fixtures__/prisma-03/index'
 
 describe('prisma 03 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, rich comments', () => {
-    const output = generateSchema(UserSchema)
+    const output = zodToOpenAPI(UserSchema)
     expect(output).toMatchInlineSnapshot(`
       {
         "class_name": "User",

@@ -1,4 +1,4 @@
-import { generateSchema } from '../zod-openapi'
+import { zodToOpenAPI } from '../zod-openapi'
 import {
   TenantSchema,
   TenantWithRelationsSchema,
@@ -7,7 +7,7 @@ import {
 
 describe('prisma 02 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, multi files', () => {
-    const output = generateSchema(TenantSchema)
+    const output = zodToOpenAPI(TenantSchema)
     expect(output).toMatchInlineSnapshot(`
       {
         "class_name": "Tenant",
@@ -42,7 +42,7 @@ describe('prisma 02 generated zod to openapi', function () {
   })
 
   it('parse a prisma generated zod schema, multi files, relation, many', () => {
-    const output = generateSchema(TenantWithRelationsSchema)
+    const output = zodToOpenAPI(TenantWithRelationsSchema)
     expect(output).toMatchInlineSnapshot(`
       {
         "properties": {
@@ -80,7 +80,7 @@ describe('prisma 02 generated zod to openapi', function () {
   })
 
   it('parse a prisma generated zod schema, multi files, relation', () => {
-    const output = generateSchema(UserWithRelationsSchema)
+    const output = zodToOpenAPI(UserWithRelationsSchema)
     expect(output).toMatchInlineSnapshot(`
       {
         "properties": {
