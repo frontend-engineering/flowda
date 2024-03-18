@@ -1,0 +1,67 @@
+{
+  "name": "zod-openapi",
+  "version": "2.14.0",
+  "description": "Convert Zod Schemas to OpenAPI v3.x documentation",
+  "keywords": [
+    "typescript",
+    "json-schema",
+    "swagger",
+    "openapi",
+    "openapi3",
+    "zod",
+    "zod-openapi"
+  ],
+  "homepage": "https://github.com/samchungy/zod-openapi#readme",
+  "bugs": {
+    "url": "https://github.com/samchungy/zod-openapi/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/samchungy/zod-openapi.git"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./lib-esm/index.mjs",
+      "require": "./lib-commonjs/index.js",
+      "types": "./lib-types/index.d.ts"
+    }
+  },
+  "main": "./lib-commonjs/index.js",
+  "module": "./lib-esm/index.mjs",
+  "types": "./lib-types/index.d.ts",
+  "files": [
+    "lib*/**/*.d.ts",
+    "lib*/**/*.{js,mjs}{,.map}",
+    "lib*/**/*.json"
+  ],
+  "scripts": {
+    "build": "pnpm copy:types && node esbuild.mjs && node esbuild.esm.mjs && tsc --allowJS false --declaration --emitDeclarationOnly --outDir lib-types --project tsconfig.build.json",
+    "copy:types": "skuba node scripts/copyTypes.ts",
+    "create:docs": " skuba node examples/simple/createSchema.ts && redocly build-docs examples/simple/openapi.yml --output=examples/simple/redoc-static.html",
+    "format": "skuba format",
+    "lint": "skuba lint",
+    "test": "skuba test",
+    "test:ci": "skuba test --coverage",
+    "test:watch": "skuba test --watch"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "zod": "^3.21.4"
+  },
+  "engines": {
+    "node": ">=16.11"
+  },
+  "publishConfig": {
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
+  },
+  "skuba": {
+    "entryPoint": "src/index.ts",
+    "template": "oss-npm-package",
+    "type": "package",
+    "version": "7.4.1"
+  },
+  "yalcSig": "1e78bb8283957533a4d5d54309e0e78a"
+}

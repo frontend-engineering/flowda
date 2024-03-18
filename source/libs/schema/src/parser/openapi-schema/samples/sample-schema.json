@@ -1,0 +1,2094 @@
+[
+  {
+    "name": "product",
+    "slug": "products",
+    "table_name": "products",
+    "class_name": "Product",
+    "primary_key": "id",
+    "display_name": "Products",
+    "display_column": "name",
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "image_attachment",
+        "display_name": "Image attachment",
+        "column_type": "file",
+        "column_source": "reflection",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "reference": {
+          "name": "image_attachment",
+          "display_name": "Image attachment",
+          "model_name": "active_storage/attachment",
+          "reference_type": "has_one",
+          "foreign_key": "record_id",
+          "primary_key": "id",
+          "options": {},
+          "polymorphic": null,
+          "virtual": false
+        },
+        "virtual": false
+      },
+      {
+        "name": "name",
+        "display_name": "Name",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "price",
+        "display_name": "Price",
+        "column_type": "currency",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "",
+        "validators": [
+          {
+            "required": true
+          },
+          {
+            "numeric": {}
+          }
+        ],
+        "reference": null,
+        "format": {
+          "currency": "USD",
+          "currency_base": "cents"
+        },
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "description",
+        "display_name": "Description",
+        "column_type": "richtext",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "",
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "category",
+        "display_name": "Category",
+        "column_type": "tag",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          },
+          {
+            "includes": [
+              "fanfiction",
+              "humor",
+              "mythology",
+              "fantasy"
+            ]
+          }
+        ],
+        "reference": null,
+        "format": {
+          "select_options": [
+            "fanfiction",
+            "humor",
+            "mythology",
+            "fantasy"
+          ]
+        },
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "slug",
+        "display_name": "Slug",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "hidden",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "release_year",
+        "display_name": "Release year",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "numeric": {
+              "allow_blank": true
+            }
+          },
+          {
+            "length": {
+              "allow_blank": true,
+              "is": 4
+            }
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [
+      {
+        "name": "orders",
+        "display_name": "Orders",
+        "slug": "orders",
+        "model_name": "order",
+        "foreign_key": "id",
+        "primary_key": "order_id",
+        "polymorphic": false,
+        "icon": "truck-delivery",
+        "options": {
+          "through": "line_items"
+        },
+        "virtual": false,
+        "visible": true
+      },
+      {
+        "name": "line_items",
+        "display_name": "Line items",
+        "slug": "line_items",
+        "model_name": "line_item",
+        "foreign_key": "product_id",
+        "primary_key": "id",
+        "polymorphic": false,
+        "icon": "database",
+        "options": {},
+        "virtual": false,
+        "visible": false
+      },
+      {
+        "name": "customers",
+        "display_name": "Customers",
+        "slug": "customers",
+        "model_name": "customer",
+        "foreign_key": "id",
+        "primary_key": "customer_id",
+        "polymorphic": false,
+        "icon": "users",
+        "options": {
+          "through": "orders"
+        },
+        "virtual": false,
+        "visible": true
+      }
+    ],
+    "icon": "building-store",
+    "scopes": [],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "id",
+      "name"
+    ],
+    "custom_sql": null,
+    "visible": true,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  },
+  {
+    "name": "customer",
+    "slug": "customers",
+    "table_name": "customers",
+    "class_name": "Customer",
+    "primary_key": "id",
+    "display_name": "Customers",
+    "display_column": "name",
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "country_code",
+        "display_name": "Country",
+        "column_type": "reference",
+        "column_source": "table",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "format": {},
+        "reference": {
+          "name": "territory",
+          "display_name": "Territory",
+          "model_name": "country",
+          "reference_type": "belongs_to",
+          "foreign_key": "country_code",
+          "primary_key": "code",
+          "options": {},
+          "polymorphic": null,
+          "virtual": false
+        },
+        "virtual": false
+      },
+      {
+        "name": "name",
+        "display_name": "Name",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "email",
+        "display_name": "Email",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "lifetime_value",
+        "display_name": "Lifetime value",
+        "column_type": "currency",
+        "is_array": false,
+        "access_type": "read_only",
+        "column_source": "query",
+        "default_value": null,
+        "reference": null,
+        "format": {
+          "currency": "USD",
+          "currency_base": "cents"
+        },
+        "validators": [],
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "kind",
+        "display_name": "Type",
+        "column_type": "tag",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "standard",
+        "validators": [
+          {
+            "required": true
+          },
+          {
+            "includes": [
+              "standard",
+              "vip"
+            ]
+          }
+        ],
+        "reference": null,
+        "format": {
+          "select_options": [
+            "standard",
+            "vip"
+          ]
+        },
+        "description": "",
+        "virtual": false
+      },
+      {
+        "access_type": "read_only",
+        "column_source": "table",
+        "default_value": "",
+        "reference": null,
+        "format": {},
+        "validators": [],
+        "description": "",
+        "name": "sales_per_year",
+        "display_name": "Sales per year",
+        "column_type": "chart",
+        "virtual": true
+      },
+      {
+        "access_type": "read_only",
+        "column_source": "table",
+        "default_value": "",
+        "reference": null,
+        "format": {},
+        "validators": [],
+        "description": "",
+        "name": "monthly_sales_diff",
+        "display_name": "Monthly sales diff",
+        "column_type": "change",
+        "virtual": true
+      },
+      {
+        "name": "reputation",
+        "display_name": "Reputation",
+        "column_type": "percentage",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "",
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "email_subscriber",
+        "display_name": "Email subscriber",
+        "column_type": "boolean",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": true,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [
+      {
+        "name": "orders",
+        "display_name": "Orders",
+        "slug": "orders",
+        "model_name": "order",
+        "foreign_key": "customer_id",
+        "primary_key": "id",
+        "polymorphic": false,
+        "icon": "truck-delivery",
+        "options": {},
+        "virtual": false,
+        "visible": true
+      },
+      {
+        "name": "line_items",
+        "display_name": "Line items",
+        "slug": "line_items",
+        "model_name": "line_item",
+        "foreign_key": "order_id",
+        "primary_key": "id",
+        "polymorphic": false,
+        "icon": "database",
+        "options": {
+          "through": "orders"
+        },
+        "virtual": false,
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "slug": "notes",
+        "model_name": "note",
+        "foreign_key": "record_id",
+        "primary_key": "id",
+        "polymorphic": false,
+        "icon": "note",
+        "options": {
+          "through": "orders"
+        },
+        "virtual": false,
+        "visible": true
+      }
+    ],
+    "icon": "users",
+    "scopes": [
+      {
+        "name": "vip",
+        "display_name": "VIP",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "standard",
+        "display_name": "Standard",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      }
+    ],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "visible": true,
+        "tab_type": "dashboard",
+        "preferences": {
+          "dashboard_id": 2
+        },
+        "name": "sales",
+        "display_name": "Sales"
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "country_code",
+      "email",
+      "id",
+      "name"
+    ],
+    "custom_sql": "SELECT cs.*, sum(li.quantity * li.unit_price) as lifetime_value FROM customers as cs\\nLEFT JOIN orders as od ON od.customer_id = cs.id\\nLEFT JOIN line_items as li ON od.id = li.order_id\\nGROUP BY cs.id",
+    "visible": true,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  },
+  {
+    "name": "order",
+    "slug": "orders",
+    "table_name": "orders",
+    "class_name": "Order",
+    "primary_key": "id",
+    "display_name": "Orders",
+    "display_column": "address_line_one",
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "customer_id",
+        "display_name": "Customer",
+        "column_type": "reference",
+        "column_source": "table",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "format": {},
+        "reference": {
+          "name": "customer",
+          "display_name": "Customer",
+          "model_name": "customer",
+          "reference_type": "belongs_to",
+          "foreign_key": "customer_id",
+          "primary_key": "id",
+          "options": {},
+          "polymorphic": null,
+          "virtual": false
+        },
+        "virtual": false
+      },
+      {
+        "access_type": "read_only",
+        "column_source": "table",
+        "default_value": null,
+        "reference": null,
+        "format": {
+          "currency": "USD",
+          "currency_base": "cents"
+        },
+        "validators": [],
+        "description": "",
+        "name": "total_price",
+        "display_name": "Total price",
+        "column_type": "currency",
+        "virtual": true
+      },
+      {
+        "name": "address_line_one",
+        "display_name": "Address line one",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "address_line_two",
+        "display_name": "Address line two",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "address_city",
+        "display_name": "Address city",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "address_state",
+        "display_name": "Address state",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "address_zip",
+        "display_name": "Address zip",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "status",
+        "display_name": "Status",
+        "column_type": "tag",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          },
+          {
+            "includes": [
+              "pending",
+              "shipped",
+              "delivered",
+              "canceled"
+            ]
+          }
+        ],
+        "reference": null,
+        "format": {
+          "select_options": [
+            "pending",
+            "shipped",
+            "delivered",
+            "canceled"
+          ]
+        },
+        "description": "",
+        "virtual": false
+      },
+      {
+        "access_type": "read_write",
+        "column_source": "table",
+        "default_value": "",
+        "reference": null,
+        "format": {
+          "link_text": "📍 Map"
+        },
+        "validators": [],
+        "description": "",
+        "name": "map_link",
+        "display_name": "Map link",
+        "column_type": "link",
+        "virtual": true
+      },
+      {
+        "name": "shipped_at",
+        "display_name": "Shipped at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [
+      {
+        "name": "line_items",
+        "display_name": "Line items",
+        "slug": "line_items",
+        "model_name": "line_item",
+        "foreign_key": "order_id",
+        "primary_key": "id",
+        "polymorphic": false,
+        "icon": "database",
+        "options": {},
+        "virtual": false,
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "slug": "notes",
+        "model_name": "note",
+        "foreign_key": "record_id",
+        "primary_key": "id",
+        "polymorphic": true,
+        "icon": "note",
+        "options": {},
+        "virtual": false,
+        "visible": true
+      }
+    ],
+    "icon": "truck-delivery",
+    "scopes": [
+      {
+        "name": "pending",
+        "display_name": "Pending",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "shipped",
+        "display_name": "Shipped",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "delivered",
+        "display_name": "Delivered",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "canceled",
+        "display_name": "Canceled",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      }
+    ],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "form",
+        "preferences": {
+          "form_id": 2
+        },
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "visible": true,
+        "apply_on": "member",
+        "preferences": {
+          "method_name": "ship!"
+        },
+        "name": "mark_as_shipped",
+        "display_name": "Mark as Shipped",
+        "action_type": "method"
+      },
+      {
+        "visible": true,
+        "apply_on": "member",
+        "preferences": {
+          "form_id": 1
+        },
+        "name": "cancel",
+        "display_name": "Cancel",
+        "action_type": "form"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "address_city",
+      "address_line_one",
+      "address_line_two",
+      "address_state",
+      "address_zip",
+      "id"
+    ],
+    "custom_sql": null,
+    "visible": true,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  },
+  {
+    "name": "country",
+    "slug": "countries",
+    "table_name": "countries",
+    "class_name": "Country",
+    "primary_key": "id",
+    "display_name": "Countries",
+    "display_column": "name",
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "name",
+        "display_name": "Name",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "code",
+        "display_name": "Code",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "customers_count",
+        "display_name": "Customers count",
+        "column_type": "integer",
+        "is_array": false,
+        "access_type": "read_only",
+        "column_source": "query",
+        "default_value": null,
+        "reference": null,
+        "format": {},
+        "validators": [],
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [
+      {
+        "visible": true,
+        "icon": "user-check",
+        "options": {},
+        "name": "customers",
+        "display_name": "Customers",
+        "model_name": "customer",
+        "foreign_key": "country_code",
+        "primary_key": "code",
+        "virtual": true,
+        "polymorphic": false,
+        "slug": "customers"
+      },
+      {
+        "visible": true,
+        "icon": "database",
+        "options": {
+          "through": "customers",
+          "source": "orders"
+        },
+        "name": "orders",
+        "display_name": "Orders",
+        "model_name": "order",
+        "foreign_key": "customer_id",
+        "primary_key": "id",
+        "virtual": true,
+        "polymorphic": false,
+        "slug": "orders"
+      }
+    ],
+    "icon": "map",
+    "scopes": [],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "query",
+        "preferences": {
+          "query_id": 17
+        },
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "code",
+      "id",
+      "name"
+    ],
+    "custom_sql": "SELECT co.*, count(cs.id) as customers_count FROM countries as co\\nJOIN customers as cs ON cs.country_code = co.code\\nGROUP BY co.id",
+    "visible": true,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  },
+  {
+    "name": "active_storage/attachment",
+    "slug": "active_storage__attachments",
+    "class_name": "ActiveStorage::Attachment",
+    "table_name": "active_storage_attachments",
+    "primary_key": "id",
+    "display_name": "Attachments",
+    "display_column": "id",
+    "icon": "paperclip",
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": null,
+        "virtual": false
+      },
+      {
+        "name": "path",
+        "display_name": "Path",
+        "column_type": "string",
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": null,
+        "virtual": true
+      },
+      {
+        "name": "record_id",
+        "display_name": "Record",
+        "column_type": "integer",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": {
+          "name": "record",
+          "display_name": "Record",
+          "model_name": null,
+          "reference_type": "belongs_to",
+          "foreign_key": "record_id",
+          "polymorphic": true
+        },
+        "virtual": false
+      },
+      {
+        "name": "record_type",
+        "display_name": "Record type",
+        "column_type": "string",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": null,
+        "virtual": false
+      },
+      {
+        "name": "name",
+        "display_name": "Name",
+        "column_type": "string",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": null,
+        "virtual": false
+      },
+      {
+        "name": "file",
+        "display_name": "File",
+        "column_type": "file",
+        "access_type": "write_only",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": null,
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "format": {},
+        "is_array": false,
+        "reference": null,
+        "virtual": false
+      }
+    ],
+    "associations": [],
+    "scopes": [],
+    "preferences": {},
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "visible": false
+  },
+  {
+    "name": "line_item",
+    "slug": "line_items",
+    "table_name": "line_items",
+    "class_name": "LineItem",
+    "primary_key": "id",
+    "display_name": "Line Items",
+    "display_column": null,
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "order_id",
+        "display_name": "Order",
+        "column_type": "reference",
+        "column_source": "table",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "format": {},
+        "reference": {
+          "name": "order",
+          "display_name": "Order",
+          "model_name": "order",
+          "reference_type": "belongs_to",
+          "foreign_key": "order_id",
+          "primary_key": "id",
+          "options": {},
+          "polymorphic": null,
+          "virtual": false
+        },
+        "virtual": false
+      },
+      {
+        "name": "product_id",
+        "display_name": "Product",
+        "column_type": "reference",
+        "column_source": "table",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "format": {},
+        "reference": {
+          "name": "product",
+          "display_name": "Product",
+          "model_name": "product",
+          "reference_type": "belongs_to",
+          "foreign_key": "product_id",
+          "primary_key": "id",
+          "options": {},
+          "polymorphic": null,
+          "virtual": false
+        },
+        "virtual": false
+      },
+      {
+        "name": "unit_price",
+        "display_name": "Unit price",
+        "column_type": "currency",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "",
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {
+          "currency": "USD",
+          "currency_base": "cents"
+        },
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "quantity",
+        "display_name": "Quantity",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [],
+    "icon": "database",
+    "scopes": [],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "id"
+    ],
+    "custom_sql": null,
+    "visible": false,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  },
+  {
+    "name": "user",
+    "slug": "users",
+    "table_name": "users",
+    "class_name": "User",
+    "primary_key": "id",
+    "display_name": "Users",
+    "display_column": "email",
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "email",
+        "display_name": "Email",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "",
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "encrypted_password",
+        "display_name": "Encrypted password",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "hidden",
+        "default_value": "",
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "reset_password_token",
+        "display_name": "Reset password token",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "hidden",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "role",
+        "display_name": "Role",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "admin",
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "groups",
+        "display_name": "Groups",
+        "column_type": "tag",
+        "column_source": "table",
+        "is_array": true,
+        "access_type": "read_write",
+        "default_value": "",
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "color",
+        "display_name": "Color",
+        "column_type": "color",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "password",
+        "display_name": "Password",
+        "column_type": "string",
+        "access_type": "write_only",
+        "default_value": null,
+        "validators": [],
+        "virtual": true
+      },
+      {
+        "access_type": "read_only",
+        "column_source": "table",
+        "default_value": "",
+        "reference": {
+          "name": "customer",
+          "display_name": "Customer",
+          "model_name": "customer",
+          "reference_type": "has_one",
+          "foreign_key": "email",
+          "association_primary_key": "email",
+          "options": {},
+          "polymorphic": false,
+          "virtual": true,
+          "primary_key": "email"
+        },
+        "format": {},
+        "validators": [],
+        "description": "",
+        "name": "customer",
+        "display_name": "Customer",
+        "column_type": "reference",
+        "virtual": true
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [],
+    "icon": "user",
+    "scopes": [],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "email",
+      "id"
+    ],
+    "custom_sql": null,
+    "visible": true,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  },
+  {
+    "name": "note",
+    "slug": "notes",
+    "table_name": "notes",
+    "class_name": "Note",
+    "primary_key": "id",
+    "display_name": "Notes",
+    "display_column": null,
+    "columns": [
+      {
+        "name": "id",
+        "display_name": "ID",
+        "column_type": "integer",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "record_id",
+        "display_name": "Record",
+        "column_type": "reference",
+        "column_source": "table",
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [
+          {
+            "required": true
+          }
+        ],
+        "format": {},
+        "reference": {
+          "name": "record",
+          "display_name": "Record",
+          "model_name": null,
+          "reference_type": "belongs_to",
+          "foreign_key": "record_id",
+          "primary_key": "id",
+          "options": {},
+          "polymorphic": true,
+          "virtual": false
+        },
+        "virtual": false
+      },
+      {
+        "name": "record_type",
+        "display_name": "Record type",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "body",
+        "display_name": "Body",
+        "column_type": "string",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "sentiment",
+        "display_name": "Sentiment",
+        "column_type": "tag",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_write",
+        "default_value": "negative",
+        "validators": [
+          {
+            "includes": [
+              "negative",
+              "neutral",
+              "positive"
+            ]
+          }
+        ],
+        "reference": null,
+        "format": {
+          "select_options": [
+            "negative",
+            "neutral",
+            "positive"
+          ]
+        },
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "updated_at",
+        "display_name": "Updated at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      },
+      {
+        "name": "created_at",
+        "display_name": "Created at",
+        "column_type": "datetime",
+        "column_source": "table",
+        "is_array": false,
+        "access_type": "read_only",
+        "default_value": null,
+        "validators": [],
+        "reference": null,
+        "format": {},
+        "description": "",
+        "virtual": false
+      }
+    ],
+    "associations": [
+      {
+        "name": "images_attachments",
+        "display_name": "Images attachments",
+        "slug": "images_attachments",
+        "model_name": "active_storage/attachment",
+        "foreign_key": "record_id",
+        "primary_key": "id",
+        "polymorphic": true,
+        "icon": "paperclip",
+        "options": {},
+        "virtual": false,
+        "visible": true
+      }
+    ],
+    "icon": "note",
+    "scopes": [
+      {
+        "name": "negative",
+        "display_name": "Negative",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "neutral",
+        "display_name": "Neutral",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "not_negative",
+        "display_name": "Not negative",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "not_neutral",
+        "display_name": "Not neutral",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "not_positive",
+        "display_name": "Not positive",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      },
+      {
+        "name": "positive",
+        "display_name": "Positive",
+        "scope_type": "default",
+        "visible": true,
+        "preferences": {}
+      }
+    ],
+    "actions": [
+      {
+        "name": "create",
+        "display_name": "Create",
+        "action_type": "form",
+        "preferences": {
+          "form_id": 4
+        },
+        "apply_on": "collection",
+        "visible": true
+      },
+      {
+        "name": "edit",
+        "display_name": "Edit",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      },
+      {
+        "name": "remove",
+        "display_name": "Remove",
+        "action_type": "default",
+        "preferences": {},
+        "apply_on": "member",
+        "visible": true
+      }
+    ],
+    "tabs": [
+      {
+        "name": "details",
+        "display_name": "Details",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "audits",
+        "display_name": "Audits",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      },
+      {
+        "name": "notes",
+        "display_name": "Notes",
+        "tab_type": "default",
+        "preferences": {},
+        "visible": true
+      }
+    ],
+    "searchable_columns": [
+      "body",
+      "id",
+      "record_type"
+    ],
+    "custom_sql": null,
+    "visible": true,
+    "display_primary_key": true,
+    "preferences": {
+      "display_as": "table"
+    }
+  }
+]

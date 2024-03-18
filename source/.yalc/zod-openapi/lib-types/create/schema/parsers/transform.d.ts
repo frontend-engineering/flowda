@@ -1,0 +1,10 @@
+import type { ZodEffects, ZodTypeAny, input, output } from 'zod';
+import type { oas31 } from '../../../openapi3-ts/dist';
+import type { Effect, ResolvedEffect } from '../../components';
+import { type Schema, type SchemaState } from '../../schema';
+export declare const createTransformSchema: <T extends ZodTypeAny, Output = output<T>, Input = input<T>>(zodTransform: ZodEffects<T, Output, Input>, state: SchemaState) => Schema;
+export declare const createManualOutputTransformSchema: <T extends ZodTypeAny, Output = output<T>, Input = input<T>>(zodTransform: ZodEffects<T, Output, Input>, state: SchemaState) => oas31.SchemaObject;
+export declare const throwTransformError: (effect: ResolvedEffect) => never;
+export declare const resolveEffect: (effects: Effect[], state: SchemaState) => ResolvedEffect | undefined;
+export declare const verifyEffects: (effects: Effect[], state: SchemaState) => void;
+export declare const flattenEffects: (effects: Array<Effect[] | undefined>) => Effect[] | undefined;
