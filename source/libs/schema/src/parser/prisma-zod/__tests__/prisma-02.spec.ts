@@ -12,10 +12,11 @@ describe('prisma-02', function () {
     dmmf = await loadDMMF(path.join(__dirname, '../__fixtures__/prisma-02/prisma/schema.prisma'))
     generatorOptions = createGeneratorOptions({ dmmf })
   })
+
   it('writeOpenApi', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
     const extendedDMMFModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
-    expect(writeOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(`"{}"`)
+    expect(writeOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(`"{"primary_key":"id"}"`)
   })
 
   it('test', async () => {
@@ -32,7 +33,7 @@ describe('prisma-02', function () {
       export const TenantSchema = z.object({
         id: z.number().int().openapi({}),
         name: z.string().openapi({}),
-      }).openapi({})
+      }).openapi({"primary_key":"id"})
 
       export type Tenant = z.infer<typeof TenantSchema>
 
@@ -58,7 +59,7 @@ describe('prisma-02', function () {
         email: z.string().openapi({}),
         name: z.string().nullish().openapi({}),
         tenantId: z.number().int().openapi({}),
-      }).openapi({})
+      }).openapi({"primary_key":"id"})
 
       export type User = z.infer<typeof UserSchema>
 
