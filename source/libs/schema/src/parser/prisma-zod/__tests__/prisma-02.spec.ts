@@ -1,13 +1,25 @@
 import * as path from 'path'
-import { ExtendedDMMF, loadDMMF, parseGeneratorConfig } from 'zod-prisma-types'
+import { ExtendedDMMF, ExtendedDMMFModel, loadDMMF, parseGeneratorConfig, writeOpenApi } from 'zod-prisma-types'
 import { writeSingleFileModelStatements } from './utils/write-single-file-model-statements'
 import { createGeneratorOptions } from './utils/generator-options'
+import { DMMF } from '@prisma/generator-helper'
+import { GeneratorOptions } from '@prisma/generator-helper/dist/types'
 
 describe('prisma-02', function () {
-  it('test', async () => {
-    const dmmf = await loadDMMF(path.join(__dirname, '../__fixtures__/prisma-02/prisma/schema.prisma'))
+  let dmmf: DMMF.Document
+  let generatorOptions: GeneratorOptions
+  beforeAll(async () => {
+    dmmf = await loadDMMF(path.join(__dirname, '../__fixtures__/prisma-02/prisma/schema.prisma'))
+    generatorOptions = createGeneratorOptions({ dmmf })
+  })
+  it('writeOpenApi', async () => {
+    const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
+    const extendedDMMFModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    expect(writeOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(`"{}"`)
+  })
 
-    const config = parseGeneratorConfig(createGeneratorOptions({ dmmf }))
+  it('test', async () => {
+    const config = parseGeneratorConfig(generatorOptions)
     const extendedDMMF = new ExtendedDMMF(dmmf, config)
     const fileWriter = writeSingleFileModelStatements({ dmmf: extendedDMMF })
     expect(fileWriter.writer.toString()).toMatchInlineSnapshot(`
