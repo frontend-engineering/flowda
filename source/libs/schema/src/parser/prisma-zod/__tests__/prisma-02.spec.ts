@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { ExtendedDMMF, ExtendedDMMFModel, loadDMMF, parseGeneratorConfig, writeOpenApi } from 'zod-prisma-types'
+import { ExtendedDMMF, ExtendedDMMFModel, loadDMMF, parseGeneratorConfig, writeModelOpenApi } from 'zod-prisma-types'
 import { writeSingleFileModelStatements } from './utils/write-single-file-model-statements'
 import { createGeneratorOptions } from './utils/generator-options'
 import { DMMF } from '@prisma/generator-helper'
@@ -13,10 +13,12 @@ describe('prisma-02', function () {
     generatorOptions = createGeneratorOptions({ dmmf })
   })
 
-  it('writeOpenApi', async () => {
+  it('writeModelOpenApi', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
     const extendedDMMFModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
-    expect(writeOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(`"{"primary_key":"id"}"`)
+    expect(writeModelOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(
+      `"{"name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true}"`,
+    )
   })
 
   it('test', async () => {
@@ -33,7 +35,7 @@ describe('prisma-02', function () {
       export const TenantSchema = z.object({
         id: z.number().int().openapi({}),
         name: z.string().openapi({}),
-      }).openapi({"primary_key":"id"})
+      }).openapi({"name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
 
       export type Tenant = z.infer<typeof TenantSchema>
 
@@ -59,7 +61,7 @@ describe('prisma-02', function () {
         email: z.string().openapi({}),
         name: z.string().nullish().openapi({}),
         tenantId: z.number().int().openapi({}),
-      }).openapi({"primary_key":"id"})
+      }).openapi({"name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
 
       export type User = z.infer<typeof UserSchema>
 
