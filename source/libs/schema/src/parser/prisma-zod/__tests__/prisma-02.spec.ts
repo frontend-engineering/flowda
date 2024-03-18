@@ -65,6 +65,19 @@ describe('prisma-02', function () {
     `)
   })
 
+  it('writeFieldOpenApi User#tenantId', async () => {
+    const model = dmmf.datamodel.models.find(m => m.name === 'User')
+    const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const tenantIdField = userModel.fields.find(f => f.name === 'tenantId')
+    expect(writeFieldOpenApi(tenantIdField!)).toMatchInlineSnapshot(`
+      {
+        "column_source": "table",
+        "display_name": "Tenant Id",
+        "name": "tenantId",
+      }
+    `)
+  })
+
   it('writeFieldOpenApi User#tenant', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'User')
     const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
