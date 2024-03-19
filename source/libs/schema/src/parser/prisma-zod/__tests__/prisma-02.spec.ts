@@ -21,7 +21,11 @@ describe('prisma-02', function () {
 
   it('writeModelOpenApi Tenant', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
-    const extendedDMMFModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const extendedDMMFModel = new ExtendedDMMFModel(
+      parseGeneratorConfig(generatorOptions),
+      model!,
+      dmmf.datamodel.models,
+    )
     expect(writeModelOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(`
       {
         "class_name": "Tenant",
@@ -38,7 +42,7 @@ describe('prisma-02', function () {
 
   it('writeFieldOpenApi Tenant#name', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
-    const tenantModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const tenantModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!, dmmf.datamodel.models)
     const nameField = tenantModel.fields.find(f => f.name === 'name')
     expect(writeFieldOpenApi(nameField!)).toMatchInlineSnapshot(`
       {
@@ -50,15 +54,19 @@ describe('prisma-02', function () {
   })
 
   it('writeFieldOpenApi Tenant#users', async () => {
+    const config = parseGeneratorConfig(generatorOptions)
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
-    const tenantModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const tenantModel = new ExtendedDMMFModel(config, model!, dmmf.datamodel.models)
+
     const usersField = tenantModel.fields.find(f => f.name === 'users')
     expect(writeFieldOpenApi(usersField!)).toMatchInlineSnapshot(`
       {
         "associations": true,
         "display_name": "Users",
+        "foreign_key": "tenantId",
         "model_name": "User",
         "name": "users",
+        "primary_key": "id",
         "slug": "users",
         "visible": true,
       }
@@ -123,7 +131,7 @@ describe('prisma-02', function () {
       export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
       export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"associations":true}),
+        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id","associations":true}),
       }))
 
       /////////////////////////////////////////
