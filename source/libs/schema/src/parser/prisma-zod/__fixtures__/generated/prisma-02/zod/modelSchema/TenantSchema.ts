@@ -24,7 +24,7 @@ export type TenantRelations = {
 export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
 export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-  users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"associations":true}),
+  users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true}),
 }))
 
 export default TenantSchema;

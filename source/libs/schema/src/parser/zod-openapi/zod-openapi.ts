@@ -2,33 +2,94 @@ import merge from 'ts-deepmerge'
 import { AnyZodObject, z, ZodTypeAny } from 'zod'
 import { SchemaObject } from 'openapi3-ts'
 
-export type ExtendSchemaObject = SchemaObject & {
-  // custom schema key
-  // keep same with zod-prisma-types/packages/generator/src/constants/regex.ts#JSDOC_SCHEMA_TAG_REGEX
-  id?: string
-  name?: string
-  slug?: string
-  table_name?: string
-  class_name?: string
-  title?: string
-  description?: string
-  primary_key?: string
-  searchable_columns?: string
-  display_column?: string
-  display_name?: string
-  display_primary_key?: boolean
-  access_type?: string
-  reference?: string
-  column_type?: string
-  model_name?: string
-  foreign_key?: string
-  override_type?: string
-  column_source?: string
-  visible?: boolean
-  associations?: boolean
-  reference_type?: string
-  references?: boolean
+type ResourceKey = {
+  class_name: string
+  display_column: string
+  display_name: string
+  display_primary_key: boolean
+  name: string
+  primary_key: string
+  searchable_columns: string[] | null
+  slug: string
+  table_name: string
+  visible: boolean
 }
+
+const ResourceKeySchema = z.object({
+  class_name: z.string(),
+  display_column: z.string(),
+  display_name: z.string(),
+  display_primary_key: z.boolean(),
+  name: z.string(),
+  primary_key: z.string(),
+  searchable_columns: z.array(z.string()).nullable(),
+  slug: z.string(),
+  table_name: z.string(),
+  visible: z.boolean(),
+}) satisfies z.ZodType<ResourceKey>
+
+type ColumnKey = {
+  access_type: string
+  column_source: string
+  column_type: string
+  display_name: string
+  name: string
+}
+
+const ColumnKeySchema = z.object({
+  access_type: z.string(),
+  column_source: z.string(),
+  column_type: z.string(),
+  display_name: z.string(),
+  name: z.string(),
+}) satisfies z.ZodType<ColumnKey>
+
+type AssociationKey = {
+  name: string
+  display_name: string
+  slug: string
+  model_name: string
+  foreign_key: string
+  primary_key: string
+  visible: boolean
+}
+
+const AssociationKeySchema = z.object({
+  name: z.string(),
+  display_name: z.string(),
+  slug: z.string(),
+  model_name: z.string(),
+  foreign_key: z.string(),
+  primary_key: z.string(),
+  visible: z.boolean(),
+}) satisfies z.ZodType<AssociationKey>
+
+type ReferenceKey = {
+  name: string
+  display_name: string
+  model_name: string
+  reference_type: string
+  foreign_key: string
+  primary_key: string
+}
+
+const ReferenceKeySchema = z.object({
+  name: z.string(),
+  display_name: z.string(),
+  model_name: z.string(),
+  reference_type: z.string(),
+  foreign_key: z.string(),
+  primary_key: z.string(),
+}) satisfies z.ZodType<ReferenceKey>
+
+// custom schema key
+// keep same with zod-prisma-types/packages/generator/src/constants/regex.ts#JSDOC_SCHEMA_TAG_REGEX
+export type ExtendSchemaObject =
+  SchemaObject
+  & Partial<ResourceKey>
+  & Partial<ColumnKey>
+  & Partial<AssociationKey>
+  & Partial<ReferenceKey>
 
 export interface OpenApiZodAny extends ZodTypeAny {
   metaOpenApi?: ExtendSchemaObject | ExtendSchemaObject[];
