@@ -27,7 +27,7 @@ export const ResourceKeySchema = z.object({
 }) satisfies z.ZodType<ResourceKey>
 
 export type ColumnKey = {
-  access_type: string
+  // access_type: string // todo: 权限没有 ready 之前，先注释
   column_source: string
   column_type: string
   display_name: string
@@ -35,7 +35,7 @@ export type ColumnKey = {
 }
 
 export const ColumnKeySchema = z.object({
-  access_type: z.string(),
+  // access_type: z.string(),
   column_source: z.string(),
   column_type: z.string(),
   display_name: z.string(),
@@ -71,7 +71,7 @@ export type ReferenceKey = {
   primary_key: string
 }
 
-const ReferenceKeySchema = z.object({
+export const ReferenceKeySchema = z.object({
   name: z.string(),
   display_name: z.string(),
   model_name: z.string(),
@@ -79,3 +79,8 @@ const ReferenceKeySchema = z.object({
   foreign_key: z.string(),
   primary_key: z.string(),
 }) satisfies z.ZodType<ReferenceKey>
+
+export const ColumnUISchema = ColumnKeySchema.extend({
+  validators: z.array(z.unknown()),
+  reference: ReferenceKeySchema.optional(),
+})
