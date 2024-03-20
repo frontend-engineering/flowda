@@ -15,6 +15,6 @@ else
     echo -e "npm install yalc -g\n"
 fi
 
-cd "$(dirname "$(readlink -f "$0")"
+cd "$(dirname "$(readlink -f "$0")")"
 cd ../zod-plugins
-./node_modules/.bin/nx watch --projects=zod-openapi -- ./node_modules/.bin/nx run zod-openapi:build
+./node_modules/.bin/nx run zod-openapi:dev

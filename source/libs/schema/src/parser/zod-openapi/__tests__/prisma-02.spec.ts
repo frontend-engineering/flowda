@@ -1,4 +1,4 @@
-import { zodToOpenAPI } from '../zod-openapi'
+import { generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
 import {
   TenantSchema,
   TenantWithRelationsSchema,
@@ -45,6 +45,11 @@ describe('prisma 02 generated zod to openapi', function () {
     const output = zodToOpenAPI(TenantWithRelationsSchema)
     expect(output).toMatchInlineSnapshot(`
       {
+        "class_name": "Tenant",
+        "display_name": "Tenants",
+        "display_primary_key": true,
+        "name": "Tenant",
+        "primary_key": "id",
         "properties": {
           "id": {
             "column_source": "table",
@@ -75,7 +80,10 @@ describe('prisma 02 generated zod to openapi', function () {
           "name",
           "users",
         ],
+        "slug": "tenants",
+        "table_name": "Tenant",
         "type": "object",
+        "visible": true,
       }
     `)
   })
@@ -84,6 +92,11 @@ describe('prisma 02 generated zod to openapi', function () {
     const output = zodToOpenAPI(UserWithRelationsSchema)
     expect(output).toMatchInlineSnapshot(`
       {
+        "class_name": "User",
+        "display_name": "Users",
+        "display_primary_key": true,
+        "name": "User",
+        "primary_key": "id",
         "properties": {
           "email": {
             "column_source": "table",
@@ -125,7 +138,10 @@ describe('prisma 02 generated zod to openapi', function () {
           "tenantId",
           "tenant",
         ],
+        "slug": "users",
+        "table_name": "User",
         "type": "object",
+        "visible": true,
       }
     `)
   })

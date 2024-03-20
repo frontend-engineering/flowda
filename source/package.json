@@ -102,6 +102,7 @@
     "pnpm": ">= 7.33.7 <8"
   },
   "dependencies": {
+    "@anatine/zod-openapi": "file:.yalc/@anatine/zod-openapi",
     "@elastic/eui": "^93.2.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",

@@ -30,4 +30,4 @@ cd "$(dirname "$(readlink -f "$0")")"
 cd ../zod-plugins
 npm i
 echo -e "${GREEN}${BOLD}zod-plugins init done${RESET}"
-echo -e "for development, run ./scripts/dev-zod-plugins-openapi.sh"
+echo -e "for development, run ./scripts/dev-zod-openapi.sh"

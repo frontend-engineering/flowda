@@ -28,9 +28,9 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       buildableProjectDepsInPackageJsonType: 'peerDependencies',
       generateLockfile: false,
       outputPath: options.outputPath,
-      main: `libs/${context.projectName}/src/index.ts`,
-      tsConfig: `libs/${context.projectName}/tsconfig.lib.json`,
-      assets: [`libs/${context.projectName}/*.md`],
+      main: options.main || `libs/${context.projectName}/src/index.ts`,
+      tsConfig: options.tsConfig || `libs/${context.projectName}/tsconfig.lib.json`,
+      assets: options.assets,
       watch: options.watch,
       clean: true,
       transformers: [],
@@ -64,14 +64,14 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
           consola.error(e)
         }
       }
-      if (options.yalc) {
-        consola.start(`yalc publish ${context.projectName} ...`)
-        execSync(`yalc publish --push --changed`, {
-          cwd: options.outputPath,
-          stdio: 'inherit',
-        })
-        consola.success('yalc publish done.')
-      }
+    }
+    if (options.yalc) {
+      consola.start(`yalc publish ${context.projectName} ...`)
+      execSync(`yalc publish --push --changed`, {
+        cwd: options.outputPath,
+        stdio: 'inherit',
+      })
+      consola.success('yalc publish done.')
     }
   }
 }

@@ -1,17 +1,5 @@
 import { z } from 'zod'
-
-export type ResourceKey = {
-  class_name: string
-  display_column: string
-  display_name: string
-  display_primary_key: boolean
-  name: string
-  primary_key: string
-  searchable_columns: string[] | null
-  slug: string
-  table_name: string
-  visible: boolean
-}
+import { AssociationKey, ColumnKey, ReferenceKey, ResourceKey } from '@anatine/zod-openapi'
 
 export const ResourceKeySchema = z.object({
   class_name: z.string(),
@@ -26,14 +14,6 @@ export const ResourceKeySchema = z.object({
   visible: z.boolean(),
 }) satisfies z.ZodType<ResourceKey>
 
-export type ColumnKey = {
-  // access_type: string // todo: 权限没有 ready 之前，先注释
-  column_source: string
-  column_type: string
-  display_name: string
-  name: string
-}
-
 export const ColumnKeySchema = z.object({
   // access_type: z.string(),
   column_source: z.string(),
@@ -41,16 +21,6 @@ export const ColumnKeySchema = z.object({
   display_name: z.string(),
   name: z.string(),
 }) satisfies z.ZodType<ColumnKey>
-
-export type AssociationKey = {
-  name: string
-  display_name: string
-  slug: string
-  model_name: string
-  foreign_key: string
-  primary_key: string
-  visible: boolean
-}
 
 export const AssociationKeySchema = z.object({
   name: z.string(),
@@ -61,15 +31,6 @@ export const AssociationKeySchema = z.object({
   primary_key: z.string(),
   visible: z.boolean(),
 }) satisfies z.ZodType<AssociationKey>
-
-export type ReferenceKey = {
-  name: string
-  display_name: string
-  model_name: string
-  reference_type: string
-  foreign_key: string
-  primary_key: string
-}
 
 export const ReferenceKeySchema = z.object({
   name: z.string(),

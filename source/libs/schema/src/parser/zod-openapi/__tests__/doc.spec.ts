@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { createDocument } from 'zod-openapi'
 import { stringify } from 'yaml'
-import { extendZodWithOpenApi } from '../extend-zod'
+import { extendZodWithOpenApi } from '@anatine/zod-openapi'
 
 extendZodWithOpenApi(z)
 

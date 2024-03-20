@@ -130,7 +130,7 @@ describe('prisma-02', function () {
 
       export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
         users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
-      }))
+      })).openapi({"name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
 
       /////////////////////////////////////////
       // USER SCHEMA
@@ -156,7 +156,7 @@ describe('prisma-02', function () {
 
       export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
         tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"name":"tenant","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
-      }))
+      })).openapi({"name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
       "
     `)
   })

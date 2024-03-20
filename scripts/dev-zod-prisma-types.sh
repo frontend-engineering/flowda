@@ -22,6 +22,6 @@ else
     echo -e "npm install yalc -g\n"
 fi
 
-cd "$(dirname "$(readlink -f "$0")"
+cd "$(dirname "$(readlink -f "$0")")"
 cd ../zod-prisma-types/packages/generator/
 tsc-watch --onSuccess "yalc publish --push"

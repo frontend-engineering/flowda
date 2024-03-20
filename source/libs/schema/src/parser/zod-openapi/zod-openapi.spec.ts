@@ -1,6 +1,5 @@
 import { z } from 'zod'
-import { zodToOpenAPI } from './zod-openapi'
-import { extendZodWithOpenApi } from './extend-zod'
+import { extendZodWithOpenApi, generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
 
 extendZodWithOpenApi(z)
 describe('zod openapi', () => {
