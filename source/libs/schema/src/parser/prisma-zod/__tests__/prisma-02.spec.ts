@@ -61,7 +61,6 @@ describe('prisma-02', function () {
     const usersField = tenantModel.fields.find(f => f.name === 'users')
     expect(writeFieldOpenApi(usersField!)).toMatchInlineSnapshot(`
       {
-        "associations": true,
         "display_name": "Users",
         "foreign_key": "tenantId",
         "model_name": "User",
@@ -98,7 +97,6 @@ describe('prisma-02', function () {
         "name": "tenant",
         "primary_key": "id",
         "reference_type": "belongs_to",
-        "references": true,
       }
     `)
   })
@@ -131,7 +129,7 @@ describe('prisma-02', function () {
       export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
       export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id","associations":true}),
+        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
       }))
 
       /////////////////////////////////////////
@@ -157,7 +155,7 @@ describe('prisma-02', function () {
       export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
 
       export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
-        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"name":"tenant","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to","references":true}),
+        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"name":"tenant","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
       }))
       "
     `)

@@ -22,11 +22,12 @@ describe('prisma-02', function () {
             "type": "string",
           },
           "users": {
-            "associations": true,
             "display_name": "Users",
+            "foreign_key": "tenantId",
             "items": {},
             "model_name": "User",
             "name": "users",
+            "primary_key": "id",
             "slug": "users",
             "type": "array",
             "visible": true,

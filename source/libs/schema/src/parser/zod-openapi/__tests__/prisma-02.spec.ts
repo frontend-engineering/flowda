@@ -59,11 +59,12 @@ describe('prisma 02 generated zod to openapi', function () {
             "type": "string",
           },
           "users": {
-            "associations": true,
             "display_name": "Users",
+            "foreign_key": "tenantId",
             "items": {},
             "model_name": "User",
             "name": "users",
+            "primary_key": "id",
             "slug": "users",
             "type": "array",
             "visible": true,
@@ -110,7 +111,6 @@ describe('prisma 02 generated zod to openapi', function () {
             "name": "tenant",
             "primary_key": "id",
             "reference_type": "belongs_to",
-            "references": true,
           },
           "tenantId": {
             "column_source": "table",
