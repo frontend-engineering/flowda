@@ -5,7 +5,7 @@
   "projectType": "library",
   "targets": {
     "dev": {
-      "executor": "@flowda/nx-plugin-flowda:dev",
+      "executor": "@flowda/nx-plugin:dev",
       "outputs": [
         "{options.outputPath}"
       ],

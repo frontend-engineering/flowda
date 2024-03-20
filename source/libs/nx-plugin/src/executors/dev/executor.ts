@@ -17,30 +17,28 @@ export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSc
         format: 'es',
       },
     ],
-    plugins: [
-      dts({}),
-    ],
+    plugins: [dts({})],
   }
 }
 
-export default async function* devExecutor(
-  _options: z.infer<typeof devExecutorSchema>,
-  context?: ExecutorContext,
-) {
+export default async function* devExecutor(_options: z.infer<typeof devExecutorSchema>, context?: ExecutorContext) {
   const options = devExecutorSchema.parse(_options)
-  const tscGenerator = tscExecutor({
-    buildableProjectDepsInPackageJsonType: 'peerDependencies',
-    generateLockfile: false,
-    outputPath: options.outputPath,
-    main: `libs/${context.projectName}/src/index.ts`,
-    tsConfig: `libs/${context.projectName}/tsconfig.lib.json`,
-    assets: [`libs/${context.projectName}/*.md`],
-    watch: options.watch,
-    clean: true,
-    transformers: [],
-    updateBuildableProjectDepsInPackageJson: true,
-    externalBuildTargets: ['build'],
-  }, context)
+  const tscGenerator = tscExecutor(
+    {
+      buildableProjectDepsInPackageJsonType: 'peerDependencies',
+      generateLockfile: false,
+      outputPath: options.outputPath,
+      main: `libs/${context.projectName}/src/index.ts`,
+      tsConfig: `libs/${context.projectName}/tsconfig.lib.json`,
+      assets: [`libs/${context.projectName}/*.md`],
+      watch: options.watch,
+      clean: true,
+      transformers: [],
+      updateBuildableProjectDepsInPackageJson: true,
+      externalBuildTargets: ['build'],
+    },
+    context,
+  )
 
   for await (const output of tscGenerator) {
     yield output

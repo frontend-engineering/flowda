@@ -35,7 +35,10 @@ export default async function (host: Tree, options: z.infer<typeof componentGene
   })
 
   updateDesignModule(host, {
-    modelName, modelFileName, modelSymbolName, componentFileName,
+    modelName,
+    modelFileName,
+    modelSymbolName,
+    componentFileName,
   })
 
   addImportHelper(
@@ -55,26 +58,12 @@ export * from './${componentFileName}/${modelFileName}'`,
 
 function addImportHelper(host: Tree, filePath: string, statement: string) {
   const source = host.read(filePath, 'utf-8')
-  const sourceFile = tsModule.createSourceFile(
-    filePath,
-    source,
-    tsModule.ScriptTarget.Latest,
-    true,
-  )
-  const changes = applyChangesToString(
-    source,
-    addImport(
-      sourceFile,
-      statement,
-    ),
-  )
+  const sourceFile = tsModule.createSourceFile(filePath, source, tsModule.ScriptTarget.Latest, true)
+  const changes = applyChangesToString(source, addImport(sourceFile, statement))
   host.write(filePath, changes)
 }
 
-export function addBind(
-  source: ts.SourceFile,
-  statement: string,
-) {
+export function addBind(source: ts.SourceFile, statement: string) {
   if (!tsModule) {
     tsModule = ensureTypescript()
   }
@@ -97,38 +86,27 @@ export function addBind(
   return changes
 }
 
-function updateDesignModule(host: Tree, opt: {
-  componentFileName: string
-  modelName: string,
-  modelFileName: string
-  modelSymbolName: string
-}) {
+function updateDesignModule(
+  host: Tree,
+  opt: {
+    componentFileName: string
+    modelName: string
+    modelFileName: string
+    modelSymbolName: string
+  },
+) {
   const { componentFileName, modelName, modelFileName, modelSymbolName } = opt
   const project = getProjects(host).get('design')
   const filePath = path.join(project.sourceRoot, 'designModule.ts')
   let source = host.read(filePath, 'utf-8')
 
-  let sourceFile = tsModule.createSourceFile(
-    filePath,
-    source,
-    tsModule.ScriptTarget.Latest,
-    true,
-  )
+  let sourceFile = tsModule.createSourceFile(filePath, source, tsModule.ScriptTarget.Latest, true)
   sourceFile = insertImport(host, sourceFile, filePath, modelSymbolName, '@flowda/types')
   source = host.read(filePath, 'utf-8')
 
-  const changes = applyChangesToString(
-    source,
-    [
-      ...addImport(
-        sourceFile,
-        `import { ${modelName} } from './${componentFileName}/${modelFileName}'`,
-      ),
-      ...addBind(
-        sourceFile,
-        `bind<${modelName}>(${modelSymbolName}).to(${modelName}).inSingletonScope()`,
-      ),
-    ],
-  )
+  const changes = applyChangesToString(source, [
+    ...addImport(sourceFile, `import { ${modelName} } from './${componentFileName}/${modelFileName}'`),
+    ...addBind(sourceFile, `bind<${modelName}>(${modelSymbolName}).to(${modelName}).inSingletonScope()`),
+  ])
   host.write(filePath, changes)
 }

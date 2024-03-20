@@ -1,42 +1,42 @@
 {
-  "name": "nx-plugin-flowda",
+  "name": "nx-plugin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/nx-plugin-flowda/src",
+  "sourceRoot": "libs/nx-plugin/src",
   "projectType": "library",
   "targets": {
     "dev": {
-      "executor": "@flowda/nx-plugin-flowda:dev",
+      "executor": "@flowda/nx-plugin:dev",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/nx-plugin-flowda"
+        "outputPath": "dist/libs/nx-plugin"
       }
     },
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/nx-plugin-flowda",
-        "main": "libs/nx-plugin-flowda/src/index.ts",
-        "tsConfig": "libs/nx-plugin-flowda/tsconfig.lib.json",
+        "outputPath": "dist/libs/nx-plugin",
+        "main": "libs/nx-plugin/src/index.ts",
+        "tsConfig": "libs/nx-plugin/tsconfig.lib.json",
         "assets": [
-          "libs/nx-plugin-flowda/*.md",
+          "libs/nx-plugin/*.md",
           {
-            "input": "./libs/nx-plugin-flowda/src",
+            "input": "./libs/nx-plugin/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./libs/nx-plugin-flowda/src",
+            "input": "./libs/nx-plugin/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./libs/nx-plugin-flowda",
+            "input": "./libs/nx-plugin",
             "glob": "generators.json",
             "output": "."
           },
           {
-            "input": "./libs/nx-plugin-flowda",
+            "input": "./libs/nx-plugin",
             "glob": "executors.json",
             "output": "."
           }
@@ -48,10 +48,10 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "libs/nx-plugin-flowda/**/*.ts",
-          "libs/nx-plugin-flowda/generators.json",
-          "libs/nx-plugin-flowda/executors.json",
-          "libs/nx-plugin-flowda/package.json"
+          "libs/nx-plugin/**/*.ts",
+          "libs/nx-plugin/generators.json",
+          "libs/nx-plugin/executors.json",
+          "libs/nx-plugin/package.json"
         ]
       }
     },
@@ -59,7 +59,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/nx-plugin-flowda/jest.config.ts",
+        "jestConfig": "libs/nx-plugin/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {

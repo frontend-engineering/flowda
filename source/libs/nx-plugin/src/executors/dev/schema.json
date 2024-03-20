@@ -5,7 +5,6 @@
   "title": "Dev executor",
   "description": "",
   "type": "object",
-  "properties": {
-  },
+  "properties": {},
   "required": []
 }
