@@ -23,3 +23,11 @@ cd ../zod-prisma-types
 pnpm i
 echo -e "${GREEN}${BOLD}zod-prisma-types init done${RESET}"
 echo -e "for development, run ./scripts/dev-zod-prisma-types.sh"
+
+echo -e "${YELLOW}${BOLD}zod-plugins init...${RESET}"
+
+cd "$(dirname "$(readlink -f "$0")")"
+cd ../zod-plugins
+npm i
+echo -e "${GREEN}${BOLD}zod-plugins init done${RESET}"
+echo -e "for development, run ./scripts/dev-zod-plugins-openapi.sh"
