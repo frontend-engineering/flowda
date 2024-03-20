@@ -9,8 +9,7 @@ import {
 } from 'zod-prisma-types'
 import { writeSingleFileModelStatements } from './utils/write-single-file-model-statements'
 import { createGeneratorOptions } from './utils/generator-options'
-import { DMMF } from '@prisma/generator-helper'
-import { GeneratorOptions } from '@prisma/generator-helper/dist/types'
+import { DMMF, GeneratorOptions } from '@prisma/generator-helper'
 
 describe('prisma-02', function () {
   let dmmf: DMMF.Document
@@ -22,7 +21,11 @@ describe('prisma-02', function () {
 
   it('writeModelOpenApi Tenant', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
-    const extendedDMMFModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const extendedDMMFModel = new ExtendedDMMFModel(
+      parseGeneratorConfig(generatorOptions),
+      model!,
+      dmmf.datamodel.models,
+    )
     expect(writeModelOpenApi(extendedDMMFModel)).toMatchInlineSnapshot(`
       {
         "class_name": "Tenant",
@@ -39,7 +42,7 @@ describe('prisma-02', function () {
 
   it('writeFieldOpenApi Tenant#name', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
-    const tenantModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const tenantModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!, dmmf.datamodel.models)
     const nameField = tenantModel.fields.find(f => f.name === 'name')
     expect(writeFieldOpenApi(nameField!)).toMatchInlineSnapshot(`
       {
@@ -51,17 +54,33 @@ describe('prisma-02', function () {
   })
 
   it('writeFieldOpenApi Tenant#users', async () => {
+    const config = parseGeneratorConfig(generatorOptions)
     const model = dmmf.datamodel.models.find(m => m.name === 'Tenant')
-    const tenantModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const tenantModel = new ExtendedDMMFModel(config, model!, dmmf.datamodel.models)
+
     const usersField = tenantModel.fields.find(f => f.name === 'users')
     expect(writeFieldOpenApi(usersField!)).toMatchInlineSnapshot(`
       {
-        "associations": true,
         "display_name": "Users",
+        "foreign_key": "tenantId",
         "model_name": "User",
         "name": "users",
+        "primary_key": "id",
         "slug": "users",
         "visible": true,
+      }
+    `)
+  })
+
+  it('writeFieldOpenApi User#tenantId', async () => {
+    const model = dmmf.datamodel.models.find(m => m.name === 'User')
+    const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const tenantIdField = userModel.fields.find(f => f.name === 'tenantId')
+    expect(writeFieldOpenApi(tenantIdField!)).toMatchInlineSnapshot(`
+      {
+        "column_source": "table",
+        "display_name": "Tenant Id",
+        "name": "tenantId",
       }
     `)
   })
@@ -78,7 +97,6 @@ describe('prisma-02', function () {
         "name": "tenant",
         "primary_key": "id",
         "reference_type": "belongs_to",
-        "references": true,
       }
     `)
   })
@@ -111,8 +129,8 @@ describe('prisma-02', function () {
       export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
       export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"associations":true}),
-      }))
+        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
+      })).openapi({"name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
 
       /////////////////////////////////////////
       // USER SCHEMA
@@ -137,8 +155,8 @@ describe('prisma-02', function () {
       export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
 
       export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
-        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"name":"tenant","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to","references":true}),
-      }))
+        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"name":"tenant","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
+      })).openapi({"name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
       "
     `)
   })
