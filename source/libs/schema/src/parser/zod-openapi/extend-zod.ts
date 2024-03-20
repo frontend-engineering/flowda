@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ZodTypeDef } from 'zod/lib/types'
+import { ZodTypeDef } from 'zod'
 import { extendApi, ExtendSchemaObject } from './zod-openapi'
 
 declare module 'zod' {
