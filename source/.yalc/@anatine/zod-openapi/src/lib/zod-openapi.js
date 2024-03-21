@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateSchema = exports.extendApi = void 0;
+exports.zodToOpenAPI = exports.generateSchema = exports.extendApi = void 0;
 const ts_deepmerge_1 = require("ts-deepmerge");
 const zod_1 = require("zod");
 function extendApi(schema, SchemaObject = {}) {
@@ -280,4 +280,8 @@ function generateSchema(zodRef, useOutput) {
     }
 }
 exports.generateSchema = generateSchema;
+function zodToOpenAPI(zodRef, useOutput) {
+    return generateSchema(zodRef, useOutput);
+}
+exports.zodToOpenAPI = zodToOpenAPI;
 //# sourceMappingURL=zod-openapi.js.map

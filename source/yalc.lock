@@ -10,12 +10,12 @@
       "link": true
     },
     "zod-prisma-types": {
-      "signature": "cd21339bccb3aa482600d7a795029dc7",
+      "signature": "b0a1973ba7154a71a9ab0d5f8823c220",
       "file": true,
       "replaced": "link:../zod-prisma-types/packages/generator"
     },
     "@anatine/zod-openapi": {
-      "signature": "76c85b29feda31c211a36905e26d333f",
+      "signature": "726f477f7c195123aa7fa706d3a86327",
       "file": true
     }
   }

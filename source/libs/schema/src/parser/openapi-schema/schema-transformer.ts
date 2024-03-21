@@ -2,11 +2,12 @@ import { ExtendSchemaObject } from '@anatine/zod-openapi'
 import { AssociationKeySchema, ColumnUISchema, ReferenceKeySchema } from '@flowda/types'
 import { z } from 'zod'
 import * as _ from 'radash'
+import { SchemaObject } from 'openapi3-ts'
 
 export class SchemaTransformer {
-  private jsonschema?: ExtendSchemaObject
-  private columns?: z.infer<typeof ColumnUISchema>[]
-  private associations?: z.infer<typeof AssociationKeySchema>[]
+  private jsonschema?: SchemaObject
+  private columns?: Omit<z.infer<typeof ColumnUISchema>, 'key_type'>[]
+  private associations?: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
 
   set(jsonschema: ExtendSchemaObject) {
     this.jsonschema = jsonschema
@@ -18,13 +19,14 @@ export class SchemaTransformer {
 
   toJSON() {
     if (!this.jsonschema) throw new Error(`No jsonschema set`)
-    return {
-      ..._.omit(this.jsonschema, ['properties', 'required']),
-      ...{
-        columns: this.columns,
-        associations: this.associations,
-      },
-    }
+    return _.omit({
+      ...this.jsonschema,
+      properties: undefined,
+      required: undefined,
+      key_type: undefined,
+      columns: this.columns,
+      associations: this.associations,
+    }, ['properties', 'required', 'key_type'])
   }
 }
 
@@ -33,25 +35,25 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
   const props = jsonschema.properties
 
   const refCols = Object.keys(props).filter(k => {
-    const prop = props[k] as ExtendSchemaObject
-    return prop.model_name && prop.reference_type
+    const prop: ExtendSchemaObject = props[k] as ExtendSchemaObject
+    if (prop.key_type === 'reference') {
+      return prop.model_name && prop.reference_type
+    }
+    return false
   }).map(k => {
     const prop = props[k] as ExtendSchemaObject
-    return ReferenceKeySchema.parse(prop)
+    return _.omit(ReferenceKeySchema.parse(prop), ['key_type'])
   })
 
   return Object.keys(props).reduce((acc, cur) => {
     // 找不到强类型的更舒适的方法，直接 type cast
     const prop = props[cur] as ExtendSchemaObject
-
-    // 然后判断 field 是否存在并 zod#parse
-    if (prop.model_name /* 目前 association 和 reference 才有 model_name */) {
-      if (prop.reference_type /* reference */) {
-        // reference 忽略，在 foreign_key column 附着在 reference 上
-        return acc
-      }
-      /* association */
-      acc.associations.push(AssociationKeySchema.parse(prop))
+    if (prop.key_type === 'reference') {
+      // reference 忽略，在 foreign_key column 附着在 reference 上
+      return acc
+    }
+    if (prop.key_type === 'association') {
+      acc.associations.push(_.omit(AssociationKeySchema.parse(prop), ['key_type']))
       return acc
     }
 
@@ -67,13 +69,13 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
         required: true,
       })
     }
-    acc.columns.push(col)
+    acc.columns.push(_.omit(col, ['key_type']))
     return acc
   }, {
     columns: [],
     associations: [],
   } as {
-    columns: z.infer<typeof ColumnUISchema>[],
-    associations: z.infer<typeof AssociationKeySchema>[]
+    columns: Omit<z.infer<typeof ColumnUISchema>, 'key_type'>[],
+    associations: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
   })
 }

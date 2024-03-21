@@ -1,4 +1,4 @@
-import { generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
+import { zodToOpenAPI } from '@anatine/zod-openapi'
 import { TenantWithRelationsSchema, UserWithRelationsSchema } from '../../prisma-zod/__fixtures__/prisma-02/index'
 import { SchemaTransformer } from '../schema-transformer'
 
@@ -16,6 +16,15 @@ describe('prisma-02', function () {
             "name": "users",
             "primary_key": "id",
             "slug": "users",
+            "visible": true,
+          },
+          {
+            "display_name": "User Profiles",
+            "foreign_key": "tenantId",
+            "model_name": "UserProfile",
+            "name": "userProfiles",
+            "primary_key": "id",
+            "slug": "user_profiles",
             "visible": true,
           },
         ],

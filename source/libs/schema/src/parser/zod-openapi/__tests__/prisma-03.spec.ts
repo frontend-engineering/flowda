@@ -1,4 +1,4 @@
-import { generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
+import { zodToOpenAPI } from '@anatine/zod-openapi'
 import { UserSchema } from '../../prisma-zod/__fixtures__/prisma-03/index'
 
 describe('prisma 03 generated zod to openapi', function () {
@@ -10,24 +10,28 @@ describe('prisma 03 generated zod to openapi', function () {
         "display_column": "email",
         "display_name": "员工",
         "display_primary_key": false,
+        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
           "email": {
             "column_source": "table",
             "display_name": "邮箱",
+            "key_type": "column",
             "name": "email",
             "type": "string",
           },
           "id": {
             "column_source": "table",
             "display_name": "Id",
+            "key_type": "column",
             "name": "id",
             "type": "integer",
           },
           "name": {
             "column_source": "table",
             "display_name": "用户名",
+            "key_type": "column",
             "name": "name",
             "nullable": true,
             "type": "string",

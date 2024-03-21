@@ -2,12 +2,13 @@ import { z } from 'zod'
 import { AssociationKey, ColumnKey, ReferenceKey, ResourceKey } from '@anatine/zod-openapi'
 
 export const ResourceKeySchema = z.object({
+  key_type: z.literal('resource'),
   class_name: z.string(),
   display_column: z.string(),
   display_name: z.string(),
   display_primary_key: z.boolean(),
   name: z.string(),
-  primary_key: z.string(),
+  primary_key: z.string().nullable(),
   searchable_columns: z.array(z.string()).nullable(),
   slug: z.string(),
   table_name: z.string(),
@@ -15,6 +16,7 @@ export const ResourceKeySchema = z.object({
 }) satisfies z.ZodType<ResourceKey>
 
 export const ColumnKeySchema = z.object({
+  key_type: z.literal('column'),
   // access_type: z.string(),
   column_source: z.string(),
   column_type: z.string(),
@@ -23,6 +25,7 @@ export const ColumnKeySchema = z.object({
 }) satisfies z.ZodType<ColumnKey>
 
 export const AssociationKeySchema = z.object({
+  key_type: z.literal('association'),
   name: z.string(),
   display_name: z.string(),
   slug: z.string(),
@@ -33,6 +36,7 @@ export const AssociationKeySchema = z.object({
 }) satisfies z.ZodType<AssociationKey>
 
 export const ReferenceKeySchema = z.object({
+  key_type: z.literal('reference'),
   name: z.string(),
   display_name: z.string(),
   model_name: z.string(),
@@ -43,5 +47,5 @@ export const ReferenceKeySchema = z.object({
 
 export const ColumnUISchema = ColumnKeySchema.extend({
   validators: z.array(z.unknown()),
-  reference: ReferenceKeySchema.optional(),
+  reference: ReferenceKeySchema.omit({ key_type: true }).optional(),
 })
