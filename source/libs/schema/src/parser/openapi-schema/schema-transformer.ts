@@ -21,8 +21,6 @@ export class SchemaTransformer {
     if (!this.jsonschema) throw new Error(`No jsonschema set`)
     return _.omit({
       ...this.jsonschema,
-      properties: undefined,
-      required: undefined,
       key_type: undefined,
       columns: this.columns,
       associations: this.associations,

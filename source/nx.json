@@ -13,7 +13,10 @@
   "targetDefaults": {
     "dev": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "options": {
+        "watch": true
+      }
     },
     "build": {
       "dependsOn": ["^build"],

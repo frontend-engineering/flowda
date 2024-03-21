@@ -8,7 +8,7 @@ export const buildRollupConfigInputSchema = z.object({
 export const devExecutorSchema = z.object({
   main: z.string().optional(),
   tsConfig: z.string().optional(),
-  watch: z.boolean().default(true),
+  watch: z.boolean().default(false),
   outputPath: z.string(),
   yalc: z.boolean().default(true),
   bundleDts: z.boolean().default(true),

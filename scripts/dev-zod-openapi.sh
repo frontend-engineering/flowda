@@ -17,4 +17,4 @@ fi
 
 cd "$(dirname "$(readlink -f "$0")")"
 cd ../zod-plugins
-./node_modules/.bin/nx run zod-openapi:dev
+./node_modules/.bin/nx run zod-openapi:dev --watch

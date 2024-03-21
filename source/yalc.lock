@@ -10,7 +10,7 @@
       "link": true
     },
     "zod-prisma-types": {
-      "signature": "b0a1973ba7154a71a9ab0d5f8823c220",
+      "signature": "76f3282acf493e2f09aa208acc86a29e",
       "file": true,
       "replaced": "link:../zod-prisma-types/packages/generator"
     },
