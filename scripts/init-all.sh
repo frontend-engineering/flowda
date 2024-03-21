@@ -1,5 +1,13 @@
 #!/bin/bash
 
+cat << EOF
+
+${YELLOW}${BOLD}This script will do:${RESET}
+1. check global installation: pnpm, yalc
+2. npm i, build, yalc publish, add to source: zod-prisma-types, zod-openapi
+
+EOF
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 RESET='\033[0m'
@@ -15,6 +23,7 @@ if command -v "pnpm" >/dev/null 2>&1; then
 else
     echo -e "${RED}Please install pnpm@7.33.7${RESET}"
     echo -e "npm install pnpm@7.33.7 -g\n"
+    exit 1
 fi
 echo -e "${YELLOW}${BOLD}Check yalc...${RESET}"
 if command -v "yalc" >/dev/null 2>&1; then
@@ -23,6 +32,7 @@ if command -v "yalc" >/dev/null 2>&1; then
 else
     echo -e "${RED}Please install yalc${RESET}"
     echo -e "npm install yalc -g\n"
+    exit 1
 fi
 
 echo -e "${YELLOW}${BOLD}zod-prisma-types init...${RESET}"
