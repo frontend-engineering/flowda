@@ -14,7 +14,7 @@ type ResourceKey = {
     display_name: string;
     display_primary_key: boolean;
     name: string;
-    primary_key: string;
+    primary_key: string | null;
     searchable_columns: string[] | null;
     slug: string;
     table_name: string;
