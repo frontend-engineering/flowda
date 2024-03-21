@@ -33,10 +33,12 @@ datasource db {
 
 /// @schema.display_name 员工
 /// @schema.display_column email
+/// @schema.display_primary_key false
+/// @schema.searchable_columns email,name
 model User {
   id    Int     @id @default(autoincrement())
-  /// @schema.title 邮箱
+  /// @schema.display_name 邮箱
   email String  @unique
-  /// @schema.title 用户名
+  /// @schema.display_name 用户名
   name  String?
 }

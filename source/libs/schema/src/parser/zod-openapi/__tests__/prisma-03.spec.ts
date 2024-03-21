@@ -9,15 +9,14 @@ describe('prisma 03 generated zod to openapi', function () {
         "class_name": "User",
         "display_column": "email",
         "display_name": "员工",
-        "display_primary_key": true,
+        "display_primary_key": false,
         "name": "User",
         "primary_key": "id",
         "properties": {
           "email": {
             "column_source": "table",
-            "display_name": "Email",
+            "display_name": "邮箱",
             "name": "email",
-            "title": "邮箱",
             "type": "string",
           },
           "id": {
@@ -28,16 +27,19 @@ describe('prisma 03 generated zod to openapi', function () {
           },
           "name": {
             "column_source": "table",
-            "display_name": "Name",
+            "display_name": "用户名",
             "name": "name",
             "nullable": true,
-            "title": "用户名",
             "type": "string",
           },
         },
         "required": [
           "id",
           "email",
+        ],
+        "searchable_columns": [
+          "email",
+          "name",
         ],
         "slug": "users",
         "table_name": "User",
