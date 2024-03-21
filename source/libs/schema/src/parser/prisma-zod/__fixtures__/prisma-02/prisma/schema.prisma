@@ -10,7 +10,7 @@ generator client {
 generator zod {
   provider                  = "node ../../../../../../../node_modules/zod-prisma-types/dist/bin.js"
   output                    = "../../generated/prisma-02/zod" // default is ./generated/zod
-  useMultipleFiles          = true // default is false
+//  useMultipleFiles          = true // default is false
   createInputTypes          = false // default is true
   // createModelTypes                 = false // default is true
   addInputTypeValidation    = false // default is true
@@ -32,9 +32,10 @@ datasource db {
 }
 
 model Tenant {
-  id    Int    @id @default(autoincrement())
-  name  String @unique()
-  users User[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique()
+  users        User[]
+  userProfiles UserProfile[]
 }
 
 model User {
@@ -43,4 +44,18 @@ model User {
   name     String?
   tenantId Int
   tenant   Tenant  @relation(fields: [tenantId], references: [id])
+
+  userProfile UserProfile?
+}
+
+model UserProfile {
+  id Int @id @default(autoincrement())
+
+  fullName String
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
 }
