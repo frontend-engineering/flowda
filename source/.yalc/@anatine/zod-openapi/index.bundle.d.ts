@@ -37,7 +37,7 @@ type ReferenceKey = {
     name: string;
     display_name: string;
     model_name: string;
-    reference_type: string;
+    reference_type: 'belongs_to' | 'has_one';
     foreign_key: string;
     primary_key: string;
 };

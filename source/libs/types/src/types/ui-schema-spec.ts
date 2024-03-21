@@ -40,12 +40,14 @@ export const ReferenceKeySchema = z.object({
   name: z.string(),
   display_name: z.string(),
   model_name: z.string(),
-  reference_type: z.string(),
+  reference_type: z.union([z.literal('belongs_to'), z.literal('has_one')]),
   foreign_key: z.string(),
   primary_key: z.string(),
 }) satisfies z.ZodType<ReferenceKey>
 
-export const ColumnUISchema = ColumnKeySchema.extend({
+export const ColumnUISchema = ColumnKeySchema.omit({
+  key_type: true,
+}).extend({
   validators: z.array(z.unknown()),
   reference: ReferenceKeySchema.omit({ key_type: true }).optional(),
 })

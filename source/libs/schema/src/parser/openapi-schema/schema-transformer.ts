@@ -48,7 +48,7 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
   return Object.keys(props).reduce((acc, cur) => {
     // 找不到强类型的更舒适的方法，直接 type cast
     const prop = props[cur] as ExtendSchemaObject
-    if (prop.key_type === 'reference') {
+    if (prop.key_type === 'reference' && prop.reference_type === 'belongs_to') {
       // reference 忽略，在 foreign_key column 附着在 reference 上
       return acc
     }
@@ -58,7 +58,14 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
     }
 
     const ref = refCols.find(r => r.foreign_key === cur)
-    const col = ColumnUISchema.parse({
+    const col = ColumnUISchema.parse((prop.key_type === 'reference' && prop.reference_type === 'has_one') ? {
+      column_source: 'table',
+      column_type: prop.key_type,
+      display_name: prop.display_name,
+      name: prop.name,
+      validators: [],
+      reference: _.omit(prop, ['key_type']),
+    } : {
       ...prop,
       column_type: prop.type,
       validators: [],
@@ -69,7 +76,7 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
         required: true,
       })
     }
-    acc.columns.push(_.omit(col, ['key_type']))
+    acc.columns.push(col)
     return acc
   }, {
     columns: [],

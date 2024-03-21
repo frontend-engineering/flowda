@@ -15,7 +15,7 @@
       "replaced": "link:../zod-prisma-types/packages/generator"
     },
     "@anatine/zod-openapi": {
-      "signature": "726f477f7c195123aa7fa706d3a86327",
+      "signature": "ca2ad9e98cdf386d39f4dbce6a2cac40",
       "file": true
     }
   }
