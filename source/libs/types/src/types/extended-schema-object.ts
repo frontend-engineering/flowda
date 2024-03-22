@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { SchemaObject } from 'openapi3-ts'
 
 export type ResourceKey = {
@@ -13,6 +14,19 @@ export type ResourceKey = {
   table_name: string
   visible: boolean
 }
+export const ResourceKeySchema = z.object({
+  key_type: z.literal('resource'),
+  class_name: z.string(),
+  display_column: z.string(),
+  display_name: z.string(),
+  display_primary_key: z.boolean(),
+  name: z.string(),
+  primary_key: z.string().nullable(),
+  searchable_columns: z.array(z.string()).nullable(),
+  slug: z.string(),
+  table_name: z.string(),
+  visible: z.boolean(),
+}) satisfies z.ZodType<ResourceKey>
 
 export type ColumnKey = {
   key_type: 'column'
@@ -21,6 +35,14 @@ export type ColumnKey = {
   display_name: string
   name: string
 }
+
+export const ColumnKeySchema = z.object({
+  key_type: z.literal('column'),
+  column_source: z.string(),
+  column_type: z.string(),
+  display_name: z.string(),
+  name: z.string(),
+}) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
   key_type: 'association'
@@ -32,6 +54,16 @@ export type AssociationKey = {
   primary_key: string
   visible: boolean
 }
+export const AssociationKeySchema = z.object({
+  key_type: z.literal('association'),
+  name: z.string(),
+  display_name: z.string(),
+  slug: z.string(),
+  model_name: z.string(),
+  foreign_key: z.string(),
+  primary_key: z.string(),
+  visible: z.boolean(),
+}) satisfies z.ZodType<AssociationKey>
 
 export type ReferenceKey = {
   key_type: 'reference'
@@ -42,6 +74,15 @@ export type ReferenceKey = {
   foreign_key: string
   primary_key: string
 }
+export const ReferenceKeySchema = z.object({
+  key_type: z.literal('reference'),
+  name: z.string(),
+  display_name: z.string(),
+  model_name: z.string(),
+  reference_type: z.union([z.literal('belongs_to'), z.literal('has_one')]),
+  foreign_key: z.string(),
+  primary_key: z.string(),
+}) satisfies z.ZodType<ReferenceKey>
 
 export type ExtendSchemaObject =
   SchemaObject &
