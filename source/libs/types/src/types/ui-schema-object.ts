@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { SchemaObject } from 'openapi3-ts'
 
 export type ResourceKey = {
   key_type: 'resource'
@@ -76,9 +75,8 @@ export const ReferenceKeySchema = z.object({
   primary_key: z.string(),
 }) satisfies z.ZodType<ReferenceKey>
 
-export type ExtendSchemaObject =
-  SchemaObject &
-  (| ResourceKey
-    | ColumnKey
-    | AssociationKey
-    | ReferenceKey)
+export type UISchemaObject =
+  | ResourceKey
+  | ColumnKey
+  | AssociationKey
+  | ReferenceKey
