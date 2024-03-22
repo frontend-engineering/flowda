@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { AssociationKey, ColumnKey, ReferenceKey, ResourceKey } from '@anatine/zod-openapi'
+import { AssociationKey, ColumnKey, ReferenceKey, ResourceKey } from './extended-schema-object'
 
 export const ResourceKeySchema = z.object({
   key_type: z.literal('resource'),

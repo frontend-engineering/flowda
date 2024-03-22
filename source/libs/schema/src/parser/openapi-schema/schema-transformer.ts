@@ -1,4 +1,4 @@
-import { ExtendSchemaObject } from '@anatine/zod-openapi'
+import { ExtendSchemaObject } from '@flowda/types'
 import { AssociationKeySchema, ColumnUISchema, ReferenceKeySchema } from '@flowda/types'
 import { z } from 'zod'
 import * as _ from 'radash'

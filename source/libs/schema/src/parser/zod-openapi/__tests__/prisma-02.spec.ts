@@ -1,9 +1,9 @@
-import { zodToOpenAPI } from '@anatine/zod-openapi'
 import {
   TenantSchema,
   TenantWithRelationsSchema,
   UserWithRelationsSchema,
 } from '../../prisma-zod/__fixtures__/prisma-02/index'
+import { zodToOpenAPI } from '../index'
 
 describe('prisma 02 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, multi files', () => {

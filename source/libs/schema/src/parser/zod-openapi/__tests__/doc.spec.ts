@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import { createDocument } from 'zod-openapi'
 import { stringify } from 'yaml'
-import { extendZodWithOpenApi } from '@anatine/zod-openapi'
+import { extendZod } from '../index'
 
-extendZodWithOpenApi(z)
+extendZod(z)
 
 describe('zod openapi', () => {
   it('generate openapi doc', () => {

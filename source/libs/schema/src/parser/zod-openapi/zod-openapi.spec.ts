@@ -1,9 +1,8 @@
 import { z } from 'zod'
-import { extendZodWithOpenApi, zodToOpenAPI } from '@anatine/zod-openapi'
+import { extendZod, zodToOpenAPI } from './index'
 
-extendZodWithOpenApi(z)
+extendZod(z)
 describe('zod openapi', () => {
-
   it('parse a simple zod schema', () => {
     const schema = z.string().openapi({ description: 'hello world!', example: 'hello world' })
     const output = zodToOpenAPI(schema)

@@ -1,4 +1,4 @@
-import { zodToOpenAPI } from '@anatine/zod-openapi'
+import { zodToOpenAPI } from '../../zod-openapi/index'
 import { TenantWithRelationsSchema, UserWithRelationsSchema } from '../../prisma-zod/__fixtures__/prisma-02/index'
 import { SchemaTransformer } from '../schema-transformer'
 

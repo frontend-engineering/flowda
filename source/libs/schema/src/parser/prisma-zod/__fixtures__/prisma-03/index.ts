@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { extendZodWithOpenApi } from '@anatine/zod-openapi'
+import { extendZod } from '../../../zod-openapi/index'
 
-extendZodWithOpenApi(z)
+extendZod(z)
 export * from '../generated/prisma-03/zod/index'

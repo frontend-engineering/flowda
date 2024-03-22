@@ -1,4 +1,4 @@
-import { zodToOpenAPI } from '@anatine/zod-openapi'
+import { zodToOpenAPI } from '../index'
 import { UserSchema } from '../../prisma-zod/__fixtures__/prisma-03/index'
 
 describe('prisma 03 generated zod to openapi', function () {

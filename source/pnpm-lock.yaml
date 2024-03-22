@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi
   '@babel/core': 7.12.13
   '@babel/preset-react': ^7.14.5
   '@babel/preset-typescript': 7.12.13
@@ -114,6 +115,7 @@ specifiers:
   zod-prisma-types: file:.yalc/zod-prisma-types
 
 dependencies:
+  '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme
   '@elastic/eui': 93.2.0_y2msmjfxa5ehnyeb76ca6txwn4
   '@emotion/react': 11.11.4_pmekkgnqduwlme35zpnqhenc34
   '@emotion/styled': 11.11.0_idvpitqx43vmck5h6avouzrlhu
@@ -19266,6 +19268,20 @@ packages:
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
+
+  file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme:
+    resolution: {directory: .yalc/@anatine/zod-openapi, type: directory}
+    id: file:.yalc/@anatine/zod-openapi
+    name: '@anatine/zod-openapi'
+    version: 1.13.0
+    peerDependencies:
+      openapi3-ts: ^2.0.0 || ^3.0.0
+      zod: ^3.20.0
+    dependencies:
+      openapi3-ts: 3.2.0
+      ts-deepmerge: 4.0.0
+      zod: 3.22.4
+    dev: false
 
   file:.yalc/zod-prisma-types:
     resolution: {directory: .yalc/zod-prisma-types, type: directory}
