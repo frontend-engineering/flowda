@@ -18,17 +18,13 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "id": {
-            "column_source": "table",
             "display_name": "Id",
             "key_type": "column",
-            "name": "id",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
             "display_name": "Name",
             "key_type": "column",
-            "name": "name",
             "type": "string",
           },
         },
@@ -56,17 +52,13 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "id": {
-            "column_source": "table",
             "display_name": "Id",
             "key_type": "column",
-            "name": "id",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
             "display_name": "Name",
             "key_type": "column",
-            "name": "name",
             "type": "string",
           },
           "userProfiles": {
@@ -75,7 +67,6 @@ describe('prisma 02 generated zod to openapi', function () {
             "items": {},
             "key_type": "association",
             "model_name": "UserProfile",
-            "name": "userProfiles",
             "primary_key": "id",
             "slug": "user_profiles",
             "type": "array",
@@ -87,7 +78,6 @@ describe('prisma 02 generated zod to openapi', function () {
             "items": {},
             "key_type": "association",
             "model_name": "User",
-            "name": "users",
             "primary_key": "id",
             "slug": "users",
             "type": "array",
@@ -120,24 +110,18 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "email": {
-            "column_source": "table",
             "display_name": "Email",
             "key_type": "column",
-            "name": "email",
             "type": "string",
           },
           "id": {
-            "column_source": "table",
             "display_name": "Id",
             "key_type": "column",
-            "name": "id",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
             "display_name": "Name",
             "key_type": "column",
-            "name": "name",
             "nullable": true,
             "type": "string",
           },
@@ -146,15 +130,12 @@ describe('prisma 02 generated zod to openapi', function () {
             "foreign_key": "tenantId",
             "key_type": "reference",
             "model_name": "Tenant",
-            "name": "tenant",
             "primary_key": "id",
             "reference_type": "belongs_to",
           },
           "tenantId": {
-            "column_source": "table",
             "display_name": "Tenant Id",
             "key_type": "column",
-            "name": "tenantId",
             "type": "integer",
           },
           "userProfile": {
@@ -162,7 +143,6 @@ describe('prisma 02 generated zod to openapi', function () {
             "foreign_key": "userId",
             "key_type": "reference",
             "model_name": "UserProfile",
-            "name": "userProfile",
             "nullable": true,
             "primary_key": "id",
             "reference_type": "has_one",

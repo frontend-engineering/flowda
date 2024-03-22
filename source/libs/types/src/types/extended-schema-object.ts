@@ -30,23 +30,18 @@ export const ResourceKeySchema = z.object({
 
 export type ColumnKey = {
   key_type: 'column'
-  column_source: string
   column_type: string
   display_name: string
-  name: string
 }
 
 export const ColumnKeySchema = z.object({
   key_type: z.literal('column'),
-  column_source: z.string(),
   column_type: z.string(),
   display_name: z.string(),
-  name: z.string(),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
   key_type: 'association'
-  name: string
   display_name: string
   slug: string
   model_name: string
@@ -56,7 +51,6 @@ export type AssociationKey = {
 }
 export const AssociationKeySchema = z.object({
   key_type: z.literal('association'),
-  name: z.string(),
   display_name: z.string(),
   slug: z.string(),
   model_name: z.string(),
@@ -67,7 +61,6 @@ export const AssociationKeySchema = z.object({
 
 export type ReferenceKey = {
   key_type: 'reference'
-  name: string
   display_name: string
   model_name: string
   reference_type: 'belongs_to' | 'has_one'
@@ -76,7 +69,6 @@ export type ReferenceKey = {
 }
 export const ReferenceKeySchema = z.object({
   key_type: z.literal('reference'),
-  name: z.string(),
   display_name: z.string(),
   model_name: z.string(),
   reference_type: z.union([z.literal('belongs_to'), z.literal('has_one')]),

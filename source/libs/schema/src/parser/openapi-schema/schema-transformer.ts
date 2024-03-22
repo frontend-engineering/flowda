@@ -1,5 +1,4 @@
-import { ExtendSchemaObject } from '@flowda/types'
-import { AssociationKeySchema, ColumnUISchema, ReferenceKeySchema } from '@flowda/types'
+import { AssociationKeySchema, ColumnUISchema, ExtendSchemaObject, ReferenceKeySchema } from '@flowda/types'
 import { z } from 'zod'
 import * as _ from 'radash'
 import { SchemaObject } from 'openapi3-ts'
@@ -29,9 +28,13 @@ export class SchemaTransformer {
 }
 
 export function processJsonschema(jsonschema: ExtendSchemaObject) {
-  if (!jsonschema.properties) throw new Error(`No properties of ${jsonschema.name}`)
-  const props = jsonschema.properties
+  if (jsonschema.key_type !== 'resource') {
+    throw new Error(`un supported key type, type:${jsonschema.key_type}, jsonschema:${JSON.stringify(jsonschema)}`)
+  }
+  if (jsonschema.properties == null)
+    throw new Error(`no properties, ${jsonschema.class_name}`)
 
+  const props = jsonschema.properties
   const refCols = Object.keys(props).filter(k => {
     const prop: ExtendSchemaObject = props[k] as ExtendSchemaObject
     if (prop.key_type === 'reference') {
@@ -40,7 +43,10 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
     return false
   }).map(k => {
     const prop = props[k] as ExtendSchemaObject
-    return _.omit(ReferenceKeySchema.parse(prop), ['key_type'])
+    const ret = ReferenceKeySchema.safeParse(prop)
+    if (!ret.success)
+      throw new Error(`reference parse error, k:${k}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
+    return _.omit(ret.data, ['key_type'])
   })
 
   return Object.keys(props).reduce((acc, cur) => {
@@ -51,24 +57,34 @@ export function processJsonschema(jsonschema: ExtendSchemaObject) {
       return acc
     }
     if (prop.key_type === 'association') {
-      acc.associations.push(_.omit(AssociationKeySchema.parse(prop), ['key_type']))
+      const ret = AssociationKeySchema.safeParse({
+        ...prop,
+        name: cur,
+      })
+      if (!ret.success)
+        throw new Error(`association parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
+      acc.associations.push(_.omit(ret.data, ['key_type']))
       return acc
     }
 
     const ref = refCols.find(r => r.foreign_key === cur)
-    const col = ColumnUISchema.parse((prop.key_type === 'reference' && prop.reference_type === 'has_one') ? {
-      column_source: 'table',
+    const ret = ColumnUISchema.safeParse((prop.key_type === 'reference' && prop.reference_type === 'has_one') ? {
       column_type: prop.key_type,
       display_name: prop.display_name,
-      name: prop.name,
       validators: [],
+      name: cur,
       reference: _.omit(prop, ['key_type']),
     } : {
       ...prop,
       column_type: prop.type,
+      name: cur,
       validators: [],
       reference: ref,
     })
+    if (!ret.success)
+      throw new Error(`column parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
+
+    const col = ret.data
     if (jsonschema.required && jsonschema.required.indexOf(cur) > -1) {
       col.validators.push({
         required: true,

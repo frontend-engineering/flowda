@@ -14,4 +14,28 @@ describe('zod openapi', () => {
       }
     `)
   })
+
+  it('parse a object zod schema', () => {
+    const schema = z
+      .object({
+        message: z.string(),
+      })
+      .openapi({ description: 'hello world!', example: 'hello world' })
+    const output = zodToOpenAPI(schema)
+    expect(output).toMatchInlineSnapshot(`
+      {
+        "description": "hello world!",
+        "example": "hello world",
+        "properties": {
+          "message": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "message",
+        ],
+        "type": "object",
+      }
+    `)
+  })
 })

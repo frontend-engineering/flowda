@@ -13,7 +13,6 @@ describe('prisma-02', function () {
             "display_name": "Users",
             "foreign_key": "tenantId",
             "model_name": "User",
-            "name": "users",
             "primary_key": "id",
             "slug": "users",
             "visible": true,
@@ -22,7 +21,6 @@ describe('prisma-02', function () {
             "display_name": "User Profiles",
             "foreign_key": "tenantId",
             "model_name": "UserProfile",
-            "name": "userProfiles",
             "primary_key": "id",
             "slug": "user_profiles",
             "visible": true,
@@ -31,7 +29,6 @@ describe('prisma-02', function () {
         "class_name": "Tenant",
         "columns": [
           {
-            "column_source": "table",
             "column_type": "integer",
             "display_name": "Id",
             "name": "id",
@@ -43,7 +40,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "string",
             "display_name": "Name",
             "name": "name",
@@ -76,7 +72,6 @@ describe('prisma-02', function () {
         "class_name": "User",
         "columns": [
           {
-            "column_source": "table",
             "column_type": "integer",
             "display_name": "Id",
             "name": "id",
@@ -88,7 +83,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "string",
             "display_name": "Email",
             "name": "email",
@@ -100,7 +94,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "string",
             "display_name": "Name",
             "name": "name",
@@ -108,7 +101,6 @@ describe('prisma-02', function () {
             "validators": [],
           },
           {
-            "column_source": "table",
             "column_type": "integer",
             "display_name": "Tenant Id",
             "name": "tenantId",
@@ -116,7 +108,6 @@ describe('prisma-02', function () {
               "display_name": "Tenant",
               "foreign_key": "tenantId",
               "model_name": "Tenant",
-              "name": "tenant",
               "primary_key": "id",
               "reference_type": "belongs_to",
             },
@@ -127,7 +118,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "reference",
             "display_name": "User Profile",
             "name": "userProfile",
@@ -135,7 +125,6 @@ describe('prisma-02', function () {
               "display_name": "User Profile",
               "foreign_key": "userId",
               "model_name": "UserProfile",
-              "name": "userProfile",
               "primary_key": "id",
               "reference_type": "has_one",
             },
