@@ -52,7 +52,7 @@ cd ../source
 yalc add zod-prisma-types
 echo -e "${GREEN}done${RESET}"
 echo -e "for development, run ./scripts/dev-zod-prisma-types.sh"
-echo -e "${GREEN}${BOLD}zod-prisma-types init done${RESET}"
+echo -e "${GREEN}${BOLD}zod-prisma-types init done${RESET}\n"
 
 echo -e "${YELLOW}${BOLD}zod-plugins init...${RESET}"
 echo -e "${YELLOW}install deps...${RESET}"
@@ -67,4 +67,4 @@ cd ../source
 yalc add @anatine/zod-openapi
 echo -e "${GREEN}done${RESET}"
 echo -e "for development, run ./scripts/dev-zod-openapi.sh"
-echo -e "${GREEN}${BOLD}zod-plugins init done${RESET}"
+echo -e "${GREEN}${BOLD}zod-plugins init done${RESET}\n"
