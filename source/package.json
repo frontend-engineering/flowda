@@ -95,7 +95,7 @@
     "typescript": "~5.4.2",
     "url-loader": "^4.1.1",
     "yaml": "^2.4.1",
-    "zod-openapi": "^2.14.0"
+    "zod-openapi": "2.14.0"
   },
   "engines": {
     "node": ">= 16",
@@ -134,5 +134,10 @@
     "zod": "^3.22.4",
     "zod-formik-adapter": "^1.2.0",
     "zod-prisma-types": "file:.yalc/zod-prisma-types"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "zod-openapi@2.14.0": "patches/zod-openapi@2.14.0.patch"
+    }
   }
 }
