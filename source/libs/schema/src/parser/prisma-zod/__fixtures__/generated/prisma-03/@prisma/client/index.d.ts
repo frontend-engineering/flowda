@@ -35,6 +35,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
  * @schema.display_column email
  * @schema.display_primary_key false
  * @schema.searchable_columns email,name
+ * @schema.legacy.route_prefix /admin
  */
 export type User = runtime.Types.DefaultSelection<UserPayload>
 

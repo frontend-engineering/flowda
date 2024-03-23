@@ -1,13 +1,43 @@
-import { z } from 'zod'
-import { extendZodWithOpenApi } from '@anatine/zod-openapi'
+import { z, ZodErrorMap } from 'zod'
+import { extendApi } from '@anatine/zod-openapi'
 import { UISchemaObject } from '@flowda/types'
-import { ZodErrorMap } from 'zod/lib/ZodError'
+import { SchemaObject } from 'openapi3-ts'
+
+declare module 'zod' {
+  interface ZodTypeDef {
+    errorMap?: ZodErrorMap;
+    description?: string;
+    /**
+     * OpenAPI metadata
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    openapi?: any;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  interface ZodSchema<Output = any, Def extends ZodTypeDef = ZodTypeDef, Input = Output> {
+    openapi<T extends ZodSchema<Output, Def, Input>>(
+      this: T,
+      metadata: Partial<UISchemaObject>,
+    ): T;
+    openapi<T extends ZodSchema<Output, Def, Input>>(
+      this: T,
+      metadata: Partial<SchemaObject>
+    ): T;
+  }
+}
+
 
 export function extendZod(zod: typeof z, forceOverride = false) {
   if (!forceOverride && typeof zod.ZodSchema.prototype.openapi !== 'undefined') {
     return
   }
-  extendZodWithOpenApi(zod, forceOverride)
+
+  zod.ZodSchema.prototype.openapi = function (
+    metadata?: Partial<SchemaObject>,
+  ) {
+    return extendApi(this, metadata)
+  }
 
   const zodObjectMerge = zod.ZodObject.prototype.merge
 
@@ -21,24 +51,5 @@ export function extendZod(zod: typeof z, forceOverride = false) {
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
     return mergedResult as any
-  }
-}
-
-declare module 'zod' {
-  interface ZodTypeDef {
-    errorMap?: ZodErrorMap;
-    description?: string;
-    /**
-     * OpenAPI metadata
-     */
-    openapi?: any;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  interface ZodSchema<Output = any, Def extends ZodTypeDef = ZodTypeDef, Input = Output> {
-    openapi<T extends ZodSchema<Output, Def, Input>>(
-      this: T,
-      metadata: Partial<UISchemaObject>,
-    ): T;
   }
 }
