@@ -49,7 +49,7 @@ export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
   users: z.lazy(() => UserWithRelationsSchema).array().openapi({"key_type":"association","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
   userProfiles: z.lazy(() => UserProfileWithRelationsSchema).array().openapi({"key_type":"association","display_name":"User Profiles","slug":"user_profiles","model_name":"UserProfile","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
-})).openapi({"key_type":"resource","name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
+}))
 
 /////////////////////////////////////////
 // USER SCHEMA
@@ -77,7 +77,7 @@ export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
 export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
   tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"key_type":"reference","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
   userProfile: z.lazy(() => UserProfileWithRelationsSchema).nullish().openapi({"key_type":"reference","display_name":"User Profile","model_name":"UserProfile","foreign_key":"userId","primary_key":"id","reference_type":"has_one"}),
-})).openapi({"key_type":"resource","name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
+}))
 
 /////////////////////////////////////////
 // USER PROFILE SCHEMA
@@ -105,4 +105,4 @@ export type UserProfileWithRelations = z.infer<typeof UserProfileSchema> & UserP
 export const UserProfileWithRelationsSchema: z.ZodObject<any> = UserProfileSchema.merge(z.object({
   user: z.lazy(() => UserWithRelationsSchema).openapi({"key_type":"reference","display_name":"User","model_name":"User","foreign_key":"userId","primary_key":"id","reference_type":"belongs_to"}),
   tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"key_type":"reference","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
-})).openapi({"key_type":"resource","name":"UserProfile","slug":"user_profiles","table_name":"UserProfile","class_name":"UserProfile","display_name":"User Profiles","primary_key":"id","visible":true,"display_primary_key":true})
+}))
