@@ -7,4 +7,4 @@ export const ColumnUISchema = ColumnKeySchema.omit({
   name: z.string(),
   validators: z.array(z.unknown()),
   reference: ReferenceKeySchema.omit({ key_type: true }).optional(),
-})
+}).partial()

@@ -90,6 +90,7 @@ export function processJsonschema(jsonschema: UISchemaObject & SchemaObject) {
 
     const col = ret.data
     if (jsonschema.required && jsonschema.required.indexOf(cur) > -1) {
+      if (!col.validators) col.validators = []
       col.validators.push({
         required: true,
       })
