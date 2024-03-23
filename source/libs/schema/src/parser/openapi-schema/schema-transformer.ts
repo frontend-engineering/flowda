@@ -81,7 +81,9 @@ export function processJsonschema(jsonschema: UISchemaObject & SchemaObject) {
         name: cur,
         validators: [],
         reference: ref,
-      } : null
+      } : {
+        key_type: prop.key_type,
+      }
     ))
     if (!ret.success)
       throw new Error(`column parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)

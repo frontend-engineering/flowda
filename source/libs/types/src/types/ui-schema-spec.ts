@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ColumnKeySchema, ReferenceKeySchema } from './extended-schema-object'
+import { ColumnKeySchema, ReferenceKeySchema } from './ui-schema-object'
 
 export const ColumnUISchema = ColumnKeySchema.omit({
   key_type: true,
