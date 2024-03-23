@@ -56,7 +56,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         const packageJson = readJsonFile(packageJsonPath)
         packageJson.types = './index.bundle.d.ts'
         writeJsonFile(`${options.outputPath}/package.json`, packageJson)
-        consola.info('  update package.json#types: ./input.bundle.d.ts')
+        consola.info('  update package.json#types: ./index.bundle.d.ts')
         consola.success(`Bundle done.`)
       } catch (e) {
         if (e instanceof Error) {
