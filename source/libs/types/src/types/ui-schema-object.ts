@@ -5,10 +5,10 @@ export type ResourceKey = {
   class_name: string
   display_column: string
   display_name: string
-  display_primary_key: boolean
+  display_primary_key: string
   name: string
   primary_key: string | null
-  searchable_columns: string[] | null
+  searchable_columns: string | null
   slug: string
   table_name: string
   visible: boolean
@@ -18,10 +18,10 @@ export const ResourceKeySchema = z.object({
   class_name: z.string(),
   display_column: z.string(),
   display_name: z.string(),
-  display_primary_key: z.boolean(),
+  display_primary_key: z.string(),
   name: z.string(),
   primary_key: z.string().nullable(),
-  searchable_columns: z.array(z.string()).nullable(),
+  searchable_columns: z.string().nullable(),
   slug: z.string(),
   table_name: z.string(),
   visible: z.boolean(),

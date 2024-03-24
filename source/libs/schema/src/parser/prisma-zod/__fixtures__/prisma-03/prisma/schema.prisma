@@ -31,15 +31,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// @schema.display_name 员工
-/// @schema.display_column email
-/// @schema.display_primary_key false
-/// @schema.searchable_columns email,name
-/// @schema.route_prefix {legacy} /admin
+/// @schema [display_name=员工]
+/// @schema [display_column=email]
+/// @schema [display_primary_key=false]
+/// @schema [searchable_columns=email,name]
+/// @schema {legacy} [route_prefix=/admin]
 model User {
   id    Int     @id @default(autoincrement())
-  /// @schema.display_name 邮箱
+  /// @schema [display_name=邮箱]
   email String  @unique
-  /// @schema.display_name 用户名
+  /// @schema [display_name=用户名]
   name  String?
 }

@@ -12,7 +12,7 @@ describe('prisma 02 generated zod to openapi', function () {
       {
         "class_name": "Tenant",
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
         "key_type": "resource",
         "name": "Tenant",
         "primary_key": "id",
@@ -46,7 +46,7 @@ describe('prisma 02 generated zod to openapi', function () {
       {
         "class_name": "Tenant",
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
         "key_type": "resource",
         "name": "Tenant",
         "primary_key": "id",
@@ -104,7 +104,7 @@ describe('prisma 02 generated zod to openapi', function () {
       {
         "class_name": "User",
         "display_name": "Users",
-        "display_primary_key": true,
+        "display_primary_key": "true",
         "key_type": "resource",
         "name": "User",
         "primary_key": "id",

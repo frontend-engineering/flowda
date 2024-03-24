@@ -30,7 +30,7 @@ describe('prisma-02', function () {
       {
         "class_name": "Tenant",
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
         "key_type": "resource",
         "name": "Tenant",
         "primary_key": "id",
@@ -112,9 +112,19 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const TenantSchema = z.object({
-        id: z.number().int().openapi({"key_type":"column","display_name":"Id"}),
-        name: z.string().openapi({"key_type":"column","display_name":"Name"}),
-      }).openapi({"key_type":"resource","name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
+        name: z.string().openapi({ key_type: 'column', display_name: 'Name' }),
+      }).openapi({
+        key_type: 'resource',
+        name: 'Tenant',
+        slug: 'tenants',
+        table_name: 'Tenant',
+        class_name: 'Tenant',
+        display_name: 'Tenants',
+        primary_key: 'id',
+        visible: true,
+        display_primary_key: 'true'
+      })
 
       export type Tenant = z.infer<typeof TenantSchema>
 
@@ -129,8 +139,24 @@ describe('prisma-02', function () {
       export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
       export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"key_type":"association","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
-        userProfiles: z.lazy(() => UserProfileWithRelationsSchema).array().openapi({"key_type":"association","display_name":"User Profiles","slug":"user_profiles","model_name":"UserProfile","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
+        users: z.lazy(() => UserWithRelationsSchema).array().openapi({
+          key_type: 'association',
+          display_name: 'Users',
+          slug: 'users',
+          model_name: 'User',
+          visible: true,
+          foreign_key: 'tenantId',
+          primary_key: 'id'
+        }),
+        userProfiles: z.lazy(() => UserProfileWithRelationsSchema).array().openapi({
+          key_type: 'association',
+          display_name: 'User Profiles',
+          slug: 'user_profiles',
+          model_name: 'UserProfile',
+          visible: true,
+          foreign_key: 'tenantId',
+          primary_key: 'id'
+        }),
       }))
 
       /////////////////////////////////////////
@@ -138,11 +164,21 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().openapi({"key_type":"column","display_name":"Id"}),
-        email: z.string().openapi({"key_type":"column","display_name":"Email"}),
-        name: z.string().nullish().openapi({"key_type":"column","display_name":"Name"}),
-        tenantId: z.number().int().openapi({"key_type":"column","display_name":"Tenant Id"}),
-      }).openapi({"key_type":"resource","name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
+        email: z.string().openapi({ key_type: 'column', display_name: 'Email' }),
+        name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name' }),
+        tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id' }),
+      }).openapi({
+        key_type: 'resource',
+        name: 'User',
+        slug: 'users',
+        table_name: 'User',
+        class_name: 'User',
+        display_name: 'Users',
+        primary_key: 'id',
+        visible: true,
+        display_primary_key: 'true'
+      })
 
       export type User = z.infer<typeof UserSchema>
 
@@ -157,8 +193,22 @@ describe('prisma-02', function () {
       export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
 
       export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
-        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"key_type":"reference","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
-        userProfile: z.lazy(() => UserProfileWithRelationsSchema).nullish().openapi({"key_type":"reference","display_name":"User Profile","model_name":"UserProfile","foreign_key":"userId","primary_key":"id","reference_type":"has_one"}),
+        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({
+          key_type: 'reference',
+          display_name: 'Tenant',
+          model_name: 'Tenant',
+          foreign_key: 'tenantId',
+          primary_key: 'id',
+          reference_type: 'belongs_to'
+        }),
+        userProfile: z.lazy(() => UserProfileWithRelationsSchema).nullish().openapi({
+          key_type: 'reference',
+          display_name: 'User Profile',
+          model_name: 'UserProfile',
+          foreign_key: 'userId',
+          primary_key: 'id',
+          reference_type: 'has_one'
+        }),
       }))
 
       /////////////////////////////////////////
@@ -166,11 +216,21 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const UserProfileSchema = z.object({
-        id: z.number().int().openapi({"key_type":"column","display_name":"Id"}),
-        fullName: z.string().openapi({"key_type":"column","display_name":"Full Name"}),
-        userId: z.number().int().openapi({"key_type":"column","display_name":"User Id"}),
-        tenantId: z.number().int().openapi({"key_type":"column","display_name":"Tenant Id"}),
-      }).openapi({"key_type":"resource","name":"UserProfile","slug":"user_profiles","table_name":"UserProfile","class_name":"UserProfile","display_name":"User Profiles","primary_key":"id","visible":true,"display_primary_key":true})
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
+        fullName: z.string().openapi({ key_type: 'column', display_name: 'Full Name' }),
+        userId: z.number().int().openapi({ key_type: 'column', display_name: 'User Id' }),
+        tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id' }),
+      }).openapi({
+        key_type: 'resource',
+        name: 'UserProfile',
+        slug: 'user_profiles',
+        table_name: 'UserProfile',
+        class_name: 'UserProfile',
+        display_name: 'User Profiles',
+        primary_key: 'id',
+        visible: true,
+        display_primary_key: 'true'
+      })
 
       export type UserProfile = z.infer<typeof UserProfileSchema>
 
@@ -185,8 +245,22 @@ describe('prisma-02', function () {
       export type UserProfileWithRelations = z.infer<typeof UserProfileSchema> & UserProfileRelations
 
       export const UserProfileWithRelationsSchema: z.ZodObject<any> = UserProfileSchema.merge(z.object({
-        user: z.lazy(() => UserWithRelationsSchema).openapi({"key_type":"reference","display_name":"User","model_name":"User","foreign_key":"userId","primary_key":"id","reference_type":"belongs_to"}),
-        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"key_type":"reference","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
+        user: z.lazy(() => UserWithRelationsSchema).openapi({
+          key_type: 'reference',
+          display_name: 'User',
+          model_name: 'User',
+          foreign_key: 'userId',
+          primary_key: 'id',
+          reference_type: 'belongs_to'
+        }),
+        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({
+          key_type: 'reference',
+          display_name: 'Tenant',
+          model_name: 'Tenant',
+          foreign_key: 'tenantId',
+          primary_key: 'id',
+          reference_type: 'belongs_to'
+        }),
       }))
       "
     `)

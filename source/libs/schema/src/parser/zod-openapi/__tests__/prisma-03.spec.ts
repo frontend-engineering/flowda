@@ -9,8 +9,11 @@ describe('prisma 03 generated zod to openapi', function () {
         "class_name": "User",
         "display_column": "email",
         "display_name": "员工",
-        "display_primary_key": false,
+        "display_primary_key": "false",
         "key_type": "resource",
+        "legacy": {
+          "route_prefix": "/admin",
+        },
         "name": "User",
         "primary_key": "id",
         "properties": {
@@ -35,10 +38,7 @@ describe('prisma 03 generated zod to openapi', function () {
           "id",
           "email",
         ],
-        "searchable_columns": [
-          "email",
-          "name",
-        ],
+        "searchable_columns": "email,name",
         "slug": "users",
         "table_name": "User",
         "type": "object",
