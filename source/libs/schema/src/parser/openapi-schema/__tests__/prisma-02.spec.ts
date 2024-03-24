@@ -1,4 +1,4 @@
-import { generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
+import { zodToOpenAPI } from '../../zod-openapi/index'
 import { TenantWithRelationsSchema, UserWithRelationsSchema } from '../../prisma-zod/__fixtures__/prisma-02/index'
 import { SchemaTransformer } from '../schema-transformer'
 
@@ -13,16 +13,22 @@ describe('prisma-02', function () {
             "display_name": "Users",
             "foreign_key": "tenantId",
             "model_name": "User",
-            "name": "users",
             "primary_key": "id",
             "slug": "users",
+            "visible": true,
+          },
+          {
+            "display_name": "User Profiles",
+            "foreign_key": "tenantId",
+            "model_name": "UserProfile",
+            "primary_key": "id",
+            "slug": "user_profiles",
             "visible": true,
           },
         ],
         "class_name": "Tenant",
         "columns": [
           {
-            "column_source": "table",
             "column_type": "integer",
             "display_name": "Id",
             "name": "id",
@@ -34,7 +40,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "string",
             "display_name": "Name",
             "name": "name",
@@ -47,7 +52,7 @@ describe('prisma-02', function () {
           },
         ],
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
         "name": "Tenant",
         "primary_key": "id",
         "slug": "tenants",
@@ -67,7 +72,6 @@ describe('prisma-02', function () {
         "class_name": "User",
         "columns": [
           {
-            "column_source": "table",
             "column_type": "integer",
             "display_name": "Id",
             "name": "id",
@@ -79,7 +83,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "string",
             "display_name": "Email",
             "name": "email",
@@ -91,7 +94,6 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_source": "table",
             "column_type": "string",
             "display_name": "Name",
             "name": "name",
@@ -99,7 +101,6 @@ describe('prisma-02', function () {
             "validators": [],
           },
           {
-            "column_source": "table",
             "column_type": "integer",
             "display_name": "Tenant Id",
             "name": "tenantId",
@@ -107,7 +108,6 @@ describe('prisma-02', function () {
               "display_name": "Tenant",
               "foreign_key": "tenantId",
               "model_name": "Tenant",
-              "name": "tenant",
               "primary_key": "id",
               "reference_type": "belongs_to",
             },
@@ -117,9 +117,22 @@ describe('prisma-02', function () {
               },
             ],
           },
+          {
+            "column_type": "reference",
+            "display_name": "User Profile",
+            "name": "userProfile",
+            "reference": {
+              "display_name": "User Profile",
+              "foreign_key": "userId",
+              "model_name": "UserProfile",
+              "primary_key": "id",
+              "reference_type": "has_one",
+            },
+            "validators": [],
+          },
         ],
         "display_name": "Users",
-        "display_primary_key": true,
+        "display_primary_key": "true",
         "name": "User",
         "primary_key": "id",
         "slug": "users",

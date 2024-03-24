@@ -30,7 +30,8 @@ describe('prisma-02', function () {
       {
         "class_name": "Tenant",
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
+        "key_type": "resource",
         "name": "Tenant",
         "primary_key": "id",
         "slug": "tenants",
@@ -46,9 +47,8 @@ describe('prisma-02', function () {
     const nameField = tenantModel.fields.find(f => f.name === 'name')
     expect(writeFieldOpenApi(nameField!)).toMatchInlineSnapshot(`
       {
-        "column_source": "table",
         "display_name": "Name",
-        "name": "name",
+        "key_type": "column",
       }
     `)
   })
@@ -63,8 +63,8 @@ describe('prisma-02', function () {
       {
         "display_name": "Users",
         "foreign_key": "tenantId",
+        "key_type": "association",
         "model_name": "User",
-        "name": "users",
         "primary_key": "id",
         "slug": "users",
         "visible": true,
@@ -74,27 +74,26 @@ describe('prisma-02', function () {
 
   it('writeFieldOpenApi User#tenantId', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'User')
-    const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!, dmmf.datamodel.models)
     const tenantIdField = userModel.fields.find(f => f.name === 'tenantId')
     expect(writeFieldOpenApi(tenantIdField!)).toMatchInlineSnapshot(`
       {
-        "column_source": "table",
         "display_name": "Tenant Id",
-        "name": "tenantId",
+        "key_type": "column",
       }
     `)
   })
 
   it('writeFieldOpenApi User#tenant', async () => {
     const model = dmmf.datamodel.models.find(m => m.name === 'User')
-    const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!)
+    const userModel = new ExtendedDMMFModel(parseGeneratorConfig(generatorOptions), model!, dmmf.datamodel.models)
     const tenantField = userModel.fields.find(f => f.name === 'tenant')
     expect(writeFieldOpenApi(tenantField!)).toMatchInlineSnapshot(`
       {
         "display_name": "Tenant",
         "foreign_key": "tenantId",
+        "key_type": "reference",
         "model_name": "Tenant",
-        "name": "tenant",
         "primary_key": "id",
         "reference_type": "belongs_to",
       }
@@ -113,9 +112,19 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const TenantSchema = z.object({
-        id: z.number().int().openapi({"name":"id","display_name":"Id","column_source":"table"}),
-        name: z.string().openapi({"name":"name","display_name":"Name","column_source":"table"}),
-      }).openapi({"name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
+        name: z.string().openapi({ key_type: 'column', display_name: 'Name' }),
+      }).openapi({
+        key_type: 'resource',
+        name: 'Tenant',
+        slug: 'tenants',
+        table_name: 'Tenant',
+        class_name: 'Tenant',
+        display_name: 'Tenants',
+        primary_key: 'id',
+        visible: true,
+        display_primary_key: 'true'
+      })
 
       export type Tenant = z.infer<typeof TenantSchema>
 
@@ -124,24 +133,52 @@ describe('prisma-02', function () {
 
       export type TenantRelations = {
         users: UserWithRelations[];
+        userProfiles: UserProfileWithRelations[];
       };
 
       export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
       export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-        users: z.lazy(() => UserWithRelationsSchema).array().openapi({"name":"users","display_name":"Users","slug":"users","model_name":"User","visible":true,"foreign_key":"tenantId","primary_key":"id"}),
-      })).openapi({"name":"Tenant","slug":"tenants","table_name":"Tenant","class_name":"Tenant","display_name":"Tenants","primary_key":"id","visible":true,"display_primary_key":true})
+        users: z.lazy(() => UserWithRelationsSchema).array().openapi({
+          key_type: 'association',
+          display_name: 'Users',
+          slug: 'users',
+          model_name: 'User',
+          visible: true,
+          foreign_key: 'tenantId',
+          primary_key: 'id'
+        }),
+        userProfiles: z.lazy(() => UserProfileWithRelationsSchema).array().openapi({
+          key_type: 'association',
+          display_name: 'User Profiles',
+          slug: 'user_profiles',
+          model_name: 'UserProfile',
+          visible: true,
+          foreign_key: 'tenantId',
+          primary_key: 'id'
+        }),
+      }))
 
       /////////////////////////////////////////
       // USER SCHEMA
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().openapi({"name":"id","display_name":"Id","column_source":"table"}),
-        email: z.string().openapi({"name":"email","display_name":"Email","column_source":"table"}),
-        name: z.string().nullish().openapi({"name":"name","display_name":"Name","column_source":"table"}),
-        tenantId: z.number().int().openapi({"name":"tenantId","display_name":"Tenant Id","column_source":"table"}),
-      }).openapi({"name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
+        email: z.string().openapi({ key_type: 'column', display_name: 'Email' }),
+        name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name' }),
+        tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id' }),
+      }).openapi({
+        key_type: 'resource',
+        name: 'User',
+        slug: 'users',
+        table_name: 'User',
+        class_name: 'User',
+        display_name: 'Users',
+        primary_key: 'id',
+        visible: true,
+        display_primary_key: 'true'
+      })
 
       export type User = z.infer<typeof UserSchema>
 
@@ -150,13 +187,81 @@ describe('prisma-02', function () {
 
       export type UserRelations = {
         tenant: TenantWithRelations;
+        userProfile?: UserProfileWithRelations | null;
       };
 
       export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
 
       export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
-        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({"name":"tenant","display_name":"Tenant","model_name":"Tenant","foreign_key":"tenantId","primary_key":"id","reference_type":"belongs_to"}),
-      })).openapi({"name":"User","slug":"users","table_name":"User","class_name":"User","display_name":"Users","primary_key":"id","visible":true,"display_primary_key":true})
+        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({
+          key_type: 'reference',
+          display_name: 'Tenant',
+          model_name: 'Tenant',
+          foreign_key: 'tenantId',
+          primary_key: 'id',
+          reference_type: 'belongs_to'
+        }),
+        userProfile: z.lazy(() => UserProfileWithRelationsSchema).nullish().openapi({
+          key_type: 'reference',
+          display_name: 'User Profile',
+          model_name: 'UserProfile',
+          foreign_key: 'userId',
+          primary_key: 'id',
+          reference_type: 'has_one'
+        }),
+      }))
+
+      /////////////////////////////////////////
+      // USER PROFILE SCHEMA
+      /////////////////////////////////////////
+
+      export const UserProfileSchema = z.object({
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
+        fullName: z.string().openapi({ key_type: 'column', display_name: 'Full Name' }),
+        userId: z.number().int().openapi({ key_type: 'column', display_name: 'User Id' }),
+        tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id' }),
+      }).openapi({
+        key_type: 'resource',
+        name: 'UserProfile',
+        slug: 'user_profiles',
+        table_name: 'UserProfile',
+        class_name: 'UserProfile',
+        display_name: 'User Profiles',
+        primary_key: 'id',
+        visible: true,
+        display_primary_key: 'true'
+      })
+
+      export type UserProfile = z.infer<typeof UserProfileSchema>
+
+      // USER PROFILE RELATION SCHEMA
+      //------------------------------------------------------
+
+      export type UserProfileRelations = {
+        user: UserWithRelations;
+        tenant: TenantWithRelations;
+      };
+
+      export type UserProfileWithRelations = z.infer<typeof UserProfileSchema> & UserProfileRelations
+
+      export const UserProfileWithRelationsSchema: z.ZodObject<any> = UserProfileSchema.merge(z.object({
+        user: z.lazy(() => UserWithRelationsSchema).openapi({
+          key_type: 'reference',
+          display_name: 'User',
+          model_name: 'User',
+          foreign_key: 'userId',
+          primary_key: 'id',
+          reference_type: 'belongs_to'
+        }),
+        tenant: z.lazy(() => TenantWithRelationsSchema).openapi({
+          key_type: 'reference',
+          display_name: 'Tenant',
+          model_name: 'Tenant',
+          foreign_key: 'tenantId',
+          primary_key: 'id',
+          reference_type: 'belongs_to'
+        }),
+      }))
       "
     `)
   })

@@ -1,6 +1,12 @@
 lockfileVersion: 5.4
 
+patchedDependencies:
+  zod-openapi@2.14.0:
+    hash: 7xoa24utsfoat3dhqbg5fm5chy
+    path: patches/zod-openapi@2.14.0.patch
+
 specifiers:
+  '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi
   '@babel/core': 7.12.13
   '@babel/preset-react': ^7.14.5
   '@babel/preset-typescript': 7.12.13
@@ -110,10 +116,11 @@ specifiers:
   yaml: ^2.4.1
   zod: ^3.22.4
   zod-formik-adapter: ^1.2.0
-  zod-openapi: ^2.14.0
+  zod-openapi: 2.14.0
   zod-prisma-types: file:.yalc/zod-prisma-types
 
 dependencies:
+  '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme
   '@elastic/eui': 93.2.0_y2msmjfxa5ehnyeb76ca6txwn4
   '@emotion/react': 11.11.4_pmekkgnqduwlme35zpnqhenc34
   '@emotion/styled': 11.11.0_idvpitqx43vmck5h6avouzrlhu
@@ -226,7 +233,7 @@ devDependencies:
   typescript: 5.4.2
   url-loader: 4.1.1_webpack@5.90.3
   yaml: 2.4.1
-  zod-openapi: 2.14.0_zod@3.22.4
+  zod-openapi: 2.14.0_7xoa24utsfoat3dhqbg5fm5chy_zod@3.22.4
 
 packages:
 
@@ -19252,7 +19259,7 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /zod-openapi/2.14.0_zod@3.22.4:
+  /zod-openapi/2.14.0_7xoa24utsfoat3dhqbg5fm5chy_zod@3.22.4:
     resolution: {integrity: sha512-TywDpZKfbNSMspWtT152DaO+/cK0xqK/bv7Kt4ZMHhzEZS1rCFYxxFwDZdQd4Nrq5g4kX/R1SKI+FkYg4QkBlw==}
     engines: {node: '>=16.11'}
     peerDependencies:
@@ -19260,12 +19267,27 @@ packages:
     dependencies:
       zod: 3.22.4
     dev: true
+    patched: true
 
   /zod/3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
+
+  file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme:
+    resolution: {directory: .yalc/@anatine/zod-openapi, type: directory}
+    id: file:.yalc/@anatine/zod-openapi
+    name: '@anatine/zod-openapi'
+    version: 1.13.0
+    peerDependencies:
+      openapi3-ts: ^2.0.0 || ^3.0.0
+      zod: ^3.20.0
+    dependencies:
+      openapi3-ts: 3.2.0
+      ts-deepmerge: 4.0.0
+      zod: 3.22.4
+    dev: false
 
   file:.yalc/zod-prisma-types:
     resolution: {directory: .yalc/zod-prisma-types, type: directory}

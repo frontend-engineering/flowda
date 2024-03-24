@@ -1,0 +1,44 @@
+diff --git a/lib-types/extendZod.d.ts b/lib-types/extendZod.d.ts
+index 5234e8c0b05e39d01c2a38a2011e2c1ebcfc8c8d..faf5fa7336ab27e6a8e1d8bd55fce06881cb0d11 100644
+--- a/lib-types/extendZod.d.ts
++++ b/lib-types/extendZod.d.ts
+@@ -55,22 +55,22 @@ interface ZodOpenApiMetadata<T extends ZodTypeAny, TInferred = z.input<T> | z.ou
+ interface ZodOpenApiExtendMetadata {
+     extends: ZodObject<any, any, any, any, any>;
+ }
+-declare module 'zod' {
+-    interface ZodType<Output, Def extends ZodTypeDef, Input = Output> {
+-        /**
+-         * Add OpenAPI metadata to a Zod Type
+-         */
+-        openapi<T extends ZodTypeAny>(this: T, metadata: ZodOpenApiMetadata<T>): T;
+-    }
+-    interface ZodTypeDef {
+-        /**
+-         * OpenAPI metadata
+-         */
+-        openapi?: ZodOpenApiMetadata<ZodTypeAny>;
+-    }
+-    interface ZodObjectDef<T extends ZodRawShape = ZodRawShape, UnknownKeys extends UnknownKeysParam = UnknownKeysParam, Catchall extends ZodTypeAny = ZodTypeAny> extends ZodTypeDef {
+-        extendMetadata?: ZodOpenApiExtendMetadata;
+-    }
+-}
++// declare module 'zod' {
++//     interface ZodType<Output, Def extends ZodTypeDef, Input = Output> {
++//         /**
++//          * Add OpenAPI metadata to a Zod Type
++//          */
++//         openapi<T extends ZodTypeAny>(this: T, metadata: ZodOpenApiMetadata<T>): T;
++//     }
++//     interface ZodTypeDef {
++//         /**
++//          * OpenAPI metadata
++//          */
++//         openapi?: ZodOpenApiMetadata<ZodTypeAny>;
++//     }
++//     interface ZodObjectDef<T extends ZodRawShape = ZodRawShape, UnknownKeys extends UnknownKeysParam = UnknownKeysParam, Catchall extends ZodTypeAny = ZodTypeAny> extends ZodTypeDef {
++//         extendMetadata?: ZodOpenApiExtendMetadata;
++//     }
++// }
+ export declare function extendZodWithOpenApi(zod: typeof z): void;
+ export {};

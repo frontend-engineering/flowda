@@ -39,6 +39,7 @@ testem.log
 Thumbs.db
 
 .yalc/zod-prisma-types/
+.yalc/@anatine/
 
 .nx/
 

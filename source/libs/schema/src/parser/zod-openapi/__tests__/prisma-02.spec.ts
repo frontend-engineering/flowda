@@ -1,9 +1,9 @@
-import { generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
 import {
   TenantSchema,
   TenantWithRelationsSchema,
   UserWithRelationsSchema,
 } from '../../prisma-zod/__fixtures__/prisma-02/index'
+import { zodToOpenAPI } from '../index'
 
 describe('prisma 02 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, multi files', () => {
@@ -12,20 +12,19 @@ describe('prisma 02 generated zod to openapi', function () {
       {
         "class_name": "Tenant",
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
+        "key_type": "resource",
         "name": "Tenant",
         "primary_key": "id",
         "properties": {
           "id": {
-            "column_source": "table",
             "display_name": "Id",
-            "name": "id",
+            "key_type": "column",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
             "display_name": "Name",
-            "name": "name",
+            "key_type": "column",
             "type": "string",
           },
         },
@@ -47,28 +46,38 @@ describe('prisma 02 generated zod to openapi', function () {
       {
         "class_name": "Tenant",
         "display_name": "Tenants",
-        "display_primary_key": true,
+        "display_primary_key": "true",
+        "key_type": "resource",
         "name": "Tenant",
         "primary_key": "id",
         "properties": {
           "id": {
-            "column_source": "table",
             "display_name": "Id",
-            "name": "id",
+            "key_type": "column",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
             "display_name": "Name",
-            "name": "name",
+            "key_type": "column",
             "type": "string",
+          },
+          "userProfiles": {
+            "display_name": "User Profiles",
+            "foreign_key": "tenantId",
+            "items": {},
+            "key_type": "association",
+            "model_name": "UserProfile",
+            "primary_key": "id",
+            "slug": "user_profiles",
+            "type": "array",
+            "visible": true,
           },
           "users": {
             "display_name": "Users",
             "foreign_key": "tenantId",
             "items": {},
+            "key_type": "association",
             "model_name": "User",
-            "name": "users",
             "primary_key": "id",
             "slug": "users",
             "type": "array",
@@ -79,6 +88,7 @@ describe('prisma 02 generated zod to openapi', function () {
           "id",
           "name",
           "users",
+          "userProfiles",
         ],
         "slug": "tenants",
         "table_name": "Tenant",
@@ -94,42 +104,48 @@ describe('prisma 02 generated zod to openapi', function () {
       {
         "class_name": "User",
         "display_name": "Users",
-        "display_primary_key": true,
+        "display_primary_key": "true",
+        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
           "email": {
-            "column_source": "table",
             "display_name": "Email",
-            "name": "email",
+            "key_type": "column",
             "type": "string",
           },
           "id": {
-            "column_source": "table",
             "display_name": "Id",
-            "name": "id",
+            "key_type": "column",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
             "display_name": "Name",
-            "name": "name",
+            "key_type": "column",
             "nullable": true,
             "type": "string",
           },
           "tenant": {
             "display_name": "Tenant",
             "foreign_key": "tenantId",
+            "key_type": "reference",
             "model_name": "Tenant",
-            "name": "tenant",
             "primary_key": "id",
             "reference_type": "belongs_to",
           },
           "tenantId": {
-            "column_source": "table",
             "display_name": "Tenant Id",
-            "name": "tenantId",
+            "key_type": "column",
             "type": "integer",
+          },
+          "userProfile": {
+            "display_name": "User Profile",
+            "foreign_key": "userId",
+            "key_type": "reference",
+            "model_name": "UserProfile",
+            "nullable": true,
+            "primary_key": "id",
+            "reference_type": "has_one",
           },
         },
         "required": [

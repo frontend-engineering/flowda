@@ -1,5 +1,6 @@
-import { generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
+import { zodToOpenAPI } from '../index'
 import { UserSchema } from '../../prisma-zod/__fixtures__/prisma-03/index'
+import '../../prisma-zod/__tests__/utils/schema-legacy'
 
 describe('prisma 03 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, rich comments', () => {
@@ -9,40 +10,43 @@ describe('prisma 03 generated zod to openapi', function () {
         "class_name": "User",
         "display_column": "email",
         "display_name": "员工",
-        "display_primary_key": true,
+        "display_primary_key": "false",
+        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
           "email": {
-            "column_source": "table",
-            "display_name": "Email",
-            "name": "email",
-            "title": "邮箱",
+            "display_name": "邮箱",
+            "key_type": "column",
             "type": "string",
           },
           "id": {
-            "column_source": "table",
             "display_name": "Id",
-            "name": "id",
+            "key_type": "column",
             "type": "integer",
           },
           "name": {
-            "column_source": "table",
-            "display_name": "Name",
-            "name": "name",
+            "display_name": "用户名",
+            "key_type": "column",
             "nullable": true,
-            "title": "用户名",
             "type": "string",
+            "x-legacy": {
+              "prisma": "false",
+            },
           },
         },
         "required": [
           "id",
           "email",
         ],
+        "searchable_columns": "email,name",
         "slug": "users",
         "table_name": "User",
         "type": "object",
         "visible": true,
+        "x-legacy": {
+          "route_prefix": "/admin",
+        },
       }
     `)
   })

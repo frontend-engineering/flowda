@@ -1,2 +1,2 @@
-export * from './openapi-schema/schema-transformer'
-export { extendZodWithOpenApi, generateSchema as zodToOpenAPI } from '@anatine/zod-openapi'
+export * from './openapi-schema/index'
+export * from './zod-openapi/index'

@@ -16,6 +16,7 @@ export type TenantPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
   name: "Tenant"
   objects: {
     users: UserPayload<ExtArgs>[]
+    userProfiles: UserProfilePayload<ExtArgs>[]
   }
   scalars: $Extensions.GetResult<{
     id: number
@@ -33,6 +34,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   name: "User"
   objects: {
     tenant: TenantPayload<ExtArgs>
+    userProfile: UserProfilePayload<ExtArgs> | null
   }
   scalars: $Extensions.GetResult<{
     id: number
@@ -48,6 +50,26 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
  * 
  */
 export type User = runtime.Types.DefaultSelection<UserPayload>
+export type UserProfilePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "UserProfile"
+  objects: {
+    user: UserPayload<ExtArgs>
+    tenant: TenantPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: number
+    fullName: string
+    userId: number
+    tenantId: number
+  }, ExtArgs["result"]["userProfile"]>
+  composites: {}
+}
+
+/**
+ * Model UserProfile
+ * 
+ */
+export type UserProfile = runtime.Types.DefaultSelection<UserProfilePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -193,6 +215,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.userProfile`: Exposes CRUD operations for the **UserProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserProfiles
+    * const userProfiles = await prisma.userProfile.findMany()
+    * ```
+    */
+  get userProfile(): Prisma.UserProfileDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -677,7 +709,8 @@ export namespace Prisma {
 
   export const ModelName: {
     Tenant: 'Tenant',
-    User: 'User'
+    User: 'User',
+    UserProfile: 'UserProfile'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -694,7 +727,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'tenant' | 'user'
+      modelProps: 'tenant' | 'user' | 'userProfile'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -825,6 +858,71 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>,
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserProfile: {
+        payload: UserProfilePayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.UserProfileFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserProfileFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.UserProfileFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserProfileFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>
+          }
+          findMany: {
+            args: Prisma.UserProfileFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>[]
+          }
+          create: {
+            args: Prisma.UserProfileCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>
+          }
+          createMany: {
+            args: Prisma.UserProfileCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.UserProfileDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>
+          }
+          update: {
+            args: Prisma.UserProfileUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserProfileDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserProfileUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserProfileUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.UserProfileAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUserProfile>
+          }
+          groupBy: {
+            args: Prisma.UserProfileGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UserProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserProfileCountArgs<ExtArgs>,
+            result: $Utils.Optional<UserProfileCountAggregateOutputType> | number
           }
         }
       }
@@ -1011,10 +1109,12 @@ export namespace Prisma {
 
   export type TenantCountOutputType = {
     users: number
+    userProfiles: number
   }
 
   export type TenantCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     users?: boolean | TenantCountOutputTypeCountUsersArgs
+    userProfiles?: boolean | TenantCountOutputTypeCountUserProfilesArgs
   }
 
   // Custom InputTypes
@@ -1035,6 +1135,14 @@ export namespace Prisma {
    */
   export type TenantCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+
+  /**
+   * TenantCountOutputType without action
+   */
+  export type TenantCountOutputTypeCountUserProfilesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: UserProfileWhereInput
   }
 
 
@@ -1220,6 +1328,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     users?: boolean | Tenant$usersArgs<ExtArgs>
+    userProfiles?: boolean | Tenant$userProfilesArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["tenant"]>
 
@@ -1230,6 +1339,7 @@ export namespace Prisma {
 
   export type TenantInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     users?: boolean | Tenant$usersArgs<ExtArgs>
+    userProfiles?: boolean | Tenant$userProfilesArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeArgs<ExtArgs>
   }
 
@@ -1604,6 +1714,8 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     users<T extends Tenant$usersArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<UserPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    userProfiles<T extends Tenant$userProfilesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$userProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -1982,6 +2094,27 @@ export namespace Prisma {
 
 
   /**
+   * Tenant.userProfiles
+   */
+  export type Tenant$userProfilesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    where?: UserProfileWhereInput
+    orderBy?: Enumerable<UserProfileOrderByWithRelationInput>
+    cursor?: UserProfileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<UserProfileScalarFieldEnum>
+  }
+
+
+  /**
    * Tenant without action
    */
   export type TenantArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -2194,6 +2327,7 @@ export namespace Prisma {
     name?: boolean
     tenantId?: boolean
     tenant?: boolean | TenantArgs<ExtArgs>
+    userProfile?: boolean | UserProfileArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2205,6 +2339,7 @@ export namespace Prisma {
 
   export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantArgs<ExtArgs>
+    userProfile?: boolean | UserProfileArgs<ExtArgs>
   }
 
 
@@ -2579,6 +2714,8 @@ export namespace Prisma {
 
     tenant<T extends TenantArgs<ExtArgs> = {}>(args?: Subset<T, TenantArgs<ExtArgs>>): Prisma__TenantClient<$Types.GetResult<TenantPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
+    userProfile<T extends UserProfileArgs<ExtArgs> = {}>(args?: Subset<T, UserProfileArgs<ExtArgs>>): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
     private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2951,6 +3088,967 @@ export namespace Prisma {
 
 
   /**
+   * Model UserProfile
+   */
+
+
+  export type AggregateUserProfile = {
+    _count: UserProfileCountAggregateOutputType | null
+    _avg: UserProfileAvgAggregateOutputType | null
+    _sum: UserProfileSumAggregateOutputType | null
+    _min: UserProfileMinAggregateOutputType | null
+    _max: UserProfileMaxAggregateOutputType | null
+  }
+
+  export type UserProfileAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    tenantId: number | null
+  }
+
+  export type UserProfileSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    tenantId: number | null
+  }
+
+  export type UserProfileMinAggregateOutputType = {
+    id: number | null
+    fullName: string | null
+    userId: number | null
+    tenantId: number | null
+  }
+
+  export type UserProfileMaxAggregateOutputType = {
+    id: number | null
+    fullName: string | null
+    userId: number | null
+    tenantId: number | null
+  }
+
+  export type UserProfileCountAggregateOutputType = {
+    id: number
+    fullName: number
+    userId: number
+    tenantId: number
+    _all: number
+  }
+
+
+  export type UserProfileAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    tenantId?: true
+  }
+
+  export type UserProfileSumAggregateInputType = {
+    id?: true
+    userId?: true
+    tenantId?: true
+  }
+
+  export type UserProfileMinAggregateInputType = {
+    id?: true
+    fullName?: true
+    userId?: true
+    tenantId?: true
+  }
+
+  export type UserProfileMaxAggregateInputType = {
+    id?: true
+    fullName?: true
+    userId?: true
+    tenantId?: true
+  }
+
+  export type UserProfileCountAggregateInputType = {
+    id?: true
+    fullName?: true
+    userId?: true
+    tenantId?: true
+    _all?: true
+  }
+
+  export type UserProfileAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserProfile to aggregate.
+     */
+    where?: UserProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserProfiles to fetch.
+     */
+    orderBy?: Enumerable<UserProfileOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserProfiles
+    **/
+    _count?: true | UserProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserProfileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserProfileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserProfileMaxAggregateInputType
+  }
+
+  export type GetUserProfileAggregateType<T extends UserProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserProfile[P]>
+      : GetScalarType<T[P], AggregateUserProfile[P]>
+  }
+
+
+
+
+  export type UserProfileGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: UserProfileWhereInput
+    orderBy?: Enumerable<UserProfileOrderByWithAggregationInput>
+    by: UserProfileScalarFieldEnum[]
+    having?: UserProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserProfileCountAggregateInputType | true
+    _avg?: UserProfileAvgAggregateInputType
+    _sum?: UserProfileSumAggregateInputType
+    _min?: UserProfileMinAggregateInputType
+    _max?: UserProfileMaxAggregateInputType
+  }
+
+
+  export type UserProfileGroupByOutputType = {
+    id: number
+    fullName: string
+    userId: number
+    tenantId: number
+    _count: UserProfileCountAggregateOutputType | null
+    _avg: UserProfileAvgAggregateOutputType | null
+    _sum: UserProfileSumAggregateOutputType | null
+    _min: UserProfileMinAggregateOutputType | null
+    _max: UserProfileMaxAggregateOutputType | null
+  }
+
+  type GetUserProfileGroupByPayload<T extends UserProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<UserProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], UserProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserProfileSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    userId?: boolean
+    tenantId?: boolean
+    user?: boolean | UserArgs<ExtArgs>
+    tenant?: boolean | TenantArgs<ExtArgs>
+  }, ExtArgs["result"]["userProfile"]>
+
+  export type UserProfileSelectScalar = {
+    id?: boolean
+    fullName?: boolean
+    userId?: boolean
+    tenantId?: boolean
+  }
+
+  export type UserProfileInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UserArgs<ExtArgs>
+    tenant?: boolean | TenantArgs<ExtArgs>
+  }
+
+
+  type UserProfileGetPayload<S extends boolean | null | undefined | UserProfileArgs> = $Types.GetResult<UserProfilePayload, S>
+
+  type UserProfileCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<UserProfileFindManyArgs, 'select' | 'include'> & {
+      select?: UserProfileCountAggregateInputType | true
+    }
+
+  export interface UserProfileDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserProfile'], meta: { name: 'UserProfile' } }
+    /**
+     * Find zero or one UserProfile that matches the filter.
+     * @param {UserProfileFindUniqueArgs} args - Arguments to find a UserProfile
+     * @example
+     * // Get one UserProfile
+     * const userProfile = await prisma.userProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends UserProfileFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, UserProfileFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'UserProfile'> extends True ? Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one UserProfile that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {UserProfileFindUniqueOrThrowArgs} args - Arguments to find a UserProfile
+     * @example
+     * // Get one UserProfile
+     * const userProfile = await prisma.userProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UserProfileFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserProfileFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first UserProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileFindFirstArgs} args - Arguments to find a UserProfile
+     * @example
+     * // Get one UserProfile
+     * const userProfile = await prisma.userProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends UserProfileFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, UserProfileFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'UserProfile'> extends True ? Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first UserProfile that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileFindFirstOrThrowArgs} args - Arguments to find a UserProfile
+     * @example
+     * // Get one UserProfile
+     * const userProfile = await prisma.userProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UserProfileFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserProfileFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more UserProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserProfiles
+     * const userProfiles = await prisma.userProfile.findMany()
+     * 
+     * // Get first 10 UserProfiles
+     * const userProfiles = await prisma.userProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userProfileWithIdOnly = await prisma.userProfile.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends UserProfileFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserProfileFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a UserProfile.
+     * @param {UserProfileCreateArgs} args - Arguments to create a UserProfile.
+     * @example
+     * // Create one UserProfile
+     * const UserProfile = await prisma.userProfile.create({
+     *   data: {
+     *     // ... data to create a UserProfile
+     *   }
+     * })
+     * 
+    **/
+    create<T extends UserProfileCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserProfileCreateArgs<ExtArgs>>
+    ): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many UserProfiles.
+     *     @param {UserProfileCreateManyArgs} args - Arguments to create many UserProfiles.
+     *     @example
+     *     // Create many UserProfiles
+     *     const userProfile = await prisma.userProfile.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends UserProfileCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserProfileCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a UserProfile.
+     * @param {UserProfileDeleteArgs} args - Arguments to delete one UserProfile.
+     * @example
+     * // Delete one UserProfile
+     * const UserProfile = await prisma.userProfile.delete({
+     *   where: {
+     *     // ... filter to delete one UserProfile
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends UserProfileDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, UserProfileDeleteArgs<ExtArgs>>
+    ): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one UserProfile.
+     * @param {UserProfileUpdateArgs} args - Arguments to update one UserProfile.
+     * @example
+     * // Update one UserProfile
+     * const userProfile = await prisma.userProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends UserProfileUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserProfileUpdateArgs<ExtArgs>>
+    ): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more UserProfiles.
+     * @param {UserProfileDeleteManyArgs} args - Arguments to filter UserProfiles to delete.
+     * @example
+     * // Delete a few UserProfiles
+     * const { count } = await prisma.userProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends UserProfileDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserProfileDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserProfiles
+     * const userProfile = await prisma.userProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends UserProfileUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, UserProfileUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserProfile.
+     * @param {UserProfileUpsertArgs} args - Arguments to update or create a UserProfile.
+     * @example
+     * // Update or create a UserProfile
+     * const userProfile = await prisma.userProfile.upsert({
+     *   create: {
+     *     // ... data to create a UserProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserProfile we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends UserProfileUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, UserProfileUpsertArgs<ExtArgs>>
+    ): Prisma__UserProfileClient<$Types.GetResult<UserProfilePayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of UserProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileCountArgs} args - Arguments to filter UserProfiles to count.
+     * @example
+     * // Count the number of UserProfiles
+     * const count = await prisma.userProfile.count({
+     *   where: {
+     *     // ... the filter for the UserProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserProfileCountArgs>(
+      args?: Subset<T, UserProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserProfileAggregateArgs>(args: Subset<T, UserProfileAggregateArgs>): Prisma.PrismaPromise<GetUserProfileAggregateType<T>>
+
+    /**
+     * Group by UserProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserProfileGroupByArgs['orderBy'] }
+        : { orderBy?: UserProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__UserProfileClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    tenant<T extends TenantArgs<ExtArgs> = {}>(args?: Subset<T, TenantArgs<ExtArgs>>): Prisma__TenantClient<$Types.GetResult<TenantPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * UserProfile base type for findUnique actions
+   */
+  export type UserProfileFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserProfile to fetch.
+     */
+    where: UserProfileWhereUniqueInput
+  }
+
+  /**
+   * UserProfile findUnique
+   */
+  export interface UserProfileFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UserProfileFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * UserProfile findUniqueOrThrow
+   */
+  export type UserProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserProfile to fetch.
+     */
+    where: UserProfileWhereUniqueInput
+  }
+
+
+  /**
+   * UserProfile base type for findFirst actions
+   */
+  export type UserProfileFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserProfile to fetch.
+     */
+    where?: UserProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserProfiles to fetch.
+     */
+    orderBy?: Enumerable<UserProfileOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserProfiles.
+     */
+    cursor?: UserProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserProfiles.
+     */
+    distinct?: Enumerable<UserProfileScalarFieldEnum>
+  }
+
+  /**
+   * UserProfile findFirst
+   */
+  export interface UserProfileFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UserProfileFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * UserProfile findFirstOrThrow
+   */
+  export type UserProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserProfile to fetch.
+     */
+    where?: UserProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserProfiles to fetch.
+     */
+    orderBy?: Enumerable<UserProfileOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserProfiles.
+     */
+    cursor?: UserProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserProfiles.
+     */
+    distinct?: Enumerable<UserProfileScalarFieldEnum>
+  }
+
+
+  /**
+   * UserProfile findMany
+   */
+  export type UserProfileFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which UserProfiles to fetch.
+     */
+    where?: UserProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserProfiles to fetch.
+     */
+    orderBy?: Enumerable<UserProfileOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserProfiles.
+     */
+    cursor?: UserProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserProfiles.
+     */
+    skip?: number
+    distinct?: Enumerable<UserProfileScalarFieldEnum>
+  }
+
+
+  /**
+   * UserProfile create
+   */
+  export type UserProfileCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserProfile.
+     */
+    data: XOR<UserProfileCreateInput, UserProfileUncheckedCreateInput>
+  }
+
+
+  /**
+   * UserProfile createMany
+   */
+  export type UserProfileCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserProfiles.
+     */
+    data: Enumerable<UserProfileCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * UserProfile update
+   */
+  export type UserProfileUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserProfile.
+     */
+    data: XOR<UserProfileUpdateInput, UserProfileUncheckedUpdateInput>
+    /**
+     * Choose, which UserProfile to update.
+     */
+    where: UserProfileWhereUniqueInput
+  }
+
+
+  /**
+   * UserProfile updateMany
+   */
+  export type UserProfileUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserProfiles.
+     */
+    data: XOR<UserProfileUpdateManyMutationInput, UserProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which UserProfiles to update
+     */
+    where?: UserProfileWhereInput
+  }
+
+
+  /**
+   * UserProfile upsert
+   */
+  export type UserProfileUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserProfile to update in case it exists.
+     */
+    where: UserProfileWhereUniqueInput
+    /**
+     * In case the UserProfile found by the `where` argument doesn't exist, create a new UserProfile with this data.
+     */
+    create: XOR<UserProfileCreateInput, UserProfileUncheckedCreateInput>
+    /**
+     * In case the UserProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserProfileUpdateInput, UserProfileUncheckedUpdateInput>
+  }
+
+
+  /**
+   * UserProfile delete
+   */
+  export type UserProfileDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    /**
+     * Filter which UserProfile to delete.
+     */
+    where: UserProfileWhereUniqueInput
+  }
+
+
+  /**
+   * UserProfile deleteMany
+   */
+  export type UserProfileDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserProfiles to delete
+     */
+    where?: UserProfileWhereInput
+  }
+
+
+  /**
+   * UserProfile without action
+   */
+  export type UserProfileArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -2982,6 +4080,16 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const UserProfileScalarFieldEnum: {
+    id: 'id',
+    fullName: 'fullName',
+    userId: 'userId',
+    tenantId: 'tenantId'
+  };
+
+  export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -3010,12 +4118,14 @@ export namespace Prisma {
     id?: IntFilter | number
     name?: StringFilter | string
     users?: UserListRelationFilter
+    userProfiles?: UserProfileListRelationFilter
   }
 
   export type TenantOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     users?: UserOrderByRelationAggregateInput
+    userProfiles?: UserProfileOrderByRelationAggregateInput
   }
 
   export type TenantWhereUniqueInput = {
@@ -3050,6 +4160,7 @@ export namespace Prisma {
     name?: StringNullableFilter | string | null
     tenantId?: IntFilter | number
     tenant?: XOR<TenantRelationFilter, TenantWhereInput>
+    userProfile?: XOR<UserProfileRelationFilter, UserProfileWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3058,6 +4169,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     tenantId?: SortOrder
     tenant?: TenantOrderByWithRelationInput
+    userProfile?: UserProfileOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = {
@@ -3087,26 +4199,78 @@ export namespace Prisma {
     tenantId?: IntWithAggregatesFilter | number
   }
 
+  export type UserProfileWhereInput = {
+    AND?: Enumerable<UserProfileWhereInput>
+    OR?: Enumerable<UserProfileWhereInput>
+    NOT?: Enumerable<UserProfileWhereInput>
+    id?: IntFilter | number
+    fullName?: StringFilter | string
+    userId?: IntFilter | number
+    tenantId?: IntFilter | number
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    tenant?: XOR<TenantRelationFilter, TenantWhereInput>
+  }
+
+  export type UserProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    user?: UserOrderByWithRelationInput
+    tenant?: TenantOrderByWithRelationInput
+  }
+
+  export type UserProfileWhereUniqueInput = {
+    id?: number
+    userId?: number
+  }
+
+  export type UserProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    _count?: UserProfileCountOrderByAggregateInput
+    _avg?: UserProfileAvgOrderByAggregateInput
+    _max?: UserProfileMaxOrderByAggregateInput
+    _min?: UserProfileMinOrderByAggregateInput
+    _sum?: UserProfileSumOrderByAggregateInput
+  }
+
+  export type UserProfileScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<UserProfileScalarWhereWithAggregatesInput>
+    OR?: Enumerable<UserProfileScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<UserProfileScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    fullName?: StringWithAggregatesFilter | string
+    userId?: IntWithAggregatesFilter | number
+    tenantId?: IntWithAggregatesFilter | number
+  }
+
   export type TenantCreateInput = {
     name: string
     users?: UserCreateNestedManyWithoutTenantInput
+    userProfiles?: UserProfileCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateInput = {
     id?: number
     name: string
     users?: UserUncheckedCreateNestedManyWithoutTenantInput
+    userProfiles?: UserProfileUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutTenantNestedInput
+    userProfiles?: UserProfileUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutTenantNestedInput
+    userProfiles?: UserProfileUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantCreateManyInput = {
@@ -3127,6 +4291,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     tenant: TenantCreateNestedOneWithoutUsersInput
+    userProfile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3134,12 +4299,14 @@ export namespace Prisma {
     email: string
     name?: string | null
     tenantId: number
+    userProfile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
+    userProfile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3147,6 +4314,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     tenantId?: IntFieldUpdateOperationsInput | number
+    userProfile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3165,6 +4333,50 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    tenantId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserProfileCreateInput = {
+    fullName: string
+    user: UserCreateNestedOneWithoutUserProfileInput
+    tenant: TenantCreateNestedOneWithoutUserProfilesInput
+  }
+
+  export type UserProfileUncheckedCreateInput = {
+    id?: number
+    fullName: string
+    userId: number
+    tenantId: number
+  }
+
+  export type UserProfileUpdateInput = {
+    fullName?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutUserProfileNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutUserProfilesNestedInput
+  }
+
+  export type UserProfileUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    tenantId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserProfileCreateManyInput = {
+    id?: number
+    fullName: string
+    userId: number
+    tenantId: number
+  }
+
+  export type UserProfileUpdateManyMutationInput = {
+    fullName?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserProfileUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
     tenantId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -3199,7 +4411,17 @@ export namespace Prisma {
     none?: UserWhereInput
   }
 
+  export type UserProfileListRelationFilter = {
+    every?: UserProfileWhereInput
+    some?: UserProfileWhereInput
+    none?: UserProfileWhereInput
+  }
+
   export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserProfileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3278,6 +4500,11 @@ export namespace Prisma {
     isNot?: TenantWhereInput | null
   }
 
+  export type UserProfileRelationFilter = {
+    is?: UserProfileWhereInput | null
+    isNot?: UserProfileWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -3331,6 +4558,44 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter
   }
 
+  export type UserRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+  }
+
+  export type UserProfileAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+  }
+
+  export type UserProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+  }
+
+  export type UserProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+  }
+
+  export type UserProfileSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutTenantInput = {
     create?: XOR<Enumerable<UserCreateWithoutTenantInput>, Enumerable<UserUncheckedCreateWithoutTenantInput>>
     connectOrCreate?: Enumerable<UserCreateOrConnectWithoutTenantInput>
@@ -3338,11 +4603,25 @@ export namespace Prisma {
     connect?: Enumerable<UserWhereUniqueInput>
   }
 
+  export type UserProfileCreateNestedManyWithoutTenantInput = {
+    create?: XOR<Enumerable<UserProfileCreateWithoutTenantInput>, Enumerable<UserProfileUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserProfileCreateOrConnectWithoutTenantInput>
+    createMany?: UserProfileCreateManyTenantInputEnvelope
+    connect?: Enumerable<UserProfileWhereUniqueInput>
+  }
+
   export type UserUncheckedCreateNestedManyWithoutTenantInput = {
     create?: XOR<Enumerable<UserCreateWithoutTenantInput>, Enumerable<UserUncheckedCreateWithoutTenantInput>>
     connectOrCreate?: Enumerable<UserCreateOrConnectWithoutTenantInput>
     createMany?: UserCreateManyTenantInputEnvelope
     connect?: Enumerable<UserWhereUniqueInput>
+  }
+
+  export type UserProfileUncheckedCreateNestedManyWithoutTenantInput = {
+    create?: XOR<Enumerable<UserProfileCreateWithoutTenantInput>, Enumerable<UserProfileUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserProfileCreateOrConnectWithoutTenantInput>
+    createMany?: UserProfileCreateManyTenantInputEnvelope
+    connect?: Enumerable<UserProfileWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -3361,6 +4640,20 @@ export namespace Prisma {
     update?: Enumerable<UserUpdateWithWhereUniqueWithoutTenantInput>
     updateMany?: Enumerable<UserUpdateManyWithWhereWithoutTenantInput>
     deleteMany?: Enumerable<UserScalarWhereInput>
+  }
+
+  export type UserProfileUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<Enumerable<UserProfileCreateWithoutTenantInput>, Enumerable<UserProfileUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserProfileCreateOrConnectWithoutTenantInput>
+    upsert?: Enumerable<UserProfileUpsertWithWhereUniqueWithoutTenantInput>
+    createMany?: UserProfileCreateManyTenantInputEnvelope
+    set?: Enumerable<UserProfileWhereUniqueInput>
+    disconnect?: Enumerable<UserProfileWhereUniqueInput>
+    delete?: Enumerable<UserProfileWhereUniqueInput>
+    connect?: Enumerable<UserProfileWhereUniqueInput>
+    update?: Enumerable<UserProfileUpdateWithWhereUniqueWithoutTenantInput>
+    updateMany?: Enumerable<UserProfileUpdateManyWithWhereWithoutTenantInput>
+    deleteMany?: Enumerable<UserProfileScalarWhereInput>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -3385,10 +4678,36 @@ export namespace Prisma {
     deleteMany?: Enumerable<UserScalarWhereInput>
   }
 
+  export type UserProfileUncheckedUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<Enumerable<UserProfileCreateWithoutTenantInput>, Enumerable<UserProfileUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserProfileCreateOrConnectWithoutTenantInput>
+    upsert?: Enumerable<UserProfileUpsertWithWhereUniqueWithoutTenantInput>
+    createMany?: UserProfileCreateManyTenantInputEnvelope
+    set?: Enumerable<UserProfileWhereUniqueInput>
+    disconnect?: Enumerable<UserProfileWhereUniqueInput>
+    delete?: Enumerable<UserProfileWhereUniqueInput>
+    connect?: Enumerable<UserProfileWhereUniqueInput>
+    update?: Enumerable<UserProfileUpdateWithWhereUniqueWithoutTenantInput>
+    updateMany?: Enumerable<UserProfileUpdateManyWithWhereWithoutTenantInput>
+    deleteMany?: Enumerable<UserProfileScalarWhereInput>
+  }
+
   export type TenantCreateNestedOneWithoutUsersInput = {
     create?: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
     connectOrCreate?: TenantCreateOrConnectWithoutUsersInput
     connect?: TenantWhereUniqueInput
+  }
+
+  export type UserProfileCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    connect?: UserProfileWhereUniqueInput
+  }
+
+  export type UserProfileUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    connect?: UserProfileWhereUniqueInput
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -3401,6 +4720,54 @@ export namespace Prisma {
     upsert?: TenantUpsertWithoutUsersInput
     connect?: TenantWhereUniqueInput
     update?: XOR<TenantUpdateWithoutUsersInput, TenantUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type UserProfileUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    upsert?: UserProfileUpsertWithoutUserInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: UserProfileWhereUniqueInput
+    update?: XOR<UserProfileUpdateWithoutUserInput, UserProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserProfileUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    upsert?: UserProfileUpsertWithoutUserInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: UserProfileWhereUniqueInput
+    update?: XOR<UserProfileUpdateWithoutUserInput, UserProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserCreateNestedOneWithoutUserProfileInput = {
+    create?: XOR<UserCreateWithoutUserProfileInput, UserUncheckedCreateWithoutUserProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserProfileInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TenantCreateNestedOneWithoutUserProfilesInput = {
+    create?: XOR<TenantCreateWithoutUserProfilesInput, TenantUncheckedCreateWithoutUserProfilesInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutUserProfilesInput
+    connect?: TenantWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutUserProfileNestedInput = {
+    create?: XOR<UserCreateWithoutUserProfileInput, UserUncheckedCreateWithoutUserProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserProfileInput
+    upsert?: UserUpsertWithoutUserProfileInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutUserProfileInput, UserUncheckedUpdateWithoutUserProfileInput>
+  }
+
+  export type TenantUpdateOneRequiredWithoutUserProfilesNestedInput = {
+    create?: XOR<TenantCreateWithoutUserProfilesInput, TenantUncheckedCreateWithoutUserProfilesInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutUserProfilesInput
+    upsert?: TenantUpsertWithoutUserProfilesInput
+    connect?: TenantWhereUniqueInput
+    update?: XOR<TenantUpdateWithoutUserProfilesInput, TenantUncheckedUpdateWithoutUserProfilesInput>
   }
 
   export type NestedIntFilter = {
@@ -3517,12 +4884,14 @@ export namespace Prisma {
   export type UserCreateWithoutTenantInput = {
     email: string
     name?: string | null
+    userProfile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTenantInput = {
     id?: number
     email: string
     name?: string | null
+    userProfile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTenantInput = {
@@ -3532,6 +4901,27 @@ export namespace Prisma {
 
   export type UserCreateManyTenantInputEnvelope = {
     data: Enumerable<UserCreateManyTenantInput>
+    skipDuplicates?: boolean
+  }
+
+  export type UserProfileCreateWithoutTenantInput = {
+    fullName: string
+    user: UserCreateNestedOneWithoutUserProfileInput
+  }
+
+  export type UserProfileUncheckedCreateWithoutTenantInput = {
+    id?: number
+    fullName: string
+    userId: number
+  }
+
+  export type UserProfileCreateOrConnectWithoutTenantInput = {
+    where: UserProfileWhereUniqueInput
+    create: XOR<UserProfileCreateWithoutTenantInput, UserProfileUncheckedCreateWithoutTenantInput>
+  }
+
+  export type UserProfileCreateManyTenantInputEnvelope = {
+    data: Enumerable<UserProfileCreateManyTenantInput>
     skipDuplicates?: boolean
   }
 
@@ -3561,18 +4951,62 @@ export namespace Prisma {
     tenantId?: IntFilter | number
   }
 
+  export type UserProfileUpsertWithWhereUniqueWithoutTenantInput = {
+    where: UserProfileWhereUniqueInput
+    update: XOR<UserProfileUpdateWithoutTenantInput, UserProfileUncheckedUpdateWithoutTenantInput>
+    create: XOR<UserProfileCreateWithoutTenantInput, UserProfileUncheckedCreateWithoutTenantInput>
+  }
+
+  export type UserProfileUpdateWithWhereUniqueWithoutTenantInput = {
+    where: UserProfileWhereUniqueInput
+    data: XOR<UserProfileUpdateWithoutTenantInput, UserProfileUncheckedUpdateWithoutTenantInput>
+  }
+
+  export type UserProfileUpdateManyWithWhereWithoutTenantInput = {
+    where: UserProfileScalarWhereInput
+    data: XOR<UserProfileUpdateManyMutationInput, UserProfileUncheckedUpdateManyWithoutUserProfilesInput>
+  }
+
+  export type UserProfileScalarWhereInput = {
+    AND?: Enumerable<UserProfileScalarWhereInput>
+    OR?: Enumerable<UserProfileScalarWhereInput>
+    NOT?: Enumerable<UserProfileScalarWhereInput>
+    id?: IntFilter | number
+    fullName?: StringFilter | string
+    userId?: IntFilter | number
+    tenantId?: IntFilter | number
+  }
+
   export type TenantCreateWithoutUsersInput = {
     name: string
+    userProfiles?: UserProfileCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutUsersInput = {
     id?: number
     name: string
+    userProfiles?: UserProfileUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutUsersInput = {
     where: TenantWhereUniqueInput
     create: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
+  }
+
+  export type UserProfileCreateWithoutUserInput = {
+    fullName: string
+    tenant: TenantCreateNestedOneWithoutUserProfilesInput
+  }
+
+  export type UserProfileUncheckedCreateWithoutUserInput = {
+    id?: number
+    fullName: string
+    tenantId: number
+  }
+
+  export type UserProfileCreateOrConnectWithoutUserInput = {
+    where: UserProfileWhereUniqueInput
+    create: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
   }
 
   export type TenantUpsertWithoutUsersInput = {
@@ -3582,11 +5016,97 @@ export namespace Prisma {
 
   export type TenantUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
+    userProfiles?: UserProfileUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    userProfiles?: UserProfileUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type UserProfileUpsertWithoutUserInput = {
+    update: XOR<UserProfileUpdateWithoutUserInput, UserProfileUncheckedUpdateWithoutUserInput>
+    create: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserProfileUpdateWithoutUserInput = {
+    fullName?: StringFieldUpdateOperationsInput | string
+    tenant?: TenantUpdateOneRequiredWithoutUserProfilesNestedInput
+  }
+
+  export type UserProfileUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    tenantId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserCreateWithoutUserProfileInput = {
+    email: string
+    name?: string | null
+    tenant: TenantCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutUserProfileInput = {
+    id?: number
+    email: string
+    name?: string | null
+    tenantId: number
+  }
+
+  export type UserCreateOrConnectWithoutUserProfileInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserProfileInput, UserUncheckedCreateWithoutUserProfileInput>
+  }
+
+  export type TenantCreateWithoutUserProfilesInput = {
+    name: string
+    users?: UserCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantUncheckedCreateWithoutUserProfilesInput = {
+    id?: number
+    name: string
+    users?: UserUncheckedCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantCreateOrConnectWithoutUserProfilesInput = {
+    where: TenantWhereUniqueInput
+    create: XOR<TenantCreateWithoutUserProfilesInput, TenantUncheckedCreateWithoutUserProfilesInput>
+  }
+
+  export type UserUpsertWithoutUserProfileInput = {
+    update: XOR<UserUpdateWithoutUserProfileInput, UserUncheckedUpdateWithoutUserProfileInput>
+    create: XOR<UserCreateWithoutUserProfileInput, UserUncheckedCreateWithoutUserProfileInput>
+  }
+
+  export type UserUpdateWithoutUserProfileInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserProfileInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    tenantId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type TenantUpsertWithoutUserProfilesInput = {
+    update: XOR<TenantUpdateWithoutUserProfilesInput, TenantUncheckedUpdateWithoutUserProfilesInput>
+    create: XOR<TenantCreateWithoutUserProfilesInput, TenantUncheckedCreateWithoutUserProfilesInput>
+  }
+
+  export type TenantUpdateWithoutUserProfilesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    users?: UserUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateWithoutUserProfilesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type UserCreateManyTenantInput = {
@@ -3595,21 +5115,46 @@ export namespace Prisma {
     name?: string | null
   }
 
+  export type UserProfileCreateManyTenantInput = {
+    id?: number
+    fullName: string
+    userId: number
+  }
+
   export type UserUpdateWithoutTenantInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    userProfile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTenantInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    userProfile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserProfileUpdateWithoutTenantInput = {
+    fullName?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutUserProfileNestedInput
+  }
+
+  export type UserProfileUncheckedUpdateWithoutTenantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserProfileUncheckedUpdateManyWithoutUserProfilesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
   }
 
 

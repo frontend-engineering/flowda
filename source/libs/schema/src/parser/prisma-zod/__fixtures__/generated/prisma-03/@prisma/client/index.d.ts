@@ -18,11 +18,12 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   scalars: $Extensions.GetResult<{
     id: number
     /**
-     * @schema.title 邮箱
+     * @schema [display_name=邮箱]
      */
     email: string
     /**
-     * @schema.title 用户名
+     * @schema [display_name=用户名]
+     * @schema {legacy} [prisma=false]
      */
     name: string | null
   }, ExtArgs["result"]["user"]>
@@ -31,8 +32,11 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
 
 /**
  * Model User
- * @schema.display_name 员工
- * @schema.display_column email
+ * @schema [display_name=员工]
+ * @schema [display_column=email]
+ * @schema [display_primary_key=false]
+ * @schema [searchable_columns=email,name]
+ * @schema {legacy} [route_prefix=/admin]
  */
 export type User = runtime.Types.DefaultSelection<UserPayload>
 
