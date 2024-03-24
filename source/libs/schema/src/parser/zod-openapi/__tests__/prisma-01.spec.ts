@@ -18,6 +18,9 @@ describe('prisma 01 generated zod to openapi', function () {
             "key_type": "column",
             "type": "string",
           },
+          "extendedDescriptionData": {
+            "nullable": true,
+          },
           "id": {
             "display_name": "Id",
             "key_type": "column",

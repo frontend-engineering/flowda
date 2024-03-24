@@ -26,6 +26,7 @@ describe('prisma-01', function () {
         id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
         email: z.string().openapi({ key_type: 'column', display_name: 'Email' }),
         name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name' }),
+        extendedDescriptionData: z.any().optional().nullish().openapi({ key_type: 'column', display_name: 'Extended Description Data' }),
       }).openapi({
         key_type: 'resource',
         name: 'User',
