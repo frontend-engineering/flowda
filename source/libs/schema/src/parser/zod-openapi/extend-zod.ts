@@ -1,7 +1,6 @@
 import { z, ZodErrorMap } from 'zod'
 import { extendApi } from '@anatine/zod-openapi'
 import { UISchemaObject } from '@flowda/types'
-import { SchemaObject } from 'openapi3-ts'
 
 declare module 'zod' {
   interface ZodTypeDef {
@@ -20,10 +19,6 @@ declare module 'zod' {
       this: T,
       metadata: Partial<UISchemaObject>,
     ): T;
-    openapi<T extends ZodSchema<Output, Def, Input>>(
-      this: T,
-      metadata: Partial<SchemaObject>
-    ): T;
   }
 }
 
@@ -34,9 +29,10 @@ export function extendZod(zod: typeof z, forceOverride = false) {
   }
 
   zod.ZodSchema.prototype.openapi = function (
-    metadata?: Partial<SchemaObject>,
+    metadata?: Partial<UISchemaObject>,
   ) {
-    return extendApi(this, metadata)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return extendApi(this, metadata as any)
   }
 
   const zodObjectMerge = zod.ZodObject.prototype.merge

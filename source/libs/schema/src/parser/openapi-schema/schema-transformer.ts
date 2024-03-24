@@ -1,14 +1,13 @@
-import { AssociationKeySchema, ColumnUISchema, ReferenceKeySchema, UISchemaObject } from '@flowda/types'
+import { AssociationKeySchema, ColumnUISchema, ReferenceKeySchema, ResourceKey } from '@flowda/types'
 import { z } from 'zod'
 import * as _ from 'radash'
-import { SchemaObject } from 'openapi3-ts'
 
 export class SchemaTransformer {
-  private jsonschema?: SchemaObject
+  private jsonschema?: ResourceKey
   private columns?: Omit<z.infer<typeof ColumnUISchema>, 'key_type'>[]
   private associations?: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
 
-  set(jsonschema: UISchemaObject & SchemaObject) {
+  set(jsonschema: ResourceKey) {
     this.jsonschema = jsonschema
     const processed = processJsonschema(jsonschema)
     this.columns = processed.columns
@@ -20,6 +19,8 @@ export class SchemaTransformer {
     if (!this.jsonschema) throw new Error(`No jsonschema set`)
     return _.omit({
       ...this.jsonschema,
+      properties: undefined,
+      required: undefined,
       key_type: undefined,
       columns: this.columns,
       associations: this.associations,
@@ -27,7 +28,7 @@ export class SchemaTransformer {
   }
 }
 
-export function processJsonschema(jsonschema: UISchemaObject & SchemaObject) {
+export function processJsonschema(jsonschema: ResourceKey) {
   if (jsonschema.key_type !== 'resource') {
     throw new Error(`un supported key type, type:${jsonschema.key_type}, jsonschema:${JSON.stringify(jsonschema)}`)
   }
@@ -36,13 +37,13 @@ export function processJsonschema(jsonschema: UISchemaObject & SchemaObject) {
 
   const props = jsonschema.properties
   const refCols = Object.keys(props).filter(k => {
-    const prop: UISchemaObject = props[k] as UISchemaObject
+    const prop = props[k]
     if (prop.key_type === 'reference') {
       return prop.model_name && prop.reference_type
     }
     return false
   }).map(k => {
-    const prop = props[k] as UISchemaObject
+    const prop = props[k]
     const ret = ReferenceKeySchema.safeParse(prop)
     if (!ret.success)
       throw new Error(`reference parse error, k:${k}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
@@ -51,7 +52,7 @@ export function processJsonschema(jsonschema: UISchemaObject & SchemaObject) {
 
   return Object.keys(props).reduce((acc, cur) => {
     // 找不到强类型的更舒适的方法，直接 type cast
-    const prop = props[cur] as UISchemaObject & SchemaObject
+    const prop = props[cur]
     if (prop.key_type === 'reference' && prop.reference_type === 'belongs_to') {
       // reference 忽略，在 foreign_key column 附着在 reference 上
       return acc
