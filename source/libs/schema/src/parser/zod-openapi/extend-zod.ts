@@ -27,12 +27,9 @@ export function extendZod(zod: typeof z, forceOverride = false) {
   if (!forceOverride && typeof zod.ZodSchema.prototype.openapi !== 'undefined') {
     return
   }
-
-  zod.ZodSchema.prototype.openapi = function (
-    metadata?: Partial<UISchemaObject>,
-  ) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return extendApi(this, metadata as any)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  zod.ZodSchema.prototype.openapi = function (metadata?: any) {
+    return extendApi(this, metadata)
   }
 
   const zodObjectMerge = zod.ZodObject.prototype.merge

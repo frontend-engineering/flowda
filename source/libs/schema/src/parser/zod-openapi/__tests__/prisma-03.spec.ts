@@ -1,5 +1,6 @@
 import { zodToOpenAPI } from '../index'
 import { UserSchema } from '../../prisma-zod/__fixtures__/prisma-03/index'
+import '../../prisma-zod/__tests__/utils/schema-legacy'
 
 describe('prisma 03 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, rich comments', () => {
@@ -11,9 +12,6 @@ describe('prisma 03 generated zod to openapi', function () {
         "display_name": "员工",
         "display_primary_key": "false",
         "key_type": "resource",
-        "legacy": {
-          "route_prefix": "/admin",
-        },
         "name": "User",
         "primary_key": "id",
         "properties": {
@@ -32,6 +30,9 @@ describe('prisma 03 generated zod to openapi', function () {
             "key_type": "column",
             "nullable": true,
             "type": "string",
+            "x-legacy": {
+              "prisma": "false",
+            },
           },
         },
         "required": [
@@ -43,6 +44,9 @@ describe('prisma 03 generated zod to openapi', function () {
         "table_name": "User",
         "type": "object",
         "visible": true,
+        "x-legacy": {
+          "route_prefix": "/admin",
+        },
       }
     `)
   })

@@ -41,5 +41,6 @@ model User {
   /// @schema [display_name=邮箱]
   email String  @unique
   /// @schema [display_name=用户名]
+  /// @schema {legacy} [prisma=false]
   name  String?
 }

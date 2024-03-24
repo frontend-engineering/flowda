@@ -23,6 +23,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     email: string
     /**
      * @schema [display_name=用户名]
+     * @schema {legacy} [prisma=false]
      */
     name: string | null
   }, ExtArgs["result"]["user"]>

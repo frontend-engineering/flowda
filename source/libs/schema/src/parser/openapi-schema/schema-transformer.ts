@@ -1,10 +1,10 @@
-import { AssociationKeySchema, ColumnUISchema, ReferenceKeySchema, ResourceKey } from '@flowda/types'
+import { AssociationKeySchema, ColumUI, ColumnUISchema, PluginKey, PluginKeySchema, ReferenceKeySchema, ResourceKey } from '@flowda/types'
 import { z } from 'zod'
 import * as _ from 'radash'
 
 export class SchemaTransformer {
   private jsonschema?: ResourceKey
-  private columns?: Omit<z.infer<typeof ColumnUISchema>, 'key_type'>[]
+  private columns?: ColumUI[]
   private associations?: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
 
   set(jsonschema: ResourceKey) {
@@ -89,6 +89,8 @@ export function processJsonschema(jsonschema: ResourceKey) {
     if (!ret.success)
       throw new Error(`column parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
 
+    const colPlugin = PluginKeySchema.parse(prop)
+
     const col = ret.data
     if (jsonschema.required && jsonschema.required.indexOf(cur) > -1) {
       if (!col.validators) col.validators = []
@@ -96,13 +98,16 @@ export function processJsonschema(jsonschema: ResourceKey) {
         required: true,
       })
     }
-    acc.columns.push(col)
+    acc.columns.push({
+      ...col,
+      ...colPlugin
+    })
     return acc
   }, {
     columns: [],
     associations: [],
   } as {
-    columns: Omit<z.infer<typeof ColumnUISchema>, 'key_type'>[],
+    columns: ColumUI[],
     associations: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
   })
 }

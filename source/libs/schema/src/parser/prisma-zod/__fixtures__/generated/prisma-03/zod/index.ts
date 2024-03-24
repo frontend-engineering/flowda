@@ -28,7 +28,7 @@ export const NullsOrderSchema = z.enum(['first','last']);
 export const UserSchema = z.object({
   id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
   email: z.string().openapi({ key_type: 'column', display_name: '邮箱' }),
-  name: z.string().nullish().openapi({ key_type: 'column', display_name: '用户名' }),
+  name: z.string().nullish().openapi({ key_type: 'column', display_name: '用户名' }).openapi({ 'x-legacy': { prisma: 'false' } }),
 }).openapi({
   key_type: 'resource',
   name: 'User',
@@ -41,6 +41,6 @@ export const UserSchema = z.object({
   display_primary_key: 'false',
   display_column: 'email',
   searchable_columns: 'email,name'
-}).openapi({ legacy: { route_prefix: '/admin' } })
+}).openapi({ 'x-legacy': { route_prefix: '/admin' } })
 
 export type User = z.infer<typeof UserSchema>

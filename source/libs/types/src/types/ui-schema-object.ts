@@ -5,16 +5,16 @@ export type ColumnKey = {
   type: string
   column_type: string
   display_name: string
-  description: string
-  example: string
+  description?: string
+  example?: string
 }
 export const ColumnKeySchema = z.object({
   key_type: z.literal('column'),
   type: z.string(),
   column_type: z.string(),
   display_name: z.string(),
-  description: z.string(),
-  example: z.string(),
+  description: z.string().optional(),
+  example: z.string().optional(),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
