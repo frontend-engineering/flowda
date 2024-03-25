@@ -24,9 +24,14 @@ describe('prisma-03', function () {
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
-        email: z.string().openapi({ key_type: 'column', display_name: '邮箱' }),
-        name: z.string().nullish().openapi({ key_type: 'column', display_name: '用户名' }).openapi({ 'x-legacy': { prisma: 'false' } }),
+        id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
+        email: z.string().openapi({ key_type: 'column', display_name: '邮箱', column_type: 'String' }),
+        name: z.string().nullish().openapi({ key_type: 'column', display_name: '用户名', column_type: 'String' }).openapi({ 'x-legacy': { prisma: 'false' } }),
+        extendedDescriptionData: z.any().optional().nullish().openapi({
+          key_type: 'column',
+          display_name: 'Extended Description Data',
+          column_type: 'Json'
+        }),
       }).openapi({
         key_type: 'resource',
         name: 'User',

@@ -1,4 +1,11 @@
-import { AssociationKeySchema, ColumUI, ColumnUISchema, PluginKey, PluginKeySchema, ReferenceKeySchema, ResourceKey } from '@flowda/types'
+import {
+  AssociationKeySchema,
+  ColumnUISchema,
+  ColumUI,
+  PluginKeySchema,
+  ReferenceKeySchema,
+  ResourceKey,
+} from '@flowda/types'
 import { z } from 'zod'
 import * as _ from 'radash'
 
@@ -78,7 +85,6 @@ export function processJsonschema(jsonschema: ResourceKey) {
     } : (
       prop.key_type === 'column' ? {
         ...prop,
-        column_type: prop.type,
         name: cur,
         validators: [],
         reference: ref,
@@ -87,7 +93,7 @@ export function processJsonschema(jsonschema: ResourceKey) {
       }
     ))
     if (!ret.success)
-      throw new Error(`column parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
+      throw new Error(`column parse error, k:${cur}, error: ${ret.error.message}, prop: ${JSON.stringify(prop)}`)
 
     const colPlugin = PluginKeySchema.parse(prop)
 
@@ -100,7 +106,7 @@ export function processJsonschema(jsonschema: ResourceKey) {
     }
     acc.columns.push({
       ...col,
-      ...colPlugin
+      ...colPlugin,
     })
     return acc
   }, {

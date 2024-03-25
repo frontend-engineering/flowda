@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 export type ColumnKey = {
   key_type: 'column'
-  type: string
   column_type: string
   display_name: string
   description?: string
@@ -10,7 +9,6 @@ export type ColumnKey = {
 }
 export const ColumnKeySchema = z.object({
   key_type: z.literal('column'),
-  type: z.string(),
   column_type: z.string(),
   display_name: z.string(),
   description: z.string().optional(),
@@ -56,36 +54,37 @@ export const ReferenceKeySchema = z.object({
 export type ResourceKey = {
   key_type: 'resource'
   class_name: string
-  display_column: string
+  display_column?: string
   display_name: string
   display_primary_key: string
   name: string
   primary_key: string | null
-  searchable_columns: string | null
+  searchable_columns?: string
   slug: string
   table_name: string
   visible: boolean
 
   // openapi3-ts
-  properties: Record<string, ColumnKey | AssociationKey | ReferenceKey>
-  required: string[]
+  properties?: Record<string, ColumnKey | AssociationKey | ReferenceKey>
+  required?: string[]
 }
 export const ResourceKeySchema = z.object({
   key_type: z.literal('resource'),
-  class_name: z.string(),
-  display_column: z.string(),
-  display_name: z.string(),
-  display_primary_key: z.string(),
   name: z.string(),
-  primary_key: z.string().nullable(),
-  searchable_columns: z.string().nullable(),
   slug: z.string(),
   table_name: z.string(),
+  class_name: z.string(),
+  display_name: z.string(),
+  primary_key: z.string().nullable(),
   visible: z.boolean(),
+  display_primary_key: z.string(),
+  display_column: z.string().optional(),
+  searchable_columns: z.string().optional(),
 
   // openapi3-ts
-  properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema])),
-  required: z.array(z.string()),
+  properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema]))
+    .optional(),
+  required: z.array(z.string()).optional(),
 }) satisfies z.ZodType<ResourceKey>
 
 export type UISchemaObject =

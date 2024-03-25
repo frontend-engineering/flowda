@@ -18,11 +18,13 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "id": {
+            "column_type": "Int",
             "display_name": "Id",
             "key_type": "column",
             "type": "integer",
           },
           "name": {
+            "column_type": "String",
             "display_name": "Name",
             "key_type": "column",
             "type": "string",
@@ -52,11 +54,13 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "id": {
+            "column_type": "Int",
             "display_name": "Id",
             "key_type": "column",
             "type": "integer",
           },
           "name": {
+            "column_type": "String",
             "display_name": "Name",
             "key_type": "column",
             "type": "string",
@@ -110,16 +114,19 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "email": {
+            "column_type": "String",
             "display_name": "Email",
             "key_type": "column",
             "type": "string",
           },
           "id": {
+            "column_type": "Int",
             "display_name": "Id",
             "key_type": "column",
             "type": "integer",
           },
           "name": {
+            "column_type": "String",
             "display_name": "Name",
             "key_type": "column",
             "nullable": true,
@@ -134,6 +141,7 @@ describe('prisma 02 generated zod to openapi', function () {
             "reference_type": "belongs_to",
           },
           "tenantId": {
+            "column_type": "Int",
             "display_name": "Tenant Id",
             "key_type": "column",
             "type": "integer",

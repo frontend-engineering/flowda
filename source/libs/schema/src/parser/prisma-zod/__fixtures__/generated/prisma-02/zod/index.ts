@@ -30,8 +30,8 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const TenantSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
-  name: z.string().openapi({ key_type: 'column', display_name: 'Name' }),
+  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
+  name: z.string().openapi({ key_type: 'column', display_name: 'Name', column_type: 'String' }),
 }).openapi({
   key_type: 'resource',
   name: 'Tenant',
@@ -82,10 +82,10 @@ export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
-  email: z.string().openapi({ key_type: 'column', display_name: 'Email' }),
-  name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name' }),
-  tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id' }),
+  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
+  email: z.string().openapi({ key_type: 'column', display_name: 'Email', column_type: 'String' }),
+  name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name', column_type: 'String' }),
+  tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id', column_type: 'Int' }),
 }).openapi({
   key_type: 'resource',
   name: 'User',
@@ -134,10 +134,14 @@ export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.obje
 /////////////////////////////////////////
 
 export const UserProfileSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
-  fullName: z.string().openapi({ key_type: 'column', display_name: 'Full Name' }),
-  userId: z.number().int().openapi({ key_type: 'column', display_name: 'User Id' }),
-  tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id' }),
+  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
+  fullName: z.string().openapi({
+    key_type: 'column',
+    display_name: 'Full Name',
+    column_type: 'String'
+  }),
+  userId: z.number().int().openapi({ key_type: 'column', display_name: 'User Id', column_type: 'Int' }),
+  tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id', column_type: 'Int' }),
 }).openapi({
   key_type: 'resource',
   name: 'UserProfile',

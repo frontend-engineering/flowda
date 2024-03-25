@@ -1,9 +1,47 @@
 import { z } from 'zod';
-import type { Prisma } from '../@prisma/client';
+import { Prisma } from '../@prisma/client';
 
 /////////////////////////////////////////
 // HELPER FUNCTIONS
 /////////////////////////////////////////
+
+// JSON
+//------------------------------------------------------
+
+export type NullableJsonInput = Prisma.JsonValue | null | 'JsonNull' | 'DbNull' | Prisma.NullTypes.DbNull | Prisma.NullTypes.JsonNull;
+
+export const transformJsonNull = (v?: NullableJsonInput) => {
+  if (!v || v === 'DbNull') return Prisma.DbNull;
+  if (v === 'JsonNull') return Prisma.JsonNull;
+  return v;
+};
+
+export const JsonValue: z.ZodType<Prisma.JsonValue> = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.lazy(() => z.array(JsonValue)),
+  z.lazy(() => z.record(JsonValue)),
+]);
+
+export type JsonValueType = z.infer<typeof JsonValue>;
+
+export const NullableJsonValue = z
+  .union([JsonValue, z.literal('DbNull'), z.literal('JsonNull')])
+  .nullable()
+  .transform((v) => transformJsonNull(v));
+
+export type NullableJsonValueType = z.infer<typeof NullableJsonValue>;
+
+export const InputJsonValue: z.ZodType<Prisma.InputJsonValue> = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.lazy(() => z.array(InputJsonValue.nullable())),
+  z.lazy(() => z.record(InputJsonValue.nullable())),
+]);
+
+export type InputJsonValueType = z.infer<typeof InputJsonValue>;
 
 
 /////////////////////////////////////////
@@ -12,9 +50,13 @@ import type { Prisma } from '../@prisma/client';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','email','name']);
+export const UserScalarFieldEnumSchema = z.enum(['id','email','name','extendedDescriptionData']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
+
+export const NullableJsonNullValueInputSchema = z.enum(['DbNull','JsonNull',]).transform((v) => transformJsonNull(v));
+
+export const JsonNullValueFilterSchema = z.enum(['DbNull','JsonNull','AnyNull',]);
 
 export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
@@ -26,9 +68,14 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id' }),
-  email: z.string().openapi({ key_type: 'column', display_name: '邮箱' }),
-  name: z.string().nullish().openapi({ key_type: 'column', display_name: '用户名' }).openapi({ 'x-legacy': { prisma: 'false' } }),
+  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
+  email: z.string().openapi({ key_type: 'column', display_name: '邮箱', column_type: 'String' }),
+  name: z.string().nullish().openapi({ key_type: 'column', display_name: '用户名', column_type: 'String' }).openapi({ 'x-legacy': { prisma: 'false' } }),
+  extendedDescriptionData: z.any().optional().nullish().openapi({
+    key_type: 'column',
+    display_name: 'Extended Description Data',
+    column_type: 'Json'
+  }),
 }).openapi({
   key_type: 'resource',
   name: 'User',

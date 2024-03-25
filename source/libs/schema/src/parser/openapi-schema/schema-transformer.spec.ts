@@ -10,6 +10,12 @@ describe('schema transformer', function () {
         },
         name: 'Site',
         properties: {
+          extendedDescriptionData: {
+            display_name: 'Extended Description Data',
+            key_type: 'column',
+            nullable: true,
+            column_type: 'Json',
+          },
           editableUrl: {
             display_name: '可编辑链接',
             key_type: 'column',
@@ -17,7 +23,7 @@ describe('schema transformer', function () {
               override_type: 'text',
               prisma: 'false',
             },
-            type: 'string',
+            column_type: 'String',
           },
         },
         required: ['editableUrl'],
@@ -29,7 +35,14 @@ describe('schema transformer', function () {
         "associations": [],
         "columns": [
           {
-            "column_type": "string",
+            "column_type": "Json",
+            "display_name": "Extended Description Data",
+            "name": "extendedDescriptionData",
+            "reference": undefined,
+            "validators": [],
+          },
+          {
+            "column_type": "String",
             "display_name": "可编辑链接",
             "name": "editableUrl",
             "reference": undefined,

@@ -26,6 +26,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
      * @schema {legacy} [prisma=false]
      */
     name: string | null
+    extendedDescriptionData: Prisma.JsonValue | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -961,6 +962,7 @@ export namespace Prisma {
     id: number
     email: number
     name: number
+    extendedDescriptionData: number
     _all: number
   }
 
@@ -989,6 +991,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    extendedDescriptionData?: true
     _all?: true
   }
 
@@ -1083,6 +1086,7 @@ export namespace Prisma {
     id: number
     email: string
     name: string | null
+    extendedDescriptionData: JsonValue | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1108,12 +1112,14 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    extendedDescriptionData?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
     name?: boolean
+    extendedDescriptionData?: boolean
   }
 
 
@@ -1835,7 +1841,8 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
-    name: 'name'
+    name: 'name',
+    extendedDescriptionData: 'extendedDescriptionData'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1847,6 +1854,23 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   export const NullsOrder: {
@@ -1869,12 +1893,14 @@ export namespace Prisma {
     id?: IntFilter | number
     email?: StringFilter | string
     name?: StringNullableFilter | string | null
+    extendedDescriptionData?: JsonNullableFilter
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    extendedDescriptionData?: SortOrderInput | SortOrder
   }
 
   export type UserWhereUniqueInput = {
@@ -1886,6 +1912,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    extendedDescriptionData?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -1900,45 +1927,53 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter | number
     email?: StringWithAggregatesFilter | string
     name?: StringNullableWithAggregatesFilter | string | null
+    extendedDescriptionData?: JsonNullableWithAggregatesFilter
   }
 
   export type UserCreateInput = {
     email: string
     name?: string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUncheckedCreateInput = {
     id?: number
     email: string
     name?: string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserCreateManyInput = {
     id?: number
     email: string
     name?: string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUpdateManyMutationInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    extendedDescriptionData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type IntFilter = {
@@ -1979,6 +2014,28 @@ export namespace Prisma {
     endsWith?: string
     not?: NestedStringNullableFilter | string | null
   }
+  export type JsonNullableFilter = 
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase>, Exclude<keyof Required<JsonNullableFilterBase>, 'path'>>,
+        Required<JsonNullableFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase>, 'path'>>
+
+  export type JsonNullableFilterBase = {
+    equals?: InputJsonValue | JsonNullValueFilter
+    path?: string
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
+  }
 
   export type SortOrderInput = {
     sort: SortOrder
@@ -1989,6 +2046,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    extendedDescriptionData?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -2059,6 +2117,31 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedStringNullableFilter
     _max?: NestedStringNullableFilter
+  }
+  export type JsonNullableWithAggregatesFilter = 
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase = {
+    equals?: InputJsonValue | JsonNullValueFilter
+    path?: string
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
+    _count?: NestedIntNullableFilter
+    _min?: NestedJsonNullableFilter
+    _max?: NestedJsonNullableFilter
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -2186,6 +2269,28 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
+  }
+  export type NestedJsonNullableFilter = 
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase>, Exclude<keyof Required<NestedJsonNullableFilterBase>, 'path'>>,
+        Required<NestedJsonNullableFilterBase>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase>, 'path'>>
+
+  export type NestedJsonNullableFilterBase = {
+    equals?: InputJsonValue | JsonNullValueFilter
+    path?: string
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
   }
 
 

@@ -5,11 +5,12 @@ describe('ui schema spec', function () {
     const data = {
       'x-legacy': {},
     }
-    const output = PluginKeySchema.parse(data)
-    expect(output).toMatchInlineSnapshot(`
-      {
-        "x-legacy": {},
-      }
-    `)
+    const output = PluginKeySchema.safeParse(data)
+    if (!output.success) throw new Error('')
+    expect(output.data).toMatchInlineSnapshot(`
+    {
+      "x-legacy": {},
+    }
+  `)
   })
 })
