@@ -4,7 +4,10 @@
   "type": "commonjs",
   "theiaExtensions": [
     {
-      "frontend": "src/browser/flowda-frontend-module"
+      "frontend": "src/browser/hello-world-frontend-module"
     }
-  ]
+  ],
+  "peerDependencies": {
+    "@anatine/zod-openapi": "*"
+  }
 }
