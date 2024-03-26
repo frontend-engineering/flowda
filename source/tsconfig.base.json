@@ -18,11 +18,12 @@
       "@flowda/design": ["libs/design/src/index.ts"],
       "@flowda/nx-plugin": ["libs/nx-plugin/src/index.ts"],
       "@flowda/schema": ["libs/schema/src/index.ts"],
-      "@flowda/types": ["libs/types/src/index.ts"]
+      "@flowda/types": ["libs/types/src/index.ts"],
+      "@flowda/theia-plugin": ["libs/theia-plugin/src/index.ts"]
     }
   },
   "exclude": [
-    "node_modules", 
+    "node_modules",
     "tmp"
   ]
 }

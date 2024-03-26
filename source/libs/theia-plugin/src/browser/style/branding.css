@@ -1,0 +1,126 @@
+/* reset.css 暂时不用，theia 的样式依赖 ua 默认样式 */
+/*@import "./reset.css";*/
+@import "./global_styles.css";
+@import "@elastic/eui/dist/eui_theme_dark.css";
+@import "ag-grid-community/styles/ag-grid.css";
+@import "./ag-theme-linear.css";
+@import "./eui-custom.css";
+@import "./grid.css";
+
+.theia-icon {
+    background-image: url("../icons/linear.avif");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#theia-main-content-panel {
+    background-image: url("../icons/linear.avif");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 15%;
+}
+
+.unclosable-window-icon {
+    -webkit-mask: url("window-icon.svg");
+    mask: url("window-icon.svg");
+}
+
+.theia-notifications-container {
+    z-index: 10000 !important;
+}
+
+/* 原先 theia 在 packages/core/src/browser/common-frontend-contribution.ts registerColors
+中颜色写死，这里强制覆盖下 并且在 dark_linear 里加上 css var。如果原先的主题没有会 fallback 到 common-frontend-contribution.ts */
+.theia-button {
+    background-color: var(--theia-button-background);
+    border-radius: 4px;
+}
+
+/* 仅覆盖 css var 不行，需要增加 css
+todo: backdrop-filter 设置 fallback 即 backdrop-filter: initiate/unset
+*/
+.p-Widget.dialogOverlay .dialogBlock,
+.p-Menu,
+.quick-input-widget {
+    backdrop-filter: blur(10px) saturate(190%) contrast(70%) brightness(80%);
+}
+
+/* override 用新的 css var 是因为原先用的 statusBar.background 用到的地方较多 所以单独改这一个*/
+.p-Widget.dialogOverlay .dialogTitle {
+    background-color: var(--theia-custom-dialogTitleBackground);
+}
+
+.p-Widget.dialogOverlay .dialogBlock {
+    background-color: var(--theia-custom-dialogBlockBackground);
+}
+
+/* 整体 box-sizing: border-box
+  后 这个样式需要 unset 下 */
+.p-TabBar-tabCloseIcon.action-label,
+.p-TabBar-tabIcon.codicon {
+    box-sizing: unset;
+}
+
+/* eui */
+.euiFormLabel.euiFormLabel-isFocused {
+    color: var(--theia-textLink-foreground);
+}
+
+.euiFieldText--compressed:focus {
+    background-image: linear-gradient(to top, var(--theia-textLink-foreground), var(--theia-textLink-foreground) 2px, transparent 2px, transparent 100%);
+    background-color: var(--theia-sideBar-background);
+}
+
+.euiFieldText--compressed {
+    background-color: var(--theia-sideBar-background);
+}
+
+.ag-root-wrapper {
+    border: var(--ag-borders) transparent !important;
+}
+
+/* 和 linear 一样 27 看起来更协调 */
+.dark-linear {
+    --theia-content-line-height: 27px;
+}
+
+/* avatar */
+.custom-avatar-wrapper {
+    &:hover {
+        background: var(--theia-menubar-selectionBackground);
+    }
+
+    border-radius: 4px;
+    margin: 8px;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    width: 32px;
+    height: 32px;
+    font-size: 9px;
+}
+
+.custom-avatar {
+    transform: translate(-50%, 50%);
+    left: 50%;
+    bottom: 50%;
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(192, 109, 37);
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease-in-out 0s;
+}
