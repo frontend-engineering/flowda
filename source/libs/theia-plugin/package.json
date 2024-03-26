@@ -1,0 +1,10 @@
+{
+  "name": "@flowda/theia-plugin",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "theiaExtensions": [
+    {
+      "frontend": "src/browser/flowda-frontend-module"
+    }
+  ]
+}

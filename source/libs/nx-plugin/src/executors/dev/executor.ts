@@ -52,11 +52,6 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         consola.start(`Bundling ${context.projectName} .d.ts...`)
         const bundle = await rollup.rollup(rollupOptions)
         await bundle.write(rollupOptions.output[0])
-        const packageJsonPath = path.join(options.outputPath, 'package.json')
-        const packageJson = readJsonFile(packageJsonPath)
-        packageJson.types = './index.bundle.d.ts'
-        writeJsonFile(`${options.outputPath}/package.json`, packageJson)
-        consola.info('  update package.json#types: ./index.bundle.d.ts')
         consola.success(`Bundle done.`)
       } catch (e) {
         if (e instanceof Error) {
@@ -64,6 +59,19 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         } else {
           consola.error(e)
         }
+      }
+    }
+    const packageJsonPath = path.join(options.outputPath, 'package.json')
+    const packageJson = readJsonFile(packageJsonPath)
+    if (options.bundleDts) {
+      packageJson.types = './index.bundle.d.ts'
+      writeJsonFile(`${options.outputPath}/package.json`, packageJson)
+      consola.info('  update package.json#types: ./index.bundle.d.ts')
+    } else {
+      if (options.yalc) {
+        delete packageJson.types
+        writeJsonFile(`${options.outputPath}/package.json`, packageJson)
+        consola.info('  delete package.json#types')
       }
     }
     if (options.yalc) {
