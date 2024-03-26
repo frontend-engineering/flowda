@@ -1,9 +1,0 @@
-/* 提取自 eui/src/global_styling/reset/global_styles.tsx
-全部提取和 theia 默认样式冲突大，按需提取
- */
-
-/* 这块样式 eui 里是写在 reset.css 但是原始的 reset.css 没有这一行，就先加在这里 */
-*, *:before, *:after {
-    box-sizing: border-box;
-}
-
