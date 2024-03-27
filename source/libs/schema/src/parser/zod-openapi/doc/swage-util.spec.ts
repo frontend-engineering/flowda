@@ -1,16 +1,39 @@
 import * as fs from 'fs-extra'
 import * as path from 'path'
+import { set } from 'lodash'
 
-import { convert } from './swage-util'
+import { convertToSwage, traverse } from './swage-util'
 
 describe('swage util', () => {
-    it('can convert zod-openapi createDocument to swage compatible format', () => {
-        const input = fs.readJSONSync(path.join(__dirname, './__fixtures__/sample-openapi3.json'))
-        const output = convert(input)
-        expect(output).toMatchInlineSnapshot(`
+  it('traverse', () => {
+    const input = fs.readJSONSync(path.join(__dirname, './__fixtures__/sample-openapi3.json'))
+    const schema = input.paths['/wms/noticeMouldIntoStock'].post.requestBody.content['application/json'].schema
+    let output: any = {}
+    traverse('root', schema, (p, node) => {
+      if (!!node.description || !!node.example) {
+        set(output, p, `${node.description}(e.g. ${node.example})`)
+      }
+    })
+    expect(output.root).toMatchInlineSnapshot(`
+      {
+        "goodsList": [
+          {
+            "containerCode": "箱码(e.g. containerCode)",
+          },
+        ],
+        "noticeId": "单据号(e.g. XSCK00001)",
+      }
+    `)
+  })
+
+  it('can convert zod-openapi createDocument to swage compatible format', () => {
+    const input = fs.readJSONSync(path.join(__dirname, './__fixtures__/sample-openapi3.json'))
+    const output = convertToSwage(input)
+    expect(output).toMatchInlineSnapshot(`
       {
         "definitions": {
           "NormalResponse": {
+            "example": {},
             "properties": {
               "code": {
                 "type": "string",
@@ -27,6 +50,14 @@ describe('swage util', () => {
             "type": "object",
           },
           "WcsNoticeMouldIntoStockSchema": {
+            "example": {
+              "goodsList": [
+                {
+                  "containerCode": "箱码(e.g. containerCode)",
+                },
+              ],
+              "noticeId": "单据号(e.g. XSCK00001)",
+            },
             "properties": {
               "goodsList": {
                 "items": {
@@ -97,5 +128,5 @@ describe('swage util', () => {
         },
       }
     `)
-    })
+  })
 })
