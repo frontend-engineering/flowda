@@ -1,4 +1,3 @@
-import { OpenAPIObject } from 'openapi3-ts'
 import { set } from 'lodash'
 
 export function traverse(path: string, tree: any, visit: (k: string, node: any) => void) {
@@ -31,7 +30,7 @@ function extractToDef(defs: Record<string, unknown>, body: any) {
   }
 }
 
-export function convertToSwage(input: OpenAPIObject) {
+export function convertToSwage(input: any) {
   const defs = {} as Record<string, unknown>
   Object.keys(input.paths).forEach(path => {
     const pathVal = input.paths[path]

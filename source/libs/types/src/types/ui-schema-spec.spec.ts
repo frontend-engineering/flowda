@@ -6,7 +6,7 @@ describe('ui schema spec', function () {
       'x-legacy': {},
     }
     const output = PluginKeySchema.safeParse(data)
-    if (!output.success) throw new Error('')
+    if (!output.success) throw new Error('test error')
     expect(output.data).toMatchInlineSnapshot(`
     {
       "x-legacy": {},

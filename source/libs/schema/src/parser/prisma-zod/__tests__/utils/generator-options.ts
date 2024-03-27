@@ -33,6 +33,7 @@ export function createGeneratorOptions({ dmmf }: {
         useMultipleFiles: 'false',
         addSelectType: 'false',
         writeNullishInModelTypes: 'true',
+        extendZod: './placeholder'
       },
       binaryTargets: [],
       previewFeatures: [],

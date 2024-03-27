@@ -31,4 +31,4 @@ fi
 
 cd $SCRIPT_DIR
 
-concurrently -c "auto" -n openapi,prisma,schema,types "./zod-openapi-dev.sh" "./zod-prisma-types-dev.sh" "./schema-dev.sh" "./types-dev.sh"
+concurrently --restart-tries -1 --restart-after 5000 -c "auto" -n openapi,prisma,schema,types "./zod-openapi-dev.sh" "./zod-prisma-types-dev.sh" "./schema-dev.sh" "./types-dev.sh"
