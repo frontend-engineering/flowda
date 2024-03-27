@@ -8,9 +8,6 @@ extendZod(z)
 describe('zod openapi', () => {
   it('generate openapi doc', () => {
     const schema = z.string().openapi({
-      key_type: 'column',
-      column_type: 'String',
-      display_name: 'Hello',
       description: 'hello world!',
       example: 'hello world',
     })
@@ -59,9 +56,6 @@ describe('zod openapi', () => {
                   application/json:
                     schema:
                       type: string
-                      key_type: column
-                      column_type: String
-                      display_name: Hello
                       description: hello world!
                       example: hello world
       "

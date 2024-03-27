@@ -30,10 +30,9 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const TenantSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
-  name: z.string().openapi({ key_type: 'column', display_name: 'Name', column_type: 'String' }),
-}).openapi({
-  key_type: 'resource',
+  id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
+  name: z.string().column({ display_name: 'Name', column_type: 'String' }),
+}).resource({
   name: 'Tenant',
   slug: 'tenants',
   table_name: 'Tenant',
@@ -57,8 +56,7 @@ export type TenantRelations = {
 export type TenantWithRelations = z.infer<typeof TenantSchema> & TenantRelations
 
 export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.object({
-  users: z.lazy(() => UserWithRelationsSchema).array().openapi({
-    key_type: 'association',
+  users: z.lazy(() => UserWithRelationsSchema).array().association({
     display_name: 'Users',
     slug: 'users',
     model_name: 'User',
@@ -66,8 +64,7 @@ export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.
     foreign_key: 'tenantId',
     primary_key: 'id'
   }),
-  userProfiles: z.lazy(() => UserProfileWithRelationsSchema).array().openapi({
-    key_type: 'association',
+  userProfiles: z.lazy(() => UserProfileWithRelationsSchema).array().association({
     display_name: 'User Profiles',
     slug: 'user_profiles',
     model_name: 'UserProfile',
@@ -82,12 +79,11 @@ export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
-  email: z.string().openapi({ key_type: 'column', display_name: 'Email', column_type: 'String' }),
-  name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name', column_type: 'String' }),
-  tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id', column_type: 'Int' }),
-}).openapi({
-  key_type: 'resource',
+  id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
+  email: z.string().column({ display_name: 'Email', column_type: 'String' }),
+  name: z.string().nullish().column({ display_name: 'Name', column_type: 'String' }),
+  tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int' }),
+}).resource({
   name: 'User',
   slug: 'users',
   table_name: 'User',
@@ -111,16 +107,14 @@ export type UserRelations = {
 export type UserWithRelations = z.infer<typeof UserSchema> & UserRelations
 
 export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.object({
-  tenant: z.lazy(() => TenantWithRelationsSchema).openapi({
-    key_type: 'reference',
+  tenant: z.lazy(() => TenantWithRelationsSchema).reference({
     display_name: 'Tenant',
     model_name: 'Tenant',
     foreign_key: 'tenantId',
     primary_key: 'id',
     reference_type: 'belongs_to'
   }),
-  userProfile: z.lazy(() => UserProfileWithRelationsSchema).nullish().openapi({
-    key_type: 'reference',
+  userProfile: z.lazy(() => UserProfileWithRelationsSchema).nullish().reference({
     display_name: 'User Profile',
     model_name: 'UserProfile',
     foreign_key: 'userId',
@@ -134,16 +128,11 @@ export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.obje
 /////////////////////////////////////////
 
 export const UserProfileSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
-  fullName: z.string().openapi({
-    key_type: 'column',
-    display_name: 'Full Name',
-    column_type: 'String'
-  }),
-  userId: z.number().int().openapi({ key_type: 'column', display_name: 'User Id', column_type: 'Int' }),
-  tenantId: z.number().int().openapi({ key_type: 'column', display_name: 'Tenant Id', column_type: 'Int' }),
-}).openapi({
-  key_type: 'resource',
+  id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
+  fullName: z.string().column({ display_name: 'Full Name', column_type: 'String' }),
+  userId: z.number().int().column({ display_name: 'User Id', column_type: 'Int' }),
+  tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int' }),
+}).resource({
   name: 'UserProfile',
   slug: 'user_profiles',
   table_name: 'UserProfile',
@@ -167,16 +156,14 @@ export type UserProfileRelations = {
 export type UserProfileWithRelations = z.infer<typeof UserProfileSchema> & UserProfileRelations
 
 export const UserProfileWithRelationsSchema: z.ZodObject<any> = UserProfileSchema.merge(z.object({
-  user: z.lazy(() => UserWithRelationsSchema).openapi({
-    key_type: 'reference',
+  user: z.lazy(() => UserWithRelationsSchema).reference({
     display_name: 'User',
     model_name: 'User',
     foreign_key: 'userId',
     primary_key: 'id',
     reference_type: 'belongs_to'
   }),
-  tenant: z.lazy(() => TenantWithRelationsSchema).openapi({
-    key_type: 'reference',
+  tenant: z.lazy(() => TenantWithRelationsSchema).reference({
     display_name: 'Tenant',
     model_name: 'Tenant',
     foreign_key: 'tenantId',

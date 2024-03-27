@@ -4,7 +4,6 @@ describe('schema transformer', function () {
   it('case', () => {
     const output = new SchemaTransformer()
       .set(<any>{
-        key_type: 'resource',
         'x-legacy': {
           route_prefix: '/resources/sites',
         },
@@ -12,13 +11,11 @@ describe('schema transformer', function () {
         properties: {
           extendedDescriptionData: {
             display_name: 'Extended Description Data',
-            key_type: 'column',
             nullable: true,
             column_type: 'Json',
           },
           editableUrl: {
             display_name: '可编辑链接',
-            key_type: 'column',
             'x-legacy': {
               override_type: 'text',
               prisma: 'false',

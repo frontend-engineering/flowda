@@ -5,9 +5,8 @@ import '../prisma-zod/__tests__/utils/schema-legacy'
 extendZod(z)
 describe('zod openapi', () => {
   it('parse a simple zod schema', () => {
-    const schema = z.string().openapi({
-      key_type: 'column',
-      type: 'string',
+    const schema = z.string().column({
+      column_type: 'String',
       display_name: 'Hello',
       description: 'hello world!',
       example: 'hello world',
@@ -15,10 +14,10 @@ describe('zod openapi', () => {
     const output = zodToOpenAPI(schema)
     expect(output).toMatchInlineSnapshot(`
       {
+        "column_type": "String",
         "description": "hello world!",
         "display_name": "Hello",
         "example": "hello world",
-        "key_type": "column",
         "type": "string",
       }
     `)
@@ -29,8 +28,7 @@ describe('zod openapi', () => {
       .object({
         message: z.string(),
       })
-      .openapi({
-        key_type: 'resource',
+      .resource({
         name: 'User',
         slug: 'users',
         table_name: 'User',
@@ -44,7 +42,7 @@ describe('zod openapi', () => {
       .extend({
         from: z.string(),
       })
-      .openapi({
+      .resource({
         'x-legacy': {
           prisma: 'false',
         },
@@ -55,7 +53,6 @@ describe('zod openapi', () => {
         "class_name": "User",
         "display_name": "员工",
         "display_primary_key": "false",
-        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
@@ -86,8 +83,7 @@ describe('zod openapi', () => {
       .object({
         message: z.string(),
       })
-      .openapi({
-        key_type: 'resource',
+      .resource({
         name: 'User',
         slug: 'users',
         table_name: 'User',
@@ -111,7 +107,6 @@ describe('zod openapi', () => {
         "class_name": "User",
         "display_name": "员工",
         "display_primary_key": "false",
-        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
@@ -135,8 +130,7 @@ describe('zod openapi', () => {
       .object({
         id1: z.string(),
       })
-      .openapi({
-        key_type: 'resource',
+      .resource({
         name: 'User',
         slug: 'users',
         table_name: 'User',
@@ -151,8 +145,7 @@ describe('zod openapi', () => {
       .object({
         id2: z.string(),
       })
-      .openapi({
-        key_type: 'resource',
+      .resource({
         name: 'User',
         slug: 'users',
         table_name: 'User',
@@ -163,8 +156,7 @@ describe('zod openapi', () => {
         display_primary_key: 'false',
       })
 
-    const schema = schema1.merge(schema2).openapi({
-      key_type: 'resource',
+    const schema = schema1.merge(schema2).resource({
       name: 'User',
       slug: 'users',
       table_name: 'User',
@@ -181,7 +173,6 @@ describe('zod openapi', () => {
         "class_name": "User",
         "display_name": "员工 merge",
         "display_primary_key": "false",
-        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
