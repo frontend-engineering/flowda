@@ -26,7 +26,11 @@ describe('prisma-03', function () {
       export const UserSchema = z.object({
         id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
         email: z.string().column({ display_name: '邮箱', column_type: 'String' }),
-        name: z.string().nullish().column({ display_name: '用户名', column_type: 'String' }).column({ 'x-legacy': { prisma: 'false' } }),
+        name: z.string().nullish().column({
+          display_name: '用户名',
+          column_type: 'String',
+          'x-legacy': { prisma: 'false' }
+        }),
         extendedDescriptionData: z.any().optional().nullish().column({ display_name: 'Extended Description Data', column_type: 'Json' }),
       }).resource({
         name: 'User',
@@ -38,8 +42,9 @@ describe('prisma-03', function () {
         visible: true,
         display_primary_key: 'false',
         display_column: 'email',
-        searchable_columns: 'email,name'
-      }).resource({ 'x-legacy': { route_prefix: '/admin' } })
+        searchable_columns: 'email,name',
+        'x-legacy': { route_prefix: '/admin' }
+      })
 
       export type User = z.infer<typeof UserSchema>
       "

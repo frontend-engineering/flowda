@@ -1,6 +1,5 @@
 import { zodToOpenAPI } from '../index'
 import { UserSchema } from '../../prisma-zod/__fixtures__/prisma-03/index'
-import '../../prisma-zod/__tests__/utils/schema-legacy'
 
 describe('prisma 03 generated zod to openapi', function () {
   it('parse a prisma generated zod schema, rich comments', () => {

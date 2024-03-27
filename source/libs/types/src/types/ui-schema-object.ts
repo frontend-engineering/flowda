@@ -5,6 +5,7 @@ export type ColumnKey = {
   display_name: string
   description?: string
   example?: string
+  [p: `x-${string}`]: unknown,
 }
 export const ColumnKeySchema = z.object({
   column_type: z.string(),
@@ -56,6 +57,7 @@ export type ResourceKey = {
   slug: string
   table_name: string
   visible: boolean
+  [p: `x-${string}`]: unknown,
 
   // openapi3-ts
   properties?: Record<string, ColumnKey | AssociationKey | ReferenceKey>

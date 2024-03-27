@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { extendZod, zodToOpenAPI } from './index'
-import '../prisma-zod/__tests__/utils/schema-legacy'
 
 extendZod(z)
 describe('zod openapi', () => {
