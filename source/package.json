@@ -118,6 +118,7 @@
     "formik": "^1.5.8",
     "inversify": "^6.0.2",
     "lodash": "^4.17.21",
+    "minimatch": "^9.0.3",
     "mobx": "^6.6.2",
     "mobx-react": "^7.6.0",
     "moment": "^2.13.0",

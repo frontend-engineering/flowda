@@ -6,8 +6,9 @@ cat << EOF
 This script will run these scripts in parallel:
 1. ./zod-openapi-dev.sh
 2. ./zod-prisma-types-dev.sh
-3. schema:dev
-4. types:dev
+3. types:dev
+4. schema:dev
+5. nx-plugin:dev
 
 EOF
 
@@ -31,4 +32,10 @@ fi
 
 cd $SCRIPT_DIR
 
-concurrently --restart-tries -1 --restart-after 5000 -c "auto" -n openapi,prisma,schema,types "./zod-openapi-dev.sh" "./zod-prisma-types-dev.sh" "./schema-dev.sh" "./types-dev.sh"
+concurrently --restart-tries -1 --restart-after 5000 -c "auto" \
+  -n openapi,prisma,types,schema,nx-plugin \
+  "./zod-openapi-dev.sh" \
+  "./zod-prisma-types-dev.sh" \
+  "./types-dev.sh" \
+  "./schema-dev.sh" \
+  "./nx-plugin-dev.sh"
