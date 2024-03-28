@@ -9,32 +9,27 @@ describe('prisma 01 generated zod to openapi', function () {
         "class_name": "User",
         "display_name": "Users",
         "display_primary_key": "true",
-        "key_type": "resource",
         "name": "User",
         "primary_key": "id",
         "properties": {
           "email": {
             "column_type": "String",
             "display_name": "Email",
-            "key_type": "column",
             "type": "string",
           },
           "extendedDescriptionData": {
             "column_type": "Json",
             "display_name": "Extended Description Data",
-            "key_type": "column",
             "nullable": true,
           },
           "id": {
             "column_type": "Int",
             "display_name": "Id",
-            "key_type": "column",
             "type": "integer",
           },
           "name": {
             "column_type": "String",
             "display_name": "Name",
-            "key_type": "column",
             "nullable": true,
             "type": "string",
           },

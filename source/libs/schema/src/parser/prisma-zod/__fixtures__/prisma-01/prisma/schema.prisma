@@ -24,6 +24,7 @@ generator zod {
   coerceDate                = false // default is true
   writeNullishInModelTypes  = true // default is false
   // prismaClientPath                 = "./generated/client" // optional
+  extendZod = "../../../../../zod-openapi/extend-zod"
 }
 
 datasource db {

@@ -1,4 +1,5 @@
 import {
+  AssociationKey,
   AssociationKeySchema,
   ColumnUISchema,
   ColumUI,
@@ -36,16 +37,13 @@ export class SchemaTransformer {
 }
 
 export function processJsonschema(jsonschema: ResourceKey) {
-  if (jsonschema.key_type !== 'resource') {
-    throw new Error(`un supported key type, type:${jsonschema.key_type}, jsonschema:${JSON.stringify(jsonschema)}`)
-  }
   if (jsonschema.properties == null)
     throw new Error(`no properties, ${jsonschema.class_name}`)
 
   const props = jsonschema.properties
   const refCols = Object.keys(props).filter(k => {
     const prop = props[k]
-    if (prop.key_type === 'reference') {
+    if ('model_name' in prop && 'reference_type' in prop) {
       return prop.model_name && prop.reference_type
     }
     return false
@@ -54,50 +52,51 @@ export function processJsonschema(jsonschema: ResourceKey) {
     const ret = ReferenceKeySchema.safeParse(prop)
     if (!ret.success)
       throw new Error(`reference parse error, k:${k}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
-    return _.omit(ret.data, ['key_type'])
+    return ret.data
   })
 
   return Object.keys(props).reduce((acc, cur) => {
-    // 找不到强类型的更舒适的方法，直接 type cast
     const prop = props[cur]
-    if (prop.key_type === 'reference' && prop.reference_type === 'belongs_to') {
+    if ('reference_type' in prop && prop.reference_type === 'belongs_to') {
       // reference 忽略，在 foreign_key column 附着在 reference 上
       return acc
     }
-    if (prop.key_type === 'association') {
+    if ('model_name' in prop && !('reference_type' in prop)) {
       const ret = AssociationKeySchema.safeParse({
         ...prop,
         name: cur,
       })
       if (!ret.success)
         throw new Error(`association parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${ret.error.message}`)
-      acc.associations.push(_.omit(ret.data, ['key_type']))
+      acc.associations.push(ret.data)
       return acc
     }
-
     const ref = refCols.find(r => r.foreign_key === cur)
-    const ret = ColumnUISchema.safeParse((prop.key_type === 'reference' && prop.reference_type === 'has_one') ? {
-      column_type: prop.key_type,
-      display_name: prop.display_name,
-      validators: [],
-      name: cur,
-      reference: _.omit(prop, ['key_type']),
-    } : (
-      prop.key_type === 'column' ? {
+    let colParseRet
+    if ('reference_type' in prop && prop.reference_type === 'has_one') {
+      colParseRet = ColumnUISchema.safeParse({
+        column_type: 'reference',
+        display_name: prop.display_name,
+        //            ^?
+        validators: [],
+        name: cur,
+        reference: prop,
+      })
+    } else if ('column_type' in prop) {
+      colParseRet = ColumnUISchema.safeParse({
         ...prop,
         name: cur,
         validators: [],
         reference: ref,
-      } : {
-        key_type: prop.key_type,
-      }
-    ))
-    if (!ret.success)
-      throw new Error(`column parse error, k:${cur}, error: ${ret.error.message}, prop: ${JSON.stringify(prop)}`)
+      })
+    } else {
+      throw new Error(`unknown branch, ${JSON.stringify(prop)}`)
+    }
+    if (!colParseRet.success)
+      throw new Error(`column parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${colParseRet.error.message}`)
 
     const colPlugin = PluginKeySchema.parse(prop)
-
-    const col = ret.data
+    const col = colParseRet.data
     if (jsonschema.required && jsonschema.required.indexOf(cur) > -1) {
       if (!col.validators) col.validators = []
       col.validators.push({
@@ -114,6 +113,6 @@ export function processJsonschema(jsonschema: ResourceKey) {
     associations: [],
   } as {
     columns: ColumUI[],
-    associations: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
+    associations: AssociationKey[]
   })
 }

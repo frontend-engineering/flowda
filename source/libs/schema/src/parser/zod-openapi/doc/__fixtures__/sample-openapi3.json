@@ -1,0 +1,80 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "云壶 WMS Open API",
+        "version": "2.0"
+    },
+    "paths": {
+        "/wms/noticeMouldIntoStock": {
+            "post": {
+                "operationId": "模具入库通知",
+                "summary": "模具入库通知",
+                "tags": [
+                    "wms模具入库"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "noticeId": {
+                                        "type": "number",
+                                        "description": "单据号",
+                                        "example": "XSCK00001"
+                                    },
+                                    "goodsList": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "containerCode": {
+                                                    "type": "string",
+                                                    "description": "箱码",
+                                                    "example": "containerCode"
+                                                }
+                                            },
+                                            "required": [
+                                                "containerCode"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "noticeId",
+                                    "goodsList"
+                                ],
+                                "title": "WcsNoticeMouldIntoStockSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "200 OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "title": "NormalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -2,7 +2,7 @@
 
 cat << EOF
 
-${YELLOW}${BOLD}This script will do:${RESET}
+This script will do:
 1. check global installation: pnpm, yalc
 2. npm i, build, yalc publish, add to source: zod-prisma-types, zod-openapi
 

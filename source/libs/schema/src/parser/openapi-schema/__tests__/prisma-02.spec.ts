@@ -29,7 +29,7 @@ describe('prisma-02', function () {
         "class_name": "Tenant",
         "columns": [
           {
-            "column_type": "integer",
+            "column_type": "Int",
             "display_name": "Id",
             "name": "id",
             "reference": undefined,
@@ -40,7 +40,7 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_type": "string",
+            "column_type": "String",
             "display_name": "Name",
             "name": "name",
             "reference": undefined,
@@ -72,7 +72,7 @@ describe('prisma-02', function () {
         "class_name": "User",
         "columns": [
           {
-            "column_type": "integer",
+            "column_type": "Int",
             "display_name": "Id",
             "name": "id",
             "reference": undefined,
@@ -83,7 +83,7 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_type": "string",
+            "column_type": "String",
             "display_name": "Email",
             "name": "email",
             "reference": undefined,
@@ -94,14 +94,14 @@ describe('prisma-02', function () {
             ],
           },
           {
-            "column_type": "string",
+            "column_type": "String",
             "display_name": "Name",
             "name": "name",
             "reference": undefined,
             "validators": [],
           },
           {
-            "column_type": "integer",
+            "column_type": "Int",
             "display_name": "Tenant Id",
             "name": "tenantId",
             "reference": {

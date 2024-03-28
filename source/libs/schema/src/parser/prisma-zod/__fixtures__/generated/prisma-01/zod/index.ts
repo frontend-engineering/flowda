@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { Prisma } from '../@prisma/client';
+import { extendZod } from '../../../../../zod-openapi/extend-zod';
+extendZod(z);
 
 /////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -68,16 +70,11 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.number().int().openapi({ key_type: 'column', display_name: 'Id', column_type: 'Int' }),
-  email: z.string().openapi({ key_type: 'column', display_name: 'Email', column_type: 'String' }),
-  name: z.string().nullish().openapi({ key_type: 'column', display_name: 'Name', column_type: 'String' }),
-  extendedDescriptionData: z.any().optional().nullish().openapi({
-    key_type: 'column',
-    display_name: 'Extended Description Data',
-    column_type: 'Json'
-  }),
-}).openapi({
-  key_type: 'resource',
+  id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
+  email: z.string().column({ display_name: 'Email', column_type: 'String' }),
+  name: z.string().nullish().column({ display_name: 'Name', column_type: 'String' }),
+  extendedDescriptionData: z.any().optional().nullish().column({ display_name: 'Extended Description Data', column_type: 'Json' }),
+}).resource({
   name: 'User',
   slug: 'users',
   table_name: 'User',

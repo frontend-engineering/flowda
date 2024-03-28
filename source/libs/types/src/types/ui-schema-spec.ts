@@ -2,17 +2,14 @@ import { z } from 'zod'
 import { ColumnKeySchema, ReferenceKeySchema, ResourceKeySchema } from './ui-schema-object'
 
 export const ResourceUISchema = ResourceKeySchema.omit({
-  key_type: true,
   properties: true,
   required: true,
 })
 
-export const ColumnUISchema = ColumnKeySchema.omit({
-  key_type: true,
-}).extend({
+export const ColumnUISchema = ColumnKeySchema.extend({
   name: z.string(),
   validators: z.array(z.unknown()),
-  reference: ReferenceKeySchema.omit({ key_type: true }).optional(),
+  reference: ReferenceKeySchema.optional(),
 })
 
 export const PluginKeySchema = z.custom<Record<`x-${string}`, unknown>>()

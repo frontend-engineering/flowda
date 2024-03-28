@@ -5,19 +5,10 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const VerificationTokenSchema = z.object({
-  identifier: z.string().openapi({
-    key_type: 'column',
-    display_name: 'Identifier',
-    column_type: 'String'
-  }),
-  token: z.string().openapi({ key_type: 'column', display_name: 'Token', column_type: 'String' }),
-  expires: z.date().openapi({
-    key_type: 'column',
-    display_name: 'Expires',
-    column_type: 'DateTime'
-  }),
-}).openapi({
-  key_type: 'resource',
+  identifier: z.string().column({ display_name: 'Identifier', column_type: 'String' }),
+  token: z.string().column({ display_name: 'Token', column_type: 'String' }),
+  expires: z.date().column({ display_name: 'Expires', column_type: 'DateTime' }),
+}).resource({
   name: 'VerificationToken',
   slug: 'verification_tokens',
   table_name: 'VerificationToken',
