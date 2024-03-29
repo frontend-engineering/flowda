@@ -26,6 +26,4 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "source/pnpm-lock.yaml"
 
-      - run: npm install yalc -g
-
-      - run: ./sripts/ci.sh
+      - run: ./scripts/ci.sh
