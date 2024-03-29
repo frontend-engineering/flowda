@@ -4,7 +4,7 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native"]
-  output        = "../../generated/prisma-04/@prisma/client"
+  output        = "../../generated/prisma-04/@prisma/client-04"
 }
 
 generator zod {
