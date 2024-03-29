@@ -9,14 +9,14 @@
       "signature": "209ac8ded566875bf5a2df6c801b6bb2",
       "link": true
     },
-    "zod-prisma-types": {
-      "signature": "d6df4fb460d07a447f9d035ecf625a4a",
-      "file": true,
-      "replaced": "link:../zod-prisma-types/packages/generator"
-    },
     "@anatine/zod-openapi": {
       "signature": "8bd1f59823bd9a4c176bd6cdb5f0e5ca",
       "file": true
+    },
+    "zod-prisma-types": {
+      "signature": "100272c2d4cbe185a00de7e04670ee3c",
+      "file": true,
+      "replaced": "link:../zod-prisma-types/packages/generator"
     }
   }
 }

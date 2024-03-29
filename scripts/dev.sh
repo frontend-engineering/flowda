@@ -25,14 +25,15 @@ if command -v "concurrently" >/dev/null 2>&1; then
   concurrently --version
   echo -e "${GREEN}found pnpm.${RESET}\n"
 else
-    echo -e "${RED}Please install concurrently${RESET}"
-    echo -e "npm install concurrently -g\n"
-    exit 1
+    echo -e "${RED}not found concurrently${RESET}"
+    echo -e "${YELLOW}install concurrently -g${RESET}"
+    npm install concurrently -g
+    echo -e "${GREEN}concurrently installed${RESET}"
 fi
 
 cd $SCRIPT_DIR
 
-concurrently --restart-tries -1 --restart-after 5000 -c "auto" \
+concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
   -n openapi,prisma,types,schema,nx-plugin \
   "./zod-openapi-dev.sh" \
   "./zod-prisma-types-dev.sh" \

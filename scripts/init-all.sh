@@ -30,9 +30,10 @@ if command -v "yalc" >/dev/null 2>&1; then
   yalc --version
   echo -e "${GREEN}found yalc.${RESET}\n"
 else
-    echo -e "${RED}Please install yalc${RESET}"
-    echo -e "npm install yalc -g\n"
-    exit 1
+    echo -e "${RED}not found yalc${RESET}"
+    echo -e "${YELLOW}install yalc -g${RESET}"
+    npm install yalc -g
+    echo -e "${GREEN}yalc installed${RESET}"
 fi
 
 echo -e "${YELLOW}${BOLD}zod-prisma-types init...${RESET}"

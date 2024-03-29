@@ -8,9 +8,10 @@ describe('swage util', () => {
   it('traverse', () => {
     const input = fs.readJSONSync(path.join(__dirname, './__fixtures__/sample-openapi3.json'))
     const schema = input.paths['/wms/noticeMouldIntoStock'].post.requestBody.content['application/json'].schema
-    let output: any = {}
+    // console.log(schema)
+    const output: any = {}
     traverse('root', schema, (p, node) => {
-      if (!!node.description || !!node.example) {
+      if (!!node?.description || !!node?.example) {
         set(output, p, `${node.description}(e.g. ${node.example})`)
       }
     })
