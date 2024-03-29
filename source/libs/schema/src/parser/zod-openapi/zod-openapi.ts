@@ -1,5 +1,5 @@
 import { generateSchema, OpenApiZodAny } from '@anatine/zod-openapi'
-import { ResourceKeySchema, ResourceUISchema } from '@flowda/types'
+import { ResourceKeySchema } from '@flowda/types'
 import { z } from 'zod'
 
 export function zodToOpenAPI(zodRef: OpenApiZodAny,
