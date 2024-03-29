@@ -24,4 +24,4 @@ fi
 
 cd "$(dirname "$(readlink -f "$0")")"
 cd ../zod-prisma-types/packages/generator/
-tsc-watch --onSuccess "yalc publish --push"
+tsc-watch --onSuccess "./node_modules/.bin/rollup -c rollup.config.mjs"
