@@ -7,13 +7,12 @@ import {
   ReferenceKeySchema,
   ResourceKey,
 } from '@flowda/types'
-import { z } from 'zod'
 import * as _ from 'radash'
 
 export class SchemaTransformer {
   private jsonschema?: ResourceKey
   private columns?: ColumUI[]
-  private associations?: Omit<z.infer<typeof AssociationKeySchema>, 'key_type'>[]
+  private associations?: AssociationKey[]
 
   set(jsonschema: ResourceKey) {
     this.jsonschema = jsonschema
@@ -29,10 +28,9 @@ export class SchemaTransformer {
       ...this.jsonschema,
       properties: undefined,
       required: undefined,
-      key_type: undefined,
       columns: this.columns,
       associations: this.associations,
-    }, ['properties', 'required', 'key_type'])
+    }, ['properties', 'required'])
   }
 }
 
