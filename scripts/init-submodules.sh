@@ -4,7 +4,8 @@ cat << EOF
 
 This script will do:
 1. check global installation: pnpm, yalc
-2. npm i, build, yalc publish, add to source: zod-prisma-types, zod-openapi
+2. fetch all submodules
+2. into submodules, npm i, build, yalc publish, yalc add to source
 
 EOF
 
@@ -36,29 +37,35 @@ else
     echo -e "${GREEN}yalc installed${RESET}"
 fi
 
+echo -e "${YELLOW}${BOLD}fetch submodules...${RESET}"
+git submodule update --init --recursive --force
+echo -e "${GREEN}${BOLD}fetched submodules${RESET}\n"
+
 echo -e "${YELLOW}${BOLD}zod-prisma-types init...${RESET}"
 cd $SCRIPT_DIR
 cd ../zod-prisma-types
+git checkout frontend-engineering
 echo -e "${YELLOW}install deps...${RESET}"
 pnpm i
 echo -e "${GREEN}done${RESET}"
 echo -e "${YELLOW}build zod-prisma-types and yalc publish...${RESET}"
 cd $SCRIPT_DIR
 cd ../zod-prisma-types/packages/generator
-npm run build
+npm run build && ./node_modules/.bin/rollup -c rollup.config.mjs
 yalc publish
 
 cd $SCRIPT_DIR
 cd ../source
 yalc add zod-prisma-types
 echo -e "${GREEN}done${RESET}"
-echo -e "for development, run ./scripts/dev-zod-prisma-types.sh"
+echo -e "for development, run ./scripts/zod-prisma-types-dev.sh"
 echo -e "${GREEN}${BOLD}zod-prisma-types init done${RESET}\n"
 
 echo -e "${YELLOW}${BOLD}zod-plugins init...${RESET}"
 echo -e "${YELLOW}install deps...${RESET}"
 cd $SCRIPT_DIR
 cd ../zod-plugins
+git checkout frontend-engineering
 npm i
 echo -e "${GREEN}done${RESET}"
 echo -e "${YELLOW}build zod-openapi and yalc publish...${RESET}"
@@ -67,5 +74,5 @@ cd $SCRIPT_DIR
 cd ../source
 yalc add @anatine/zod-openapi
 echo -e "${GREEN}done${RESET}"
-echo -e "for development, run ./scripts/dev-zod-openapi.sh"
+echo -e "for development, run ./scripts/zod-openapi-dev.sh"
 echo -e "${GREEN}${BOLD}zod-plugins init done${RESET}\n"
