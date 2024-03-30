@@ -7,6 +7,7 @@ import {
   GeneratorCallback,
   getWorkspaceLayout,
   joinPathFragments,
+  names,
   offsetFromRoot,
   ProjectConfiguration,
   runTasksInSerial,
@@ -29,12 +30,12 @@ export default async function(tree: Tree, options: z.infer<typeof bizLibGroupGen
   return runTasksInSerial(...tasks)
 }
 
-async function createLib(tree: Tree, name: string, suffix: 'types' | 'services' | 'trpc-server') {
+async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'services' | 'trpc-server') {
   const tasks: GeneratorCallback[] = []
 
   const { libsDir, npmScope } = getWorkspaceLayout(tree)
-  const projectName = `${name}-${suffix}`
-  const projectRoot = path.join(libsDir, name, suffix)
+  const projectName = `${groupName}-${suffix}`
+  const projectRoot = path.join(libsDir, groupName, suffix)
   const importPath = `@${npmScope}/${projectName}`
   consola.info(`  ${projectRoot} (${importPath})`)
 
@@ -48,6 +49,27 @@ async function createLib(tree: Tree, name: string, suffix: 'types' | 'services' 
     offsetFromRoot: offsetFromRoot(projectRoot),
     rootTsConfigPath: getRelativePathToRootTsConfig(tree, projectRoot),
   })
+
+  const { className, propertyName, fileName } = names(groupName)
+
+  if (suffix === 'types') {
+    generateFiles(tree, path.join(__dirname, 'files/types'), projectRoot, {
+      tmpl: '',
+      className,
+      propertyName,
+    })
+  }
+
+  if (suffix === 'services') {
+    generateFiles(tree, path.join(__dirname, 'files/services'), projectRoot, {
+      tmpl: '',
+      className,
+      propertyName,
+      fileName,
+      projectName,
+      typesImportPath: `@${npmScope}/${groupName}-types`,
+    })
+  }
 
   addProject(tree, { projectName, projectRoot })
 
@@ -87,7 +109,7 @@ function addProject(
     tags: [],
   }
 
-  const outputPath = `dist/${libsDir}${options.projectRoot}`
+  const outputPath = `dist/${libsDir}/${options.projectRoot}`
 
   projectConfiguration.targets.build = {
     executor: `@nrwl/js:tsc`,
@@ -105,16 +127,7 @@ function addProject(
     joinPathFragments(options.projectRoot, '*.md'),
   )
 
-  addProjectConfiguration(
-    tree,
-    options.projectName,
-    {
-      root: projectConfiguration.root,
-      tags: projectConfiguration.tags,
-      targets: {},
-    },
-    true,
-  )
+  addProjectConfiguration(tree, options.projectName, projectConfiguration)
 }
 
 async function addLint(
