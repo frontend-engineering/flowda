@@ -43,5 +43,4 @@ Thumbs.db
 
 .nx/
 
-libs/schema/src/parser/prisma-zod/__fixtures__/generated/**/@prisma/client/**/*
-!libs/schema/src/parser/prisma-zod/__fixtures__/generated/**/@prisma/client/**/*.d.ts
+libs/schema/src/parser/prisma-zod/__fixtures__/generated/**/@prisma/**/*

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Prisma } from '../@prisma/client';
+import type { Prisma } from '../@prisma/client-02';
 import { extendZod } from '../../../../../zod-openapi/extend-zod';
 extendZod(z);
 

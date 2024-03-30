@@ -3,7 +3,7 @@
 
 cat << EOF
 
-This script will run these scripts in parallel:
+This script first \`nx reset\` then run these scripts in parallel:
 1. ./zod-openapi-dev.sh
 2. ./zod-prisma-types-dev.sh
 3. types:dev
@@ -33,10 +33,12 @@ fi
 
 cd $SCRIPT_DIR
 
+sh ./nx-reset.sh
+
 concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
   -n openapi,prisma,types,schema,nx-plugin \
   "./zod-openapi-dev.sh" \
   "./zod-prisma-types-dev.sh" \
-  "./types-dev.sh" \
-  "./schema-dev.sh" \
-  "./nx-plugin-dev.sh"
+  "./project-dev.sh types" \
+  "./project-dev.sh schema" \
+  "./project-dev.sh nx-plugin"

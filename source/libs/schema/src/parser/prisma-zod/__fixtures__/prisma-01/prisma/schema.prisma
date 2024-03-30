@@ -4,11 +4,11 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native"]
-  output        = "../../generated/prisma-01/@prisma/client"
+  output        = "../../generated/prisma-01/@prisma/client-01"
 }
 
 generator zod {
-  provider                  = "node ../../../../../../../node_modules/zod-prisma-types/dist/bin.js"
+  provider                  = "node ../../../../../../../node_modules/zod-prisma-types/dist/bundle/bin.js"
   output                    = "../../generated/prisma-01/zod" // default is ./generated/zod
 //  useMultipleFiles          = true // default is false
   createInputTypes          = false // default is true
