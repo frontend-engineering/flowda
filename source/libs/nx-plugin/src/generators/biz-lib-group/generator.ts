@@ -53,7 +53,7 @@ async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'servi
   const { className, propertyName, fileName } = names(groupName)
 
   if (suffix === 'types') {
-    generateFiles(tree, path.join(__dirname, 'files/types'), projectRoot, {
+    generateFiles(tree, path.join(__dirname, `files/${suffix}`), projectRoot, {
       tmpl: '',
       className,
       propertyName,
@@ -61,13 +61,21 @@ async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'servi
   }
 
   if (suffix === 'services') {
-    generateFiles(tree, path.join(__dirname, 'files/services'), projectRoot, {
+    generateFiles(tree, path.join(__dirname, `files/${suffix}`), projectRoot, {
       tmpl: '',
       className,
       propertyName,
       fileName,
       projectName,
       typesImportPath: `@${npmScope}/${groupName}-types`,
+    })
+  }
+
+  if (suffix === 'trpc-server') {
+    generateFiles(tree, path.join(__dirname, `files/${suffix}`), projectRoot, {
+      tmpl: '',
+      propertyName,
+      projectName,
     })
   }
 
