@@ -6,7 +6,12 @@
     "component": {
       "factory": "./src/generators/component/generator",
       "schema": "./src/generators/component/schema.json",
-      "description": "Create a component in "
+      "description": "Create a component"
+    },
+    "biz-lib-group": {
+      "factory": "./src/generators/biz-lib-group/generator",
+      "schema": "./src/generators/biz-lib-group/schema.json",
+      "description": "Create a biz lib group"
     }
   }
 }
