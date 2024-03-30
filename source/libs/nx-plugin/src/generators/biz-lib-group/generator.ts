@@ -100,7 +100,6 @@ function addProject(
     projectRoot: string
   },
 ) {
-  const { libsDir } = getWorkspaceLayout(tree)
   const projectConfiguration: ProjectConfiguration = {
     root: options.projectRoot,
     sourceRoot: joinPathFragments(options.projectRoot, 'src'),
@@ -109,7 +108,7 @@ function addProject(
     tags: [],
   }
 
-  const outputPath = `dist/${libsDir}/${options.projectRoot}`
+  const outputPath = `dist/${options.projectRoot}`
 
   projectConfiguration.targets.build = {
     executor: `@nrwl/js:tsc`,
