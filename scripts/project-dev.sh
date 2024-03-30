@@ -5,4 +5,6 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR
 cd ../source
 
-./node_modules/.bin/nx run nx-plugin:dev
+proj="$1"
+
+./node_modules/.bin/nx run $proj:dev
