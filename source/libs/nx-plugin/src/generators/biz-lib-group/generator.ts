@@ -25,17 +25,17 @@ export default async function(tree: Tree, options: z.infer<typeof bizLibGroupGen
   const suffixes = ['types', 'services', 'trpc-server'] as const
   let tasks: GeneratorCallback[] = []
   for (const suffix of suffixes) {
-    tasks = tasks.concat(await createLib(tree, groupName, suffix))
+    tasks = tasks.concat(await createLib(tree, groupName, suffix, options))
   }
   return runTasksInSerial(...tasks)
 }
 
-async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'services' | 'trpc-server') {
+async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'services' | 'trpc-server', options: z.infer<typeof bizLibGroupGeneratorSchema>) {
   const tasks: GeneratorCallback[] = []
 
   const { libsDir, npmScope } = getWorkspaceLayout(tree)
-  const projectName = `${groupName}-${suffix}`
-  const projectRoot = path.join(libsDir, groupName, suffix)
+  const projectName = options.omitGroupName ? suffix : `${groupName}-${suffix}`
+  const projectRoot = path.join(libsDir, options.omitGroupName ? '' : groupName, suffix)
   const importPath = `@${npmScope}/${projectName}`
   consola.info(`  ${projectRoot} (${importPath})`)
 
@@ -67,7 +67,7 @@ async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'servi
       propertyName,
       fileName,
       projectName,
-      typesImportPath: `@${npmScope}/${groupName}-types`,
+      typesImportPath: options.omitGroupName ? `@${npmScope}/types` : `@${npmScope}/${groupName}-types`,
     })
   }
 
