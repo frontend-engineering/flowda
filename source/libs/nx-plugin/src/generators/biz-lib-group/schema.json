@@ -13,8 +13,13 @@
           "index": 0
         },
         "x-prompt": "What name would you like to use?"
+      },
+      "omitGroupName": {
+        "type": "boolean",
+        "description": "",
+        "default": false,
+        "x-prompt": "Omit group name?"
       }
     },
     "required": ["name"]
   }
-  
