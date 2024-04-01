@@ -22,7 +22,7 @@ import { nxVersion } from '@nrwl/js/src/utils/versions'
 export default async function(tree: Tree, options: z.infer<typeof bizLibGroupGeneratorSchema>) {
   const groupName = _.dash(options.name)
   consola.start(`generate biz lib group ${groupName}`)
-  const suffixes = ['types', 'services', 'trpc-server'] as const
+  const suffixes = ['types', 'services', 'trpc-server', 'prisma'] as const
   let tasks: GeneratorCallback[] = []
   for (const suffix of suffixes) {
     tasks = tasks.concat(await createLib(tree, groupName, suffix, options))
@@ -30,12 +30,18 @@ export default async function(tree: Tree, options: z.infer<typeof bizLibGroupGen
   return runTasksInSerial(...tasks)
 }
 
-async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'services' | 'trpc-server', options: z.infer<typeof bizLibGroupGeneratorSchema>) {
+async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'services' | 'trpc-server' | 'prisma', options: z.infer<typeof bizLibGroupGeneratorSchema>) {
   const tasks: GeneratorCallback[] = []
 
   const { libsDir, npmScope } = getWorkspaceLayout(tree)
-  const projectName = options.omitGroupName ? suffix : `${groupName}-${suffix}`
-  const projectRoot = path.join(libsDir, options.omitGroupName ? '' : groupName, suffix)
+  let projectName = options.omitGroupName ? suffix : `${groupName}-${suffix}`
+  let projectRoot = path.join(libsDir, options.omitGroupName ? '' : groupName, suffix)
+  const dbPrefix = _.snake(groupName)
+  if (suffix === 'prisma') {
+    projectName = `prisma-${dbPrefix}`
+    projectRoot = path.join(libsDir, options.omitGroupName ? '' : groupName, projectName)
+  }
+
   const importPath = `@${npmScope}/${projectName}`
   consola.info(`  ${projectRoot} (${importPath})`)
 
@@ -43,6 +49,7 @@ async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'servi
 
   generateFiles(tree, path.join(__dirname, 'files/lib'), projectRoot, {
     tmpl: '',
+    dbPrefix,
     projectName,
     projectRoot,
     importPath,
@@ -76,6 +83,19 @@ async function createLib(tree: Tree, groupName: string, suffix: 'types' | 'servi
       tmpl: '',
       propertyName,
       projectName,
+    })
+  }
+
+  if (suffix === 'prisma') {
+    const dbPrefix = _.snake(groupName)
+    const prismaProjectRoot = path.join(libsDir, options.omitGroupName ? '' : groupName, `prisma-${dbPrefix}`)
+    generateFiles(tree, path.join(__dirname, `files/${suffix}`), prismaProjectRoot, {
+      tmpl: '',
+      dbPrefix,
+      prismaProjectRoot,
+      groupName,
+      className,
+      offsetFromRoot: offsetFromRoot(projectRoot),
     })
   }
 
