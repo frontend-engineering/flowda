@@ -34,6 +34,7 @@ specifiers:
   '@prisma/client': ^4.16.2
   '@prisma/generator-helper': ^4.13.0
   '@prisma/internals': ^4.13.0
+  '@rollup/plugin-alias': ^5.1.0
   '@rollup/plugin-url': ^7.0.0
   '@storybook/addon-essentials': ^7.6.17
   '@storybook/builder-webpack5': ^7.6.17
@@ -128,6 +129,7 @@ dependencies:
   '@emotion/styled': 11.11.0_idvpitqx43vmck5h6avouzrlhu
   '@nestjs/common': 10.3.3_rcbhqa4so6dtcde4mhxkgzk6je
   '@prisma/generator-helper': 4.16.2
+  '@rollup/plugin-alias': 5.1.0_rollup@4.12.1
   ag-grid-community: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
   code-block-writer: 11.0.3
@@ -4801,6 +4803,19 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.0
     dev: true
+
+  /@rollup/plugin-alias/5.1.0_rollup@4.12.1:
+    resolution: {integrity: sha512-lpA3RZ9PdIG7qqhEfv79tBffNaoDuukFDrmhLqg9ifv99u/ehn+lOg30x2zmhf8AQqQUZaMk/B9fZraQ6/acDQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      rollup: 4.12.1
+      slash: 4.0.0
+    dev: false
 
   /@rollup/plugin-babel/5.3.1_wuzibgmdcvkbwmtrwger3wftya:
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
@@ -16954,7 +16969,6 @@ packages:
   /slash/4.0.0:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
-    dev: true
 
   /slash/5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}

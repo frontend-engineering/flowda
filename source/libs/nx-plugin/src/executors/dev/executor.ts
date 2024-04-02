@@ -1,4 +1,4 @@
-import { type ExecutorContext, readJsonFile, writeJsonFile } from '@nrwl/devkit'
+import { type ExecutorContext, readJsonFile, writeJsonFile, offsetFromRoot } from '@nrwl/devkit'
 import { buildRollupConfigInputSchema, devExecutorSchema } from './zod-def'
 import { z } from 'zod'
 import * as rollup from 'rollup'
@@ -8,6 +8,8 @@ import { tscExecutor } from '@nrwl/js/src/executors/tsc/tsc.impl'
 import { execSync } from 'child_process'
 import consola from 'consola'
 import * as fs from 'fs-extra'
+import alias from '@rollup/plugin-alias'
+import * as _ from 'radash'
 
 export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSchema>): rollup.RollupOptions {
   return {
@@ -18,7 +20,12 @@ export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSc
         format: 'es',
       },
     ],
-    plugins: [dts({})],
+    plugins: [
+      dts({}),
+      alias({
+        entries: input.bundleAlias
+      })
+    ],
   }
 }
 
@@ -38,7 +45,10 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       updateBuildableProjectDepsInPackageJson: true,
       externalBuildTargets: ['build'],
     },
-    context,
+    {
+      ...context,
+      targetName: 'build' // fix: isBuildable 会检查 deps 是否存在相同 target, 位置：checkDependencies > calculateProjectDependencies
+    },
   )
 
   for await (const output of tscGenerator) {
@@ -47,6 +57,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       const rollupOptions = buildRollupConfig({
         bundleInput: path.join(options.outputPath, `src/index.d.ts`),
         bundleFile: path.join(options.outputPath, `index.bundle.d.ts`),
+        bundleAlias: _.mapValues(options.bundleAlias, value => path.join(context.root, value))
       })
       try {
         consola.start(`Bundling ${context.projectName} .d.ts...`)
@@ -76,11 +87,13 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
     }
     if (options.yalc) {
       consola.start(`yalc publish ${context.projectName} ...`)
-      fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `*.js.map
-src/**/*.d.ts
-src/**/__fixtures__/**/*
-src/**/__tests__/**/*
-`)
+      if (!options.assets.some(ass => ass.indexOf('.yalcignore') > -1)) {
+        fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `*.js.map
+        src/**/*.d.ts
+        src/**/__fixtures__/**/*
+        src/**/__tests__/**/*
+        `)
+      }
       execSync(`yalc publish --push --changed`, {
         cwd: options.outputPath,
         stdio: 'inherit',

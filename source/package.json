@@ -109,6 +109,7 @@
     "@emotion/styled": "^11.11.0",
     "@nestjs/common": "^10.3.3",
     "@prisma/generator-helper": "^4.13.0",
+    "@rollup/plugin-alias": "^5.1.0",
     "ag-grid-community": "^31.1.1",
     "ag-grid-react": "^31.1.1",
     "code-block-writer": "^11.0.3",
