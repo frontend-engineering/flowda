@@ -10,6 +10,7 @@ describe('Dev Executor', () => {
       buildRollupConfigInputSchema.parse({
         bundleInput: path.join(__dirname, '__fixtures__/schema/src/index.d.ts'),
         bundleFile: path.join(__dirname, '__fixtures__/schema/index.bundle.d.ts'),
+        bundleAlias: {}
       }),
     )
 
