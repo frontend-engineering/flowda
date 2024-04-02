@@ -15,7 +15,6 @@ specifiers:
   '@emotion/react': ^11.11.4
   '@emotion/styled': ^11.11.0
   '@flowda-projects/flowda-gateway-trpc-server': link:.yalc/@flowda-projects/flowda-gateway-trpc-server
-  '@flowda-projects/flowda-shared-types': link:.yalc/@flowda-projects/flowda-shared-types
   '@nestjs/common': ^10.3.3
   '@nrwl/cli': 15.9.7
   '@nrwl/cypress': 15.9.7
@@ -164,7 +163,6 @@ devDependencies:
   '@babel/preset-typescript': 7.12.13_@babel+core@7.12.13
   '@emotion/babel-plugin': 11.11.0
   '@flowda-projects/flowda-gateway-trpc-server': link:.yalc/@flowda-projects/flowda-gateway-trpc-server
-  '@flowda-projects/flowda-shared-types': link:.yalc/@flowda-projects/flowda-shared-types
   '@nrwl/cli': 15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m
   '@nrwl/cypress': 15.9.7_5vpzudigxs6s3hsa2scdyczyem
   '@nrwl/devkit': 15.9.7_nx@15.9.7

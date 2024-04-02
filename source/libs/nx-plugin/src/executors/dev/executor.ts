@@ -101,9 +101,9 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
 `)
       } else {
         fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `*.js.map
-        src/**/*.d.ts
-        src/**/__fixtures__/**/*
-        src/**/__tests__/**/*
+src/**/*.d.ts
+src/**/__fixtures__/**/*
+src/**/__tests__/**/*
 `)
       }
       execSync(`yalc publish --push --changed`, {

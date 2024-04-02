@@ -5,10 +5,6 @@
       "signature": "bb6cbc425cda43e16bed03c2b458616c",
       "link": true
     },
-    "@flowda-projects/flowda-shared-types": {
-      "signature": "209ac8ded566875bf5a2df6c801b6bb2",
-      "link": true
-    },
     "@anatine/zod-openapi": {
       "signature": "8bd1f59823bd9a4c176bd6cdb5f0e5ca",
       "file": true

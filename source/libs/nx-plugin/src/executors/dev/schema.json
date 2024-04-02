@@ -33,16 +33,6 @@
       "description": "generate ./index.bundle.d.ts",
       "default": true
     },
-    "assets": {
-      "type": "array",
-      "description": "",
-      "default": []
-    },
-    "bundleAlias": {
-      "type": "object",
-      "description": "@rollup/plugin-alias entries",
-      "default": {}
-    },
     "onlyTypes": {
       "type": "boolean",
       "description": "only .d.ts, e.g. trpc-server lib",
