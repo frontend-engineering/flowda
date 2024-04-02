@@ -72,27 +72,39 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         }
       }
     }
+    consola.start('To update package.json')
     const packageJsonPath = path.join(options.outputPath, 'package.json')
     const packageJson = readJsonFile(packageJsonPath)
     if (options.bundleDts) {
       packageJson.types = './index.bundle.d.ts'
-      writeJsonFile(`${options.outputPath}/package.json`, packageJson)
-      consola.info('  update package.json#types: ./index.bundle.d.ts')
+      consola.info('  to update package.json#types: ./index.bundle.d.ts')
     } else {
-      if (options.yalc) {
+      if (options.yalc) { // 如果不 bundle dts 则 yalc 不用支持 d.ts，因为 yalc 永远会 ignore src/**/*.d.ts
         delete packageJson.types
-        writeJsonFile(`${options.outputPath}/package.json`, packageJson)
-        consola.info('  delete package.json#types')
+        consola.info('  to delete package.json#types')
       }
     }
+    if (options.onlyTypes) {
+      delete packageJson.main
+      delete packageJson.scripts
+      delete packageJson.peerDependencies
+      delete packageJson.dependencies
+      consola.info('  to delete package.json#{main,scripts,peerDependencies,dependencies}')
+    }
+    writeJsonFile(`${options.outputPath}/package.json`, packageJson)
+    consola.success('Updated package.json')
+
     if (options.yalc) {
       consola.start(`yalc publish ${context.projectName} ...`)
-      if (!options.assets.some(ass => ass.indexOf('.yalcignore') > -1)) {
+      if (options.onlyTypes) {
+        fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `src/**/*
+`)
+      } else {
         fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `*.js.map
         src/**/*.d.ts
         src/**/__fixtures__/**/*
         src/**/__tests__/**/*
-        `)
+`)
       }
       execSync(`yalc publish --push --changed`, {
         cwd: options.outputPath,
