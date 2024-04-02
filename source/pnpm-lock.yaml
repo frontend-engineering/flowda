@@ -15,7 +15,6 @@ specifiers:
   '@emotion/react': ^11.11.4
   '@emotion/styled': ^11.11.0
   '@flowda-projects/flowda-gateway-trpc-server': link:.yalc/@flowda-projects/flowda-gateway-trpc-server
-  '@flowda-projects/flowda-shared-types': link:.yalc/@flowda-projects/flowda-shared-types
   '@nestjs/common': ^10.3.3
   '@nrwl/cli': 15.9.7
   '@nrwl/cypress': 15.9.7
@@ -34,6 +33,7 @@ specifiers:
   '@prisma/client': ^4.16.2
   '@prisma/generator-helper': ^4.13.0
   '@prisma/internals': ^4.13.0
+  '@rollup/plugin-alias': ^5.1.0
   '@rollup/plugin-url': ^7.0.0
   '@storybook/addon-essentials': ^7.6.17
   '@storybook/builder-webpack5': ^7.6.17
@@ -128,6 +128,7 @@ dependencies:
   '@emotion/styled': 11.11.0_idvpitqx43vmck5h6avouzrlhu
   '@nestjs/common': 10.3.3_rcbhqa4so6dtcde4mhxkgzk6je
   '@prisma/generator-helper': 4.16.2
+  '@rollup/plugin-alias': 5.1.0_rollup@4.12.1
   ag-grid-community: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
   code-block-writer: 11.0.3
@@ -162,7 +163,6 @@ devDependencies:
   '@babel/preset-typescript': 7.12.13_@babel+core@7.12.13
   '@emotion/babel-plugin': 11.11.0
   '@flowda-projects/flowda-gateway-trpc-server': link:.yalc/@flowda-projects/flowda-gateway-trpc-server
-  '@flowda-projects/flowda-shared-types': link:.yalc/@flowda-projects/flowda-shared-types
   '@nrwl/cli': 15.9.7_deiv3jhfyk5koc4ozk6dtt2g4m
   '@nrwl/cypress': 15.9.7_5vpzudigxs6s3hsa2scdyczyem
   '@nrwl/devkit': 15.9.7_nx@15.9.7
@@ -4801,6 +4801,19 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.0
     dev: true
+
+  /@rollup/plugin-alias/5.1.0_rollup@4.12.1:
+    resolution: {integrity: sha512-lpA3RZ9PdIG7qqhEfv79tBffNaoDuukFDrmhLqg9ifv99u/ehn+lOg30x2zmhf8AQqQUZaMk/B9fZraQ6/acDQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      rollup: 4.12.1
+      slash: 4.0.0
+    dev: false
 
   /@rollup/plugin-babel/5.3.1_wuzibgmdcvkbwmtrwger3wftya:
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
@@ -16954,7 +16967,6 @@ packages:
   /slash/4.0.0:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
-    dev: true
 
   /slash/5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}

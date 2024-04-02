@@ -1,7 +1,0 @@
-{
-  "name": "@flowda-projects/flowda-shared-types",
-  "version": "0.0.1",
-  "main": "./src/index.js",
-  "types": "./index.bundle.d.ts",
-  "yalcSig": "209ac8ded566875bf5a2df6c801b6bb2"
-}
