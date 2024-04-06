@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-alpine.css'
+import 'ag-grid-community/styles/ag-theme-quartz.css'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Grid, GridProps } from './grid'
 import { Container } from 'inversify'
@@ -26,10 +26,10 @@ export class GridWrapper extends React.Component<GridProps> {
         #storybook-root {
           height: 100%;
         }
-      `}/>
+      `} />
       <button onClick={() => this.props.model.refresh()}>Refresh</button>
-      <div className="ag-theme-alpine" style={{ height: '100%' }}>
-        <Grid model={this.props.model}/>
+      <div className="ag-theme-quartz" style={{ height: '100%' }}>
+        <Grid model={this.props.model} />
       </div>
     </>
   }

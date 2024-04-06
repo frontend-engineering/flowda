@@ -1,7 +1,8 @@
-import { action, makeObservable, observable } from 'mobx'
+import { action, makeObservable, observable, } from 'mobx'
 import type { FormikProps } from 'formik'
-import { injectable } from 'inversify'
-import { loginInputSchemaDto, loginOutputSchemaDto } from '@flowda/types'
+import { injectable, inject } from 'inversify'
+import { ThemeModelSymbol, loginInputSchemaDto, loginOutputSchemaDto } from '@flowda/types'
+import { ThemeModel } from '../theme/theme.model'
 
 @injectable()
 export class LoginModel {
@@ -14,7 +15,9 @@ export class LoginModel {
     validate: (input: loginInputSchemaDto) => Promise<loginOutputSchemaDto>
   }> = {}
 
-  constructor() {
+  constructor(
+    @inject(ThemeModelSymbol) public theme: ThemeModel,
+  ) {
     makeObservable(this)
   }
 

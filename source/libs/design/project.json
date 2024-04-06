@@ -9,7 +9,10 @@
       "executor": "@flowda/nx-plugin:dev",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/design"
+        "outputPath": "dist/libs/design",
+        "assets": [
+          "libs/design/src/**/*.css"
+        ]
       }
     },
     "build": {
@@ -20,6 +23,7 @@
         "main": "libs/design/src/index.ts",
         "tsConfig": "libs/design/tsconfig.lib.json",
         "assets": [
+          "libs/design/src/**.css",
           "libs/design/*.md"
         ]
       }

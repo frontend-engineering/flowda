@@ -79,7 +79,7 @@ describe('theme', () => {
         "editor.foreground": "#e4e4ed",
         "editor.inactiveSelectionBackground": "#15161c",
         "editor.selectionHighlightBackground": "#e4e4ed",
-        "editorGroupHeader.tabsBackground": "#222430",
+        "editorGroupHeader.tabsBackground": "#15161c",
         "editorIndentGuide.background": "#222430",
         "focusBorder": "#2e303d",
         "icon.foreground": "#5d5e65",
@@ -106,10 +106,12 @@ describe('theme', () => {
         "statusBar.noFolderBackground": "#15161c",
         "tab.activeModifiedBorder": "#2e303d",
         "tab.border": "#2c2d3a",
-        "tab.inactiveBackground": "#252634",
+        "tab.inactiveBackground": "#15161c",
         "textLink.foreground": "#8182ff",
         "titleBar.activeBackground": "#15161c",
         "titleBar.activeForeground": "#999aa1",
+        "tree.inactiveIndentGuidesStroke": "#313240",
+        "tree.indentGuidesStroke": "#313240",
       }
     `)
   })
@@ -136,7 +138,7 @@ describe('theme', () => {
         "editor.foreground": "#2f2f31",
         "editor.inactiveSelectionBackground": "#ececec",
         "editor.selectionHighlightBackground": "#2f2f31",
-        "editorGroupHeader.tabsBackground": "#edeef2",
+        "editorGroupHeader.tabsBackground": "#ececec",
         "editorIndentGuide.background": "#edeef2",
         "focusBorder": "#d8d8d8",
         "icon.foreground": "#9d9d9f",
@@ -163,10 +165,12 @@ describe('theme', () => {
         "statusBar.noFolderBackground": "#ececec",
         "tab.activeModifiedBorder": "#d8d8d8",
         "tab.border": "#dcdcdc",
-        "tab.inactiveBackground": "#ffffff",
+        "tab.inactiveBackground": "#ececec",
         "textLink.foreground": "#4161da",
         "titleBar.activeBackground": "#ececec",
         "titleBar.activeForeground": "#5c5c5e",
+        "tree.inactiveIndentGuidesStroke": "#d4d4d4",
+        "tree.indentGuidesStroke": "#d4d4d4",
       }
     `)
   })

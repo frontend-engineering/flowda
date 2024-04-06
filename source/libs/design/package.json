@@ -1,4 +1,7 @@
 {
   "name": "@flowda/design",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@anatine/zod-openapi": "*"
+  }
 }

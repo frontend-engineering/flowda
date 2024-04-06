@@ -40,8 +40,8 @@ const linearToTheiaDict = {
     'list.warningForeground': '',
     'list.highlightForeground': 'controlBase',
     'editorGroup.border': '',
-    'editorGroupHeader.tabsBackground': 'bgShade',
-    'tab.inactiveBackground': 'controlSecondary',
+    'editorGroupHeader.tabsBackground': 'bgSub',
+    'tab.inactiveBackground': 'bgSub',
     'tab.border': 'bgBorderThin',
     'tab.activeModifiedBorder': 'bgBorderHover',
     'statusBar.foreground': 'labelMuted',
@@ -78,7 +78,9 @@ const linearToTheiaDict = {
     'scrollbarSlider.activeBackground': 'scrollbarBgActive',
     'list.focusHighlightForeground': 'controlBaseHighlight',
     'pickerGroup.foreground': 'controlBase',
-    'quickInput.background': 'bgBase'
+    'quickInput.background': 'bgBase',
+    'tree.indentGuidesStroke': 'bgBorderSolid',
+    'tree.inactiveIndentGuidesStroke': 'bgBorderSolid',
 }
 export function createTheiaThemeColors(theiaColor: Record<string, string>, linearColor: Record<string, string>) {
     const ret = omitBy(

@@ -51,7 +51,7 @@ export class Login extends React.Component<{
               /* and other goodies */
             } = formikProps
             return (
-              <EuiThemeProvider colorMode="dark">
+              <EuiThemeProvider colorMode={this.props.model.theme.colorMode}>
                 <EuiForm isInvalid={false} error={[]} component="form">
                   <EuiFormRow
                     label="Username"
