@@ -11,34 +11,13 @@ import { designModule } from '../designModule'
 import { TreeGridModel } from './tree-grid.model'
 import { getData } from './__stories__/getData'
 import React from 'react'
-import { css, Global } from '@emotion/react'
+import { GridWrapper } from '../../stories/grid-wrapper'
 
 const container = new Container()
 container.load(designModule)
 
-export class TreeGridWrapper extends React.Component<{
-  model: TreeGridModel
-}> {
-  render() {
-    return <>
-      <Global styles={css`
-          html, body {
-              height: 100%;
-          }
-
-          #storybook-root {
-              height: 100%;
-          }
-      `} />
-      <div className="ag-theme-quartz" style={{ height: '100%' }}>
-        <TreeGrid model={this.props.model} />
-      </div>
-    </>
-  }
-}
-
-const meta: Meta<typeof TreeGridWrapper> = {
-  component: TreeGridWrapper,
+const meta: Meta<typeof GridWrapper> = {
+  component: GridWrapper,
   title: 'TreeGrid',
 }
 
@@ -50,8 +29,8 @@ model.columnDefs = [
   { field: 'jobTitle' },
   { field: 'employmentType' },
 ]
-export const Primary: StoryObj<typeof TreeGridWrapper> = {
+export const Primary: StoryObj<typeof GridWrapper> = {
   args: {
-    model,
+    children: <TreeGrid model={model} />,
   },
 }

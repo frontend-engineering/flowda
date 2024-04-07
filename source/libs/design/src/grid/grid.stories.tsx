@@ -2,38 +2,18 @@ import 'reflect-metadata'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-quartz.css'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Grid, GridProps } from './grid'
+import { Grid } from './grid'
 import { Container } from 'inversify'
 import { GridModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { GridModel } from './grid.model'
 
 import React from 'react'
-import { css, Global } from '@emotion/react'
 import { trpc } from '../../stories/trpc/trpc-client'
+import { GridWrapper } from '../../stories/grid-wrapper'
 
 const container = new Container()
 container.load(designModule)
-
-export class GridWrapper extends React.Component<GridProps> {
-  render() {
-    return <>
-      <Global styles={css`
-        html, body {
-          height: 100%;
-        }
-
-        #storybook-root {
-          height: 100%;
-        }
-      `} />
-      <button onClick={() => this.props.model.refresh()}>Refresh</button>
-      <div className="ag-theme-quartz" style={{ height: '100%' }}>
-        <Grid model={this.props.model} />
-      </div>
-    </>
-  }
-}
 
 const meta: Meta<typeof GridWrapper> = {
   component: GridWrapper,
@@ -51,6 +31,6 @@ gridModel.getCol('resource.flowda.UserResourceSchema')
 
 export const Primary: StoryObj<typeof GridWrapper> = {
   args: {
-    model: gridModel,
+    children: <Grid model={gridModel} />,
   },
 }
