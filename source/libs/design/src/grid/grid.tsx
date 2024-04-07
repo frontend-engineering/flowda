@@ -14,6 +14,7 @@ import { shortenDatetime } from '../utils/time-utils'
 import { callRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
 
 export type GridProps = {
   model: GridModel
@@ -226,6 +227,9 @@ export class Grid extends Component<GridProps> {
   override render() {
     return (
       <AgGridReact
+        modules={[
+          ClientSideRowModelModule,
+        ]}
         ref={ref => (this.gridRef = ref)}
         defaultColDef={{
           maxWidth: 400,

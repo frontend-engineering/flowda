@@ -26,8 +26,12 @@ export default meta
 const model = container.get<TreeGridModel>(TreeGridModelSymbol)
 model.rowData = getData()
 model.columnDefs = [
-  { field: 'title' },
-  { field: 'url' },
+  {
+    field: 'title', editable: true,
+  },
+  {
+    field: 'url', editable: true,
+  },
 ]
 
 export const Primary: StoryObj<typeof GridWrapper> = {

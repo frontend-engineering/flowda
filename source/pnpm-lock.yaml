@@ -6,6 +6,10 @@ patchedDependencies:
     path: patches/zod-openapi@2.14.0.patch
 
 specifiers:
+  '@ag-grid-community/client-side-row-model': 31.1.1
+  '@ag-grid-community/core': 31.1.1
+  '@ag-grid-community/infinite-row-model': 31.1.1
+  '@ag-grid-enterprise/row-grouping': 31.1.1
   '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi
   '@babel/core': 7.12.13
   '@babel/preset-react': ^7.14.5
@@ -62,8 +66,6 @@ specifiers:
   '@types/react-dom': 18.0.11
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
-  ag-grid-community: 31.1.1
-  ag-grid-enterprise: 31.1.1
   ag-grid-react: ^31.1.1
   babel-loader: 8.1.0
   code-block-writer: ^11.0.3
@@ -124,6 +126,10 @@ specifiers:
   zod-prisma-types: file:.yalc/zod-prisma-types
 
 dependencies:
+  '@ag-grid-community/client-side-row-model': 31.1.1
+  '@ag-grid-community/core': 31.1.1
+  '@ag-grid-community/infinite-row-model': 31.1.1
+  '@ag-grid-enterprise/row-grouping': 31.1.1
   '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme
   '@elastic/eui': 93.2.0_y2msmjfxa5ehnyeb76ca6txwn4
   '@emotion/react': 11.11.4_pmekkgnqduwlme35zpnqhenc34
@@ -131,8 +137,6 @@ dependencies:
   '@nestjs/common': 10.3.3_rcbhqa4so6dtcde4mhxkgzk6je
   '@prisma/generator-helper': 4.16.2
   '@rollup/plugin-alias': 5.1.0_rollup@4.12.1
-  ag-grid-community: 31.1.1
-  ag-grid-enterprise: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
   code-block-writer: 11.0.3
   comment-parser: 1.4.1
@@ -249,6 +253,35 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /@ag-grid-community/client-side-row-model/31.1.1:
+    resolution: {integrity: sha512-KBSPaEJ1q97xooJd7U6W8PUfzUDecnsvE+Y05Xg/s6i61fLKyDTxDVJB/kETxdST0+T8FgjFMaPjY0hAZBOhWg==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+    dev: false
+
+  /@ag-grid-community/core/31.1.1:
+    resolution: {integrity: sha512-WFN3yXpFR0uMJQZak6x4kzLl7nJPrrorUWf/KWH4ToP6PMZcc6cKT3jge3bJ0SBkzs2m7oQGnmi8rfTaHuXI4Q==}
+    dev: false
+
+  /@ag-grid-community/infinite-row-model/31.1.1:
+    resolution: {integrity: sha512-cOuqOZD+V0ShwlxZy0Q5UJAD4ixO9GteCsJyvueAybq7BO8MfYCfjAS+Wk/z6hPEsuoGLk6lupIzneNVyDmzfA==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/core/31.1.1:
+    resolution: {integrity: sha512-jbLXQqfgZCTh1FQ6Dbsbmn/+EWAhPu+4stECLxdP3zVXPxJh1vOw717GjGQrduo5jWWdncj7mC9zOMSLMyzW1Q==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/row-grouping/31.1.1:
+    resolution: {integrity: sha512-CcyF8vzNEBzwEX4WuMYJ6hQ+F7RFoYqdYDyUj01Vz/dnLiZummT2a9bAdLXYCaNDg7fyrsjnqchiTv8g06qsmA==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+      '@ag-grid-enterprise/core': 31.1.1
+    dev: false
 
   /@ampproject/remapping/2.3.0:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -8126,12 +8159,6 @@ packages:
 
   /ag-grid-community/31.1.1:
     resolution: {integrity: sha512-tiQZ7VQ07yJScTMIQpaYoUMPgiyXMwYDcwTxe4riRrcYGTg0e258XEihoPUZFejR60P1fYWMxdJaR2JUnyhGrg==}
-    dev: false
-
-  /ag-grid-enterprise/31.1.1:
-    resolution: {integrity: sha512-hAy8x+P2KzpRb8RONvCj/FqLL0AJ4FEIEJsEuOEiZAEgi64TAhZv/FzIhIbAElPXf+OhCMKHIAKTD765vzCMOQ==}
-    dependencies:
-      ag-grid-community: 31.1.1
     dev: false
 
   /ag-grid-react/31.1.1_biqbaboplfbrettd7655fr4n2y:
