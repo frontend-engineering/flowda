@@ -62,7 +62,8 @@ specifiers:
   '@types/react-dom': 18.0.11
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
-  ag-grid-community: ^31.1.1
+  ag-grid-community: 31.1.1
+  ag-grid-enterprise: 31.1.1
   ag-grid-react: ^31.1.1
   babel-loader: 8.1.0
   code-block-writer: ^11.0.3
@@ -131,6 +132,7 @@ dependencies:
   '@prisma/generator-helper': 4.16.2
   '@rollup/plugin-alias': 5.1.0_rollup@4.12.1
   ag-grid-community: 31.1.1
+  ag-grid-enterprise: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
   code-block-writer: 11.0.3
   comment-parser: 1.4.1
@@ -8124,6 +8126,12 @@ packages:
 
   /ag-grid-community/31.1.1:
     resolution: {integrity: sha512-tiQZ7VQ07yJScTMIQpaYoUMPgiyXMwYDcwTxe4riRrcYGTg0e258XEihoPUZFejR60P1fYWMxdJaR2JUnyhGrg==}
+    dev: false
+
+  /ag-grid-enterprise/31.1.1:
+    resolution: {integrity: sha512-hAy8x+P2KzpRb8RONvCj/FqLL0AJ4FEIEJsEuOEiZAEgi64TAhZv/FzIhIbAElPXf+OhCMKHIAKTD765vzCMOQ==}
+    dependencies:
+      ag-grid-community: 31.1.1
     dev: false
 
   /ag-grid-react/31.1.1_biqbaboplfbrettd7655fr4n2y:
