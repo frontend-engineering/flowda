@@ -29,7 +29,7 @@ export class Grid extends Component<GridProps> {
   }
 
   private readonly onGridReady = async (params: GridReadyEvent) => {
-    console.log('[Grid] onGridReady', this.props.model.schemaName)
+    // console.log('[Grid] onGridReady', this.props.model.schemaName)
     this.props.model.gridApi = params.api
 
     const datasource: IDatasource = {
@@ -44,7 +44,7 @@ export class Grid extends Component<GridProps> {
             filterModel: params.filterModel,
           })
 
-          console.log(`[Grid] successCallback`)
+          // console.log(`[Grid] successCallback`)
           params.successCallback(ret.data, ret.pagination.total)
           // this.props.model.gridApi?.setGridOption('pinnedTopRowData', [ret.data[0]])
           // 只在第一次有值的时候做 resize 后续分页或者刷新就不要 resize 了
@@ -53,7 +53,8 @@ export class Grid extends Component<GridProps> {
           }
           this.props.model.isNotEmpty = ret.data != null
         } else {
-          console.warn('schemaName is null')
+          // console.warn('schemaName is null')
+          throw new Error('schemaName is null')
         }
       },
     }
@@ -61,9 +62,9 @@ export class Grid extends Component<GridProps> {
   }
 
   private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
-    console.log(
-      `[Grid] onCellValueChanged, id ${evt.data.id},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
-    )
+    // console.log(
+    //   `[Grid] onCellValueChanged, id ${evt.data.id},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
+    // )
     await this.props.model.putData(evt.data.id, {
       [evt.colDef.field as string]: evt.newValue,
     })
@@ -214,7 +215,6 @@ export class Grid extends Component<GridProps> {
    todo 第一次调用之后 如果用户有调整过 则存储到 localStorage 优先用户本地存储
    */
   autoResizeAll() {
-    console.log(`[Grid] autoResizeAll`)
     const allColumnIds: string[] = []
     this.gridRef!.api.getColumns()!.forEach(column => {
       allColumnIds.push(column.getId())
