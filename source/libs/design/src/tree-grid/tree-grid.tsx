@@ -21,7 +21,7 @@ export class TreeGrid extends Component<{
           flex: 1,
         }}
         autoGroupColumnDef={{
-          headerName: 'Organisation Hierarchy',
+          headerName: 'Menu',
           minWidth: 300,
           cellRendererParams: {
             suppressCount: true,
@@ -29,7 +29,7 @@ export class TreeGrid extends Component<{
         }}
         treeData={true}
         groupDefaultExpanded={-1}
-        getDataPath={(data: any) => data.orgHierarchy}
+        getDataPath={(data: any) => data.hierarchy}
       />
     )
   }
