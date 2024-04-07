@@ -6,5 +6,6 @@ cd $SCRIPT_DIR
 cd ../source
 
 proj="$1"
+exe="$2"
 
-./node_modules/.bin/nx run $proj:dev
+./node_modules/.bin/nx run $proj:$exe

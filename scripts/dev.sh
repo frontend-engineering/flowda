@@ -40,7 +40,7 @@ concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
   -n openapi,prisma,types,schema,nx-plugin,design \
   "./zod-openapi-dev.sh" \
   "./zod-prisma-types-dev.sh" \
-  "./project-dev.sh types" \
-  "./project-dev.sh schema" \
-  "./project-dev.sh nx-plugin" \
-  "./project-dev.sh design"
+  "./run.sh types dev" \
+  "./run.sh schema dev" \
+  "./run.sh nx-plugin dev" \
+  "./run.sh design dev"

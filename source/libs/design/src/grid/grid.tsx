@@ -230,6 +230,7 @@ export class Grid extends Component<GridProps> {
         defaultColDef={{
           maxWidth: 400,
         }}
+        rowHeight={42}
         columnDefs={this.columnDefs()}
         pagination={true}
         paginationPageSize={20}
