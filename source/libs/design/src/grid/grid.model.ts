@@ -1,7 +1,6 @@
 import { injectable } from 'inversify'
 import { action, makeObservable, observable } from 'mobx'
-import type { SortModelItem } from 'ag-grid-community/dist/lib/sortController'
-import type { GridApi } from 'ag-grid-community'
+import type { GridApi, SortModelItem } from 'ag-grid-community'
 import * as _ from 'radash'
 import {
   agFilterSchema,

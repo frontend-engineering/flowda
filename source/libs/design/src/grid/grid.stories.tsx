@@ -31,6 +31,9 @@ gridModel.getCol('resource.flowda.UserResourceSchema')
 
 export const Primary: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <Grid model={gridModel} />,
+    children: <>
+      <button onClick={() => gridModel.refresh()}>Refresh</button>
+      <Grid model={gridModel} />
+    </>,
   },
 }

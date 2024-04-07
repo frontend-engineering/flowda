@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { AgGridReact } from 'ag-grid-react'
 import { observer } from 'mobx-react'
 import { GridModel } from './grid.model'
-import {
+import type {
   CellValueChangedEvent,
   ColDef,
   GetRowIdParams,
@@ -14,7 +14,7 @@ import { shortenDatetime } from '../utils/time-utils'
 import { callRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'
+import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
 
 export type GridProps = {
   model: GridModel
@@ -26,11 +26,9 @@ export class Grid extends Component<GridProps> {
 
   constructor(props: GridProps) {
     super(props)
-    this.onGridReady = this.onGridReady.bind(this)
-    this.onCellValueChanged = this.onCellValueChanged.bind(this)
   }
 
-  async onGridReady(params: GridReadyEvent) {
+  private readonly onGridReady = async (params: GridReadyEvent) => {
     console.log('[Grid] onGridReady', this.props.model.schemaName)
     this.props.model.gridApi = params.api
 
@@ -62,7 +60,7 @@ export class Grid extends Component<GridProps> {
     params.api.setGridOption('datasource', datasource)
   }
 
-  async onCellValueChanged(evt: CellValueChangedEvent) {
+  private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
     console.log(
       `[Grid] onCellValueChanged, id ${evt.data.id},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
     )
@@ -227,15 +225,13 @@ export class Grid extends Component<GridProps> {
   override render() {
     return (
       <AgGridReact
-        modules={[
-          ClientSideRowModelModule,
-        ]}
+        modules={[InfiniteRowModelModule]}
         ref={ref => (this.gridRef = ref)}
         defaultColDef={{
           maxWidth: 400,
         }}
-        rowHeight={42}
         columnDefs={this.columnDefs()}
+        rowHeight={42}
         pagination={true}
         paginationPageSize={20}
         cacheBlockSize={20}

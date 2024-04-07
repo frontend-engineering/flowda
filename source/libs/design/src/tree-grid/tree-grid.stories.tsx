@@ -9,9 +9,9 @@ import { Container } from 'inversify'
 import { TreeGridModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { TreeGridModel } from './tree-grid.model'
-import { getData } from './__stories__/getData'
 import React from 'react'
 import { GridWrapper } from '../../stories/grid-wrapper'
+import { getData } from './__stories__/getData'
 
 const container = new Container()
 container.load(designModule)
@@ -25,14 +25,6 @@ export default meta
 
 const model = container.get<TreeGridModel>(TreeGridModelSymbol)
 model.rowData = getData()
-model.columnDefs = [
-  {
-    field: 'title', editable: true,
-  },
-  {
-    field: 'url', editable: true,
-  },
-]
 
 export const Primary: StoryObj<typeof GridWrapper> = {
   args: {
