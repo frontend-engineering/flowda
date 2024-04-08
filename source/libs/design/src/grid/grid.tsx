@@ -11,7 +11,7 @@ import type {
   IGetRowsParams,
 } from 'ag-grid-community'
 import { shortenDatetime } from '../utils/time-utils'
-import { callRendererInputSchema } from '@flowda/types'
+import { cellRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
@@ -78,7 +78,7 @@ export class Grid extends Component<GridProps> {
           field: item.name,
           headerName: item.display_name,
           cellDataType: 'text',
-          cellRenderer: (param: z.infer<typeof callRendererInputSchema>) => {
+          cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
             if (!param.value) return param.value
             return (
               <img
@@ -112,9 +112,9 @@ export class Grid extends Component<GridProps> {
             editable: false,
             field: item.name,
             headerName: item.display_name,
-            cellRenderer: (param: z.infer<typeof callRendererInputSchema>) => {
+            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               return (
-                <div onContextMenu={this.props.model.onContextMenu}>
+                <div onContextMenu={(e) => this.props.model.onContextMenu(param, e)}>
                   <a
                     className="grid-reference-field"
                     href=""
@@ -194,6 +194,19 @@ export class Grid extends Component<GridProps> {
             cellDataType: 'text',
             filter: true,
             floatingFilter: true,
+          }
+        case 'Json':
+          return {
+            editable: false,
+            field: item.name,
+            headerName: item.display_name,
+            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              return (
+                <div onContextMenu={(e) => this.props.model.onContextMenu(param, e)}>
+                  {param.valueFormatted}
+                </div>
+              )
+            },
           }
         default:
           return {

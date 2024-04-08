@@ -4,14 +4,16 @@ import type { GridApi, SortModelItem } from 'ag-grid-community'
 import * as _ from 'radash'
 import {
   agFilterSchema,
+  cellRendererInputSchema,
+  ColumnUISchema,
   getResourceDataInputSchema,
   getResourceDataOutputInnerSchema,
   getResourceDataOutputSchema,
   getResourceInputSchema,
+  handleContextMenuInputSchema,
   type JSONObject,
   putResourceDataInputSchema,
-  resourceColumnSchema,
-  resourceSchema,
+  ResourceUISchema,
 } from '@flowda/types'
 import { z } from 'zod'
 
@@ -19,20 +21,20 @@ import { z } from 'zod'
 export class GridModel {
   static KEY = 'resourceQuery'
 
-  @observable columnDefs: z.infer<typeof resourceColumnSchema>[] = []
+  @observable columnDefs: z.infer<typeof ColumnUISchema>[] = []
 
   schemaName: string | null = null
-  schema: z.infer<typeof resourceSchema> | null = null
+  schema: z.infer<typeof ResourceUISchema> | null = null
   filterModel: z.infer<typeof agFilterSchema> | null = null
 
   handlers: Partial<{
     onRefClick: (v: { schemaName: string; name: string; id: number | string }) => void
     onMouseEnter: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
-    onContextMenu: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
+    onContextMenu: (input: z.infer<typeof handleContextMenuInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>) => void
   }> = {}
 
   apis: Partial<{
-    getResourceSchema: (input: z.infer<typeof getResourceInputSchema>) => Promise<z.infer<typeof resourceSchema>>
+    getResourceSchema: (input: z.infer<typeof getResourceInputSchema>) => Promise<z.infer<typeof ResourceUISchema>>
     getResourceData: (input: z.infer<typeof getResourceDataInputSchema>) => Promise<z.infer<typeof getResourceDataOutputSchema>>
     putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
   }> = {}
@@ -48,7 +50,7 @@ export class GridModel {
   }
 
   @action
-  setColumnDefs(columnDefs: z.infer<typeof resourceColumnSchema>[]) {
+  setColumnDefs(columnDefs: z.infer<typeof ColumnUISchema>[]) {
     this.columnDefs = columnDefs
   }
 
@@ -138,14 +140,24 @@ export class GridModel {
     }
   }
 
-  readonly onContextMenu = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  readonly onContextMenu = (cellRendererInput: z.infer<typeof cellRendererInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (typeof this.handlers.onContextMenu === 'function') {
-      this.handlers.onContextMenu(e)
+      if (!this.schema) throw new Error('schema is null')
+      const parsedRet = cellRendererInputSchema.parse(cellRendererInput)
+      const colDef = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
+      if (!colDef) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
+      this.handlers.onContextMenu({
+        colDef: colDef,
+        value: parsedRet.value,
+      }, e)
     }
   }
 
   onRefClick(field: string, value: number | string) {
     const ref = this.schema?.columns.find(t => t.name === field)
+    if (ref == null || ref.reference == null) {
+      throw new Error(`field is not type reference, ${field}`)
+    }
     if (typeof this.handlers.onRefClick === 'function') {
       this.handlers.onRefClick({
         schemaName: `resource.${this.schema!.namespace}.${ref!.reference.model_name}ResourceSchema`,

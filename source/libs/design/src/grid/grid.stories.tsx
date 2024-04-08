@@ -17,6 +17,10 @@ container.load(designModule)
 
 container.rebind<GridModel>(GridModelSymbol).to(GridModel).inRequestScope()
   .onActivation(({ container }, gridModel) => {
+    gridModel.handlers.onContextMenu = (e) => {
+      console.log(e)
+    }
+
     gridModel.apis.getResourceData = (input) => trpc.hello.getResourceData.query(input)
     gridModel.apis.getResourceSchema = (input) => trpc.hello.getResourceSchema.query(input)
     gridModel.apis.putResourceData = (input) => trpc.hello.putResourceData.mutate(input)
