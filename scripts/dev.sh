@@ -24,13 +24,20 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 echo -e "${YELLOW}${BOLD}Check concurrently...${RESET}"
 if command -v "concurrently" >/dev/null 2>&1; then
-  concurrently --version
-  echo -e "${GREEN}found pnpm.${RESET}\n"
+    concurrently --version
+    echo -e "${GREEN}found pnpm.${RESET}\n"
 else
     echo -e "${RED}not found concurrently${RESET}"
     echo -e "${YELLOW}install concurrently -g${RESET}"
     npm install concurrently -g
     echo -e "${GREEN}concurrently installed${RESET}"
+fi
+
+echo -e "${YELLOW}${BOLD}Check iterm2-tab-set...${RESET}"
+if command -v "tabset" >/dev/null 2>&1; then
+    tabset --badge '\(session.path)'
+else
+    echo -e "${RED}not found iterm2-tab-set${RESET}"
 fi
 
 cd $SCRIPT_DIR
@@ -39,14 +46,14 @@ sh ./nx-reset.sh
 
 if [ "$source" = "s" ]
 then
-  concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
+    concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
     -n types,schema,nx-plugin,design \
     "./run.sh types dev" \
     "./run.sh schema dev" \
     "./run.sh nx-plugin dev" \
     "./run.sh design dev"
 else
-  concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
+    concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
     -n openapi,prisma,types,schema,nx-plugin,design \
     "./zod-openapi-dev.sh" \
     "./zod-prisma-types-dev.sh" \
