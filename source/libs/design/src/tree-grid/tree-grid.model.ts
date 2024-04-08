@@ -37,10 +37,10 @@ export class TreeGridModel {
     return data.hierarchy
   }
 
-  addChild(id: string) {
+  addChild(id: number) {
     // todo: 从 db 中获取自增 id
     const newId = _.random(10, 100)
-    const findRet = this.rowData.find(i => i.id === Number(id))
+    const findRet = this.rowData.find(i => i.id === id)
     if (!findRet) throw new Error(`No row found, ${id}`)
     this.rowData.push({
       hierarchy: [...findRet.hierarchy, String(newId)],

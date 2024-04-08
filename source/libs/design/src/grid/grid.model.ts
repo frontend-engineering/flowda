@@ -29,6 +29,9 @@ export class GridModel {
     onRefClick: (v: { schemaName: string; name: string; id: number | string }) => void
     onMouseEnter: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
     onContextMenu: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  }> = {}
+
+  apis: Partial<{
     getResourceSchema: (input: z.infer<typeof getResourceInputSchema>) => Promise<z.infer<typeof resourceSchema>>
     getResourceData: (input: z.infer<typeof getResourceDataInputSchema>) => Promise<z.infer<typeof getResourceDataOutputSchema>>
     putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
@@ -56,16 +59,14 @@ export class GridModel {
 
   constructor() {
     makeObservable(this)
-    this.onMouseEnter = this.onMouseEnter.bind(this)
-    this.onContextMenu = this.onContextMenu.bind(this)
   }
 
   async getCol(schemaName: string) {
     this.setSchemaName(schemaName)
-    if (typeof this.handlers.getResourceSchema !== 'function') {
+    if (typeof this.apis.getResourceSchema !== 'function') {
       throw new Error('handlers.getResourceSchema is not implemented')
     }
-    const schemaRes = await this.handlers.getResourceSchema({
+    const schemaRes = await this.apis.getResourceSchema({
       schemaName,
     })
     this.setColumnDefs(schemaRes.columns)
@@ -92,10 +93,10 @@ export class GridModel {
       setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
     }
     localStorage.setItem(GridModel.KEY, JSON.stringify(resourceQuery))
-    if (typeof this.handlers.getResourceData !== 'function') {
+    if (typeof this.apis.getResourceData !== 'function') {
       throw new Error('handlers.getResourceData is not implemented')
     }
-    const dataRet = await this.handlers.getResourceData(
+    const dataRet = await this.apis.getResourceData(
       Object.assign({}, params, { filterModel: this.filterModel }),
     )
     const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
@@ -121,23 +122,23 @@ export class GridModel {
   }
 
   async putData(id: number, updatedValue: unknown) {
-    if (typeof this.handlers.putResourceData != 'function') {
+    if (typeof this.apis.putResourceData != 'function') {
       throw new Error('handlers.putResourceData is not implemented')
     }
-    await this.handlers.putResourceData({
+    await this.apis.putResourceData({
       schemaName: this.schemaName!,
       id: id,
       updatedValue: updatedValue,
     })
   }
 
-  onMouseEnter(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+  readonly onMouseEnter = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (typeof this.handlers.onMouseEnter === 'function') {
       this.handlers.onMouseEnter(e)
     }
   }
 
-  onContextMenu(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+  readonly onContextMenu = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (typeof this.handlers.onContextMenu === 'function') {
       this.handlers.onContextMenu(e)
     }

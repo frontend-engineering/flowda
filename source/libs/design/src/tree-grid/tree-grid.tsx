@@ -34,17 +34,18 @@ export class TreeGrid extends Component<TreeGridProps> {
 
     if (!params.node) throw new Error(`Add child to ${params.value} but node is null`)
     const title = params.node.data.title
+    const id = params.node.data.id
     return [
       {
         name: `Add child to ${title}`,
         action: () => {
-          this.props.model.addChild(params.value)
+          this.props.model.addChild(id)
         },
       },
       {
         name: `Remove ${title}`,
         action: () => {
-          this.props.model.remove(params.value)
+          this.props.model.remove(id)
         },
       },
     ]

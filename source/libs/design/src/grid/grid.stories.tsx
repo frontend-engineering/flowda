@@ -23,9 +23,9 @@ export default meta
 
 const gridModel = container.get<GridModel>(GridModelSymbol)
 
-gridModel.handlers.getResourceData = (input) => trpc.hello.getResourceData.query(input)
-gridModel.handlers.getResourceSchema = (input) => trpc.hello.getResourceSchema.query(input)
-gridModel.handlers.putResourceData = (input) => trpc.hello.putResourceData.mutate(input)
+gridModel.apis.getResourceData = (input) => trpc.hello.getResourceData.query(input)
+gridModel.apis.getResourceSchema = (input) => trpc.hello.getResourceSchema.query(input)
+gridModel.apis.putResourceData = (input) => trpc.hello.putResourceData.mutate(input)
 
 gridModel.getCol('resource.flowda.UserResourceSchema')
 
