@@ -29,24 +29,36 @@ const meta: Meta<typeof GridWrapper> = {
 
 export default meta
 
-const gridModel1 = container.get<GridModel>(GridModelSymbol)
-gridModel1.getCol('resource.flowda.UserResourceSchema')
+class GridStory extends React.Component<{
+  gridModel: GridModel
+  schemaName: string
+}> {
+  componentDidMount() {
+    this.props.gridModel.getCol(this.props.schemaName)
+  }
+
+  render() {
+    return (
+      <>
+        <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
+        <Grid model={this.props.gridModel} />
+      </>
+    )
+  }
+}
+
+
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <>
-      <button onClick={() => gridModel1.refresh()}>Refresh</button>
-      <Grid model={gridModel1} />
-    </>,
+    children: <GridStory
+      gridModel={container.get<GridModel>(GridModelSymbol)}
+      schemaName="resource.flowda.UserResourceSchema" />,
   },
 }
 
-const gridModel2 = container.get<GridModel>(GridModelSymbol)
-gridModel2.getCol('resource.flowda.MenuResourceSchema')
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <>
-      <button onClick={() => gridModel2.refresh()}>Refresh</button>
-      <Grid model={gridModel2} />
-    </>,
+    children: <GridStory gridModel={container.get<GridModel>(GridModelSymbol)}
+                         schemaName="resource.flowda.MenuResourceSchema" />,
   },
 }
