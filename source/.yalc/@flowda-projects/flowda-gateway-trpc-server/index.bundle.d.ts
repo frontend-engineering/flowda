@@ -579,56 +579,32 @@ declare class HelloRouter {
             _output_in: typeof _trpc_server.unsetMarker;
             _output_out: typeof _trpc_server.unsetMarker;
         }, {
-            display_name: string | null;
-            display_primary_key: boolean;
-            name: string;
-            primary_key: string;
+            display_name: string;
             slug: string;
-            schema_name: string;
+            primary_key: string | null;
+            visible: boolean;
+            class_name: string;
+            display_primary_key: string;
+            name: string;
+            table_name: string;
+            namespace: string;
             columns: {
-                name: string;
-                column_type: "string" | "boolean" | "datetime" | "integer" | "reference" | "tag" | "textarea";
-                reference: {
-                    display_name: string;
-                    primary_key: string;
-                    model_name: string;
-                    'x-relationField': string;
-                    'x-onSoftDelete': string;
-                    display_column?: string | string[] | undefined;
-                    'x-unique'?: boolean | undefined;
-                };
-                validators: ({
-                    required: boolean;
-                } | {
-                    message: string;
-                    format: string;
-                })[];
-                access_type?: "read_only" | undefined;
-                prisma?: boolean | undefined;
-                format?: {
-                    select_options: {
-                        value: string | number;
-                        label: string;
-                    }[];
-                } | undefined;
-                display_name?: string | undefined;
-            }[];
-            associations: {
+                column_type: string;
                 display_name: string;
                 name: string;
-                primary_key: string;
-                slug: string;
-                foreign_key: string;
-                model_name: string;
-                schema_name: string;
+                validators: unknown[];
+                description?: string | undefined;
+                example?: string | undefined;
+                reference?: {
+                    display_name: string;
+                    model_name: string;
+                    foreign_key: string;
+                    primary_key: string;
+                    reference_type: "belongs_to" | "has_one";
+                } | undefined;
             }[];
-            namespace?: string | undefined;
-            prisma?: boolean | undefined;
-            is_dynamic?: boolean | undefined;
-            'x-legacy'?: any;
-            display_column?: string | string[] | undefined;
-            searchable_columns?: string[] | undefined;
-            __jsonschema?: any;
+            display_column?: string | undefined;
+            searchable_columns?: string | undefined;
         }>;
         getResourceData: _trpc_server.BuildProcedure<"query", {
             _config: _trpc_server.RootConfig<{
@@ -1068,56 +1044,32 @@ declare class TrpcRouter {
                 _output_in: typeof _trpc_server.unsetMarker;
                 _output_out: typeof _trpc_server.unsetMarker;
             }, {
-                display_name: string | null;
-                display_primary_key: boolean;
-                name: string;
-                primary_key: string;
+                display_name: string;
                 slug: string;
-                schema_name: string;
+                primary_key: string | null;
+                visible: boolean;
+                class_name: string;
+                display_primary_key: string;
+                name: string;
+                table_name: string;
+                namespace: string;
                 columns: {
-                    name: string;
-                    column_type: "string" | "boolean" | "datetime" | "integer" | "reference" | "tag" | "textarea";
-                    reference: {
-                        display_name: string;
-                        primary_key: string;
-                        model_name: string;
-                        'x-relationField': string;
-                        'x-onSoftDelete': string;
-                        display_column?: string | string[] | undefined;
-                        'x-unique'?: boolean | undefined;
-                    };
-                    validators: ({
-                        required: boolean;
-                    } | {
-                        message: string;
-                        format: string;
-                    })[];
-                    access_type?: "read_only" | undefined;
-                    prisma?: boolean | undefined;
-                    format?: {
-                        select_options: {
-                            value: string | number;
-                            label: string;
-                        }[];
-                    } | undefined;
-                    display_name?: string | undefined;
-                }[];
-                associations: {
+                    column_type: string;
                     display_name: string;
                     name: string;
-                    primary_key: string;
-                    slug: string;
-                    foreign_key: string;
-                    model_name: string;
-                    schema_name: string;
+                    validators: unknown[];
+                    description?: string | undefined;
+                    example?: string | undefined;
+                    reference?: {
+                        display_name: string;
+                        model_name: string;
+                        foreign_key: string;
+                        primary_key: string;
+                        reference_type: "belongs_to" | "has_one";
+                    } | undefined;
                 }[];
-                namespace?: string | undefined;
-                prisma?: boolean | undefined;
-                is_dynamic?: boolean | undefined;
-                'x-legacy'?: any;
-                display_column?: string | string[] | undefined;
-                searchable_columns?: string[] | undefined;
-                __jsonschema?: any;
+                display_column?: string | undefined;
+                searchable_columns?: string | undefined;
             }>;
             getResourceData: _trpc_server.BuildProcedure<"query", {
                 _config: _trpc_server.RootConfig<{

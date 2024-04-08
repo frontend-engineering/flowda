@@ -28,7 +28,7 @@ export const agSortSchema = z.array(
 )
 
 export const cellRendererInputSchema = z.object({
-  value: z.unknown(),
+  value: z.any(),
   valueFormatted: z.string(),
   colDef: z.object({
     field: z.string(),

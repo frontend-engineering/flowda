@@ -153,7 +153,7 @@ export class GridModel {
     }
   }
 
-  onRefClick(field: string, value: number | string) {
+  onRefClick(field: string, value: any) {
     const ref = this.schema?.columns.find(t => t.name === field)
     if (ref == null || ref.reference == null) {
       throw new Error(`field is not type reference, ${field}`)

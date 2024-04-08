@@ -132,7 +132,9 @@ export class Grid extends Component<GridProps> {
             },
           }
         }
-        case 'tag': {
+        // todo: 更新 schema parser 后，暂时不支持 tag
+        // 这块属于 plugin
+        /*case 'tag': {
           const options = item.format!.select_options!
           const refData = options.reduce((acc, cur) => {
             acc[cur.value] = cur.label
@@ -149,7 +151,7 @@ export class Grid extends Component<GridProps> {
             },
             refData: refData,
           }
-        }
+        }*/
         case 'integer':
           return {
             field: item.name,
