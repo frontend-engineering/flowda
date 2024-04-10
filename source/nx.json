@@ -15,7 +15,7 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
       "options": {
-        "watch": true
+        "watch": false
       }
     },
     "build": {

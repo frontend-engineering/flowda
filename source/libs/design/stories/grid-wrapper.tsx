@@ -13,7 +13,7 @@ export class GridWrapper extends React.Component<React.PropsWithChildren> {
               height: 100%;
           }
       `} />
-      <div className="ag-theme-quartz" style={{ height: '100%' }}>
+      <div className="ag-theme-quartz-dark" style={{ height: '100%' }}>
         {this.props.children}
       </div>
     </>

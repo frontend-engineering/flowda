@@ -7,5 +7,6 @@ cd ../source
 
 proj="$1"
 exe="$2"
+opts="$3"
 
-./node_modules/.bin/nx run $proj:$exe
+./node_modules/.bin/nx run $proj:$exe $opts

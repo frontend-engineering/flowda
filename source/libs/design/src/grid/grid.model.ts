@@ -1,5 +1,4 @@
-import { injectable } from 'inversify'
-import { action, makeObservable, observable } from 'mobx'
+import { injectable, postConstruct } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import * as _ from 'radash'
 import {
@@ -21,11 +20,17 @@ import { z } from 'zod'
 export class GridModel {
   static KEY = 'resourceQuery'
 
-  @observable columnDefs: z.infer<typeof ColumnUISchema>[] = []
-
+  columnDefs: z.infer<typeof ColumnUISchema>[] = []
   schemaName: string | null = null
   schema: z.infer<typeof ResourceUISchema> | null = null
-  filterModel: z.infer<typeof agFilterSchema> | null = null
+  isNotEmpty = false
+  gridApi: GridApi | null = null
+
+  /**
+   * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
+   * 原因是 setColDefs 有 React（cellRenderer）不能放在 grid.model 里
+   */
+  refPromise?: Promise<boolean>
 
   handlers: Partial<{
     onRefClick: (v: { schemaName: string; name: string; id: number | string }) => void
@@ -39,9 +44,21 @@ export class GridModel {
     putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
   }> = {}
 
-  isNotEmpty = false
+  private filterModel: z.infer<typeof agFilterSchema> | null = null
+  private ref: unknown
+  private uri?: string
+  private refResolve?: (value: boolean | PromiseLike<boolean>) => void
 
-  gridApi: GridApi | null = null
+  /**
+   * 在 ResourceWidgetFactory#createWidget 重置 promise
+   * 因为目前 grid.model 在 tab 关闭并不会销毁 todo 可以销毁 这样流程简单很多
+   */
+  resetRefPromise(uri: string) {
+    this.uri = uri
+    this.refPromise = new Promise<boolean>((resolve) => {
+      this.refResolve = resolve
+    })
+  }
 
   refresh() {
     if (this.gridApi && !this.gridApi.isDestroyed()) {
@@ -49,18 +66,17 @@ export class GridModel {
     }
   }
 
-  @action
-  setColumnDefs(columnDefs: z.infer<typeof ColumnUISchema>[]) {
-    this.columnDefs = columnDefs
+  /**
+   * `<Grid ref={ref => this.setRef(ref)} />`
+   */
+  setRef(ref: unknown, uri?: string) {
+    this.ref = ref
+    this.uri = uri
+    this.refResolve!(true)
   }
 
-  @action
   setSchemaName(schemaName: string) {
     this.schemaName = schemaName
-  }
-
-  constructor() {
-    makeObservable(this)
   }
 
   async getCol(schemaName: string) {
@@ -68,11 +84,31 @@ export class GridModel {
     if (typeof this.apis.getResourceSchema !== 'function') {
       throw new Error('handlers.getResourceSchema is not implemented')
     }
-    const schemaRes = await this.apis.getResourceSchema({
-      schemaName,
-    })
-    this.setColumnDefs(schemaRes.columns)
-    this.schema = schemaRes
+    if (this.schemaName == null) {
+      throw new Error('schemaName is null')
+    }
+    if (this.columnDefs.length > 0) {
+      console.warn(`columns is not empty, only refresh data, ${schemaName}`)
+      this.refresh()
+    } else {
+      const schemaRes = await this.apis.getResourceSchema({
+        schemaName: this.schemaName,
+      })
+      if (schemaRes.columns.length > 0 && !_.isEqual(this.columnDefs, schemaRes.columns)) {
+        this.columnDefs = schemaRes.columns
+      }
+      this.schema = schemaRes
+    }
+
+    if (this.refPromise == null) throw new Error('refPromise is null, call resetRefPromise in getOrCreateGridModel()')
+    await this.refPromise
+    // @ts-expect-error
+    if (this.ref == null || typeof this.ref['setColDefs'] !== 'function') {
+      throw new Error('ref is null')
+    }
+    // @ts-expect-error
+    this.ref['setColDefs']()
+
     if (!_.isEmpty(this.filterModel)) {
       setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
     }
@@ -91,7 +127,7 @@ export class GridModel {
     if (this.filterModel != null) {
       resourceQuery[params.schemaName] = this.filterModel
     }
-    if (this.columnDefs.length > 0 && params.filterModel != this.filterModel && !_.isEmpty(this.filterModel)) {
+    if (this.columnDefs && this.columnDefs.length > 0 && params.filterModel != this.filterModel && !_.isEmpty(this.filterModel)) {
       setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
     }
     localStorage.setItem(GridModel.KEY, JSON.stringify(resourceQuery))

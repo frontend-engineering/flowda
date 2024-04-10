@@ -1,6 +1,5 @@
-import { Component } from 'react'
+import * as React from 'react'
 import { AgGridReact } from 'ag-grid-react'
-import { observer } from 'mobx-react'
 import { GridModel } from './grid.model'
 import type {
   CellValueChangedEvent,
@@ -17,48 +16,48 @@ import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
 
 export type GridProps = {
+  uri?: string
   model: GridModel
 }
 
-@observer
-export class Grid extends Component<GridProps> {
+export class Grid extends React.Component<GridProps> {
   private gridRef: AgGridReact | null = null
 
-  constructor(props: GridProps) {
-    super(props)
-  }
-
-  private readonly onGridReady = async (params: GridReadyEvent) => {
+  private readonly onGridReady = async (evt: GridReadyEvent) => {
     // console.log('[Grid] onGridReady', this.props.model.schemaName)
-    this.props.model.gridApi = params.api
+    this.props.model.gridApi = evt.api
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {
-        if (this.props.model.schemaName) {
-          const ret = await this.props.model.getData({
-            schemaName: this.props.model.schemaName,
-            // todo: 分页参数逻辑 后续重构可以下沉到 node 端，即服务端直接接收 startRow endRow
-            current: params.endRow / (params.endRow - params.startRow),
-            pageSize: params.endRow - params.startRow,
-            sort: params.sortModel,
-            filterModel: params.filterModel,
-          })
-
-          // console.log(`[Grid] successCallback`)
-          params.successCallback(ret.data, ret.pagination.total)
-          // this.props.model.gridApi?.setGridOption('pinnedTopRowData', [ret.data[0]])
-          // 只在第一次有值的时候做 resize 后续分页或者刷新就不要 resize 了
-          if (!this.props.model.isNotEmpty && ret.data != null) {
-            setTimeout(() => this.autoResizeAll(), 0)
-          }
-          this.props.model.isNotEmpty = ret.data != null
-        } else {
-          // console.warn('schemaName is null')
-          throw new Error('schemaName is null')
+        if (this.props.model.schemaName == null) {
+          console.warn('schemaName is null, ignored')
+          return
         }
+        if (this.props.model.columnDefs.length === 0) {
+          console.warn('columnDefs is empty, ignored')
+          return
+        }
+        const ret = await this.props.model.getData({
+          schemaName: this.props.model.schemaName,
+          // todo: 分页参数逻辑 后续重构可以下沉到 node 端，即服务端直接接收 startRow endRow
+          current: params.endRow / (params.endRow - params.startRow),
+          pageSize: params.endRow - params.startRow,
+          sort: params.sortModel,
+          filterModel: params.filterModel,
+        })
+
+        // console.log(`[Grid] successCallback`)
+        evt.api.hideOverlay()
+        params.successCallback(ret.data, ret.pagination.total)
+        // this.props.model.gridApi?.setGridOption('pinnedTopRowData', [ret.data[0]])
+        // 只在第一次有值的时候做 resize 后续分页或者刷新就不要 resize 了
+        if (!this.props.model.isNotEmpty && ret.data != null) {
+          setTimeout(() => this.autoResizeAll(), 0)
+        }
+        this.props.model.isNotEmpty = ret.data != null
       },
     }
-    params.api.setGridOption('datasource', datasource)
+    evt.api.setGridOption('datasource', datasource)
   }
 
   private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
@@ -70,8 +69,8 @@ export class Grid extends Component<GridProps> {
     })
   }
 
-  columnDefs() {
-    return this.props.model.columnDefs.map<ColDef>(item => {
+  setColDefs = () => {
+    const colDefs = this.props.model.columnDefs.map<ColDef>(item => {
       // todo: 图片需要搞一个 modal 并且上传修改
       if (item.name === 'image') {
         return {
@@ -218,6 +217,10 @@ export class Grid extends Component<GridProps> {
           }
       }
     })
+    if (!this.gridRef) {
+      throw new Error('this.gridRef is null')
+    }
+    this.gridRef.api.setGridOption('columnDefs', colDefs)
   }
 
   /*
@@ -241,11 +244,12 @@ export class Grid extends Component<GridProps> {
     return (
       <AgGridReact
         modules={[InfiniteRowModelModule]}
-        ref={ref => (this.gridRef = ref)}
+        ref={ref => {
+          this.gridRef = ref
+        }}
         defaultColDef={{
           maxWidth: 400,
         }}
-        columnDefs={this.columnDefs()}
         rowHeight={42}
         pagination={true}
         paginationPageSize={20}

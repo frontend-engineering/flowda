@@ -523,10 +523,7 @@ declare class HelloRouter {
             id: string;
             name: string;
             selected: boolean;
-            uri: {
-                scheme: string;
-                name: string;
-            } | undefined;
+            uri: string | undefined;
             expanded: boolean | undefined;
             children: never[] | undefined;
         }[] | {
@@ -988,10 +985,7 @@ declare class TrpcRouter {
                 id: string;
                 name: string;
                 selected: boolean;
-                uri: {
-                    scheme: string;
-                    name: string;
-                } | undefined;
+                uri: string | undefined;
                 expanded: boolean | undefined;
                 children: never[] | undefined;
             }[] | {

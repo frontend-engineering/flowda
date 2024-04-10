@@ -45,24 +45,26 @@ class GridStory extends React.Component<{
     return (
       <>
         <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
-        <Grid model={this.props.gridModel} />
+        <Grid ref={ref => this.props.gridModel.setRef(ref)}
+              model={this.props.gridModel} />
       </>
     )
   }
 }
 
 
+const userGridModel = container.get<GridModel>(GridModelSymbol)
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory
-      gridModel={container.get<GridModel>(GridModelSymbol)}
-      schemaName="resource.flowda.UserResourceSchema" />,
+      gridModel={userGridModel}
+      schemaName={'flowda.UserResourceSchema'} />,
   },
 }
-
+const menuGridModel = container.get<GridModel>(GridModelSymbol)
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory gridModel={container.get<GridModel>(GridModelSymbol)}
-                         schemaName="resource.flowda.MenuResourceSchema" />,
+    children: <GridStory gridModel={menuGridModel}
+                         schemaName={'flowda.MenuResourceSchema'} />,
   },
 }
