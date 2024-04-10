@@ -187,16 +187,16 @@ export class GridModel {
 
   readonly onContextMenu = (cellRendererInput: z.infer<typeof cellRendererInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (typeof this.handlers.onContextMenu === 'function') {
-      if (!this.schema) throw new Error('schema is null')
       const parsedRet = cellRendererInputSchema.parse(cellRendererInput)
-      const colDef = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
-      if (!colDef) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
       if (this.uri == null) throw new Error('uri is null')
-      const uri = createTreeGridUri(this.uri, cellRendererInput.data.id, cellRendererInput.colDef.field)
+      if (this.schema == null) throw new Error('schema is null')
+      const column = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
+      if (!column) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
+      // const uri = createTreeGridUri(this.uri, parsedRet.data.id, parsedRet.colDef.field)
       this.handlers.onContextMenu({
-        uri,
-        colDef,
-        value: parsedRet.value,
+        uri: this.uri,
+        cellRendererInput: parsedRet,
+        column
       }, e)
     }
   }

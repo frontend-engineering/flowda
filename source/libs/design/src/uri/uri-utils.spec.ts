@@ -112,7 +112,9 @@ describe('uri utils', () => {
     const uri = 'grid://flowda?schemaName=MenuResourceSchema'
     const output = createTreeGridUri(new URI(uri), '1', 'menuData')
     console.log(output)
-    expect(output).toMatchInlineSnapshot(`"tree-grid://flowda?schema=MenuResourceSchema&id=1&field=menuData"`)
+    expect(output.toString()).toMatchInlineSnapshot(
+      `"tree-grid://flowda?schema%3DMenuResourceSchema%26id%3D1%26field%3DmenuData"`,
+    )
   })
 
   it('isUriEqual', () => {
