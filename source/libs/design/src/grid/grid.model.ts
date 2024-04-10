@@ -30,7 +30,7 @@ export class GridModel {
    * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
    * 原因是 setColDefs 有 React（cellRenderer）不能放在 grid.model 里
    */
-  refPromise?: Promise<boolean>
+  private refPromise?: Promise<boolean>
 
   handlers: Partial<{
     onRefClick: (v: { schemaName: string; name: string; id: number | string }) => void

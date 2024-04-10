@@ -4,11 +4,11 @@ import * as _ from 'radash'
 import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery, getUriSchemaName } from '../uri/uri-utils'
+import { convertMenuDataToAgTreeData } from './tree-grid-utils'
 
 @injectable()
 export class TreeGridModel {
   gridApi: GridApi | null = null
-  private uri?: string
 
   rowData: Array<{
     hierarchy: string[]
@@ -19,19 +19,45 @@ export class TreeGridModel {
   }> = []
 
   columnDefs: ColDef<any, any>[] = [
-    { field: 'title', editable: true },
-    { field: 'url', editable: true },
+    { field: 'name', editable: true },
+    { field: 'slug', editable: true },
     { field: 'icon', editable: true },
   ]
 
+  private uri?: string
   private gridModel?: GridModel
+  /**
+  * 等待 onGridReady 对 gridApi 赋值
+  */
+  private gridReadyPromise?: Promise<boolean>
+  private gridReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
 
   handlers: Partial<{
     message: (title: string) => void
   }> = {}
 
+  resetGridReadyPromise(uri: string) {
+    this.setUri(uri)
+    this.gridReadyPromise = new Promise<boolean>((resolve) => {
+      this.gridReadyResolve = resolve
+    })
+  }
+
+  setGridApi(gridApi: GridApi) {
+    this.gridApi = gridApi
+    if (!this.gridReadyResolve) throw new Error('gridReadyResolve is null, call resetGridReadyPromise() first')
+    this.gridReadyResolve(true)
+  }
+
   setUri(uri: string) {
-    this.uri = uri
+    if (uri != null) {
+      if (this.uri == null) {
+        this.uri = uri
+      } else {
+        // double check 下 防止 gridModel grid 未对应
+        if (uri !== this.uri) throw new Error(`setRef uri is not matched, current: ${this.uri}, input: ${uri}`)
+      }
+    }
   }
 
   async loadData() {
@@ -40,10 +66,16 @@ export class TreeGridModel {
     if (typeof this.gridModel.apis.getResourceData !== 'function') throw new Error('handlers.getResourceData is not implemented')
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
-    const ret = await this.gridModel.apis.getResourceData({
+    // todo: any
+    const ret: any = await this.gridModel.apis.getResourceData({
       schemaName: `${uri.authority}.${query.schemaName}`,
       id: Number(query.id),
     })
+    const treeData = convertMenuDataToAgTreeData(ret[query.field])
+    if (!this.gridReadyPromise) throw new Error('gridReadyPromise is null, call resetGridReadyPromise() first')
+    await this.gridReadyPromise
+    if (!this.gridApi) throw new Error('gridApi is null')
+    this.gridApi.setGridOption('rowData', treeData)
   }
 
   setGridModel(gridModel: GridModel) {

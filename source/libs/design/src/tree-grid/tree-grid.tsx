@@ -22,7 +22,7 @@ export class TreeGrid extends Component<TreeGridProps> {
   }
 
   private readonly onGridReady = (params: GridReadyEvent) => {
-    this.props.model.gridApi = params.api
+    this.props.model.setGridApi(params.api)
   }
 
   /*
@@ -59,7 +59,6 @@ export class TreeGrid extends Component<TreeGridProps> {
           MenuModule,
         ]}
         ref={ref => (this.gridRef = ref)}
-        rowData={this.props.model.rowData}
         columnDefs={this.props.model.columnDefs}
         defaultColDef={{
           flex: 1,

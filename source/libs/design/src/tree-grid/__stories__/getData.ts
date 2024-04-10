@@ -1,26 +1,28 @@
-export function getData(): any[] {
-  const rowData = [
+import { agMenuItemSchema } from '@flowda/types'
+import { z } from 'zod'
+
+export function getData(): z.infer<typeof agMenuItemSchema>[] {
+  return [
     {
       hierarchy: ['1'],
-      id: 1,
-      title: '租户管理',
-      url: 'tenant_admin',
+      id: '1',
+      name: '租户管理',
+      slug: 'tenant_admin',
       icon: '',
     },
     {
       hierarchy: ['1', '2'],
-      id: 2,
-      title: '租户和用户',
-      url: 'tenant',
+      id: '2',
+      name: '租户和用户',
+      slug: 'tenant',
       icon: '',
     },
     {
       hierarchy: ['1', '2', '3'],
-      id: 3,
-      title: '租户列表',
-      url: 'tenants',
+      id: '2',
+      name: '租户列表',
+      slug: 'tenants',
       icon: '',
     },
   ]
-  return rowData
 }
