@@ -23,7 +23,6 @@ export const bindDesignModule = (bind: interfaces.Bind) => {
   bind<ThemeModel>(ThemeModelSymbol).to(ThemeModel).inSingletonScope()
   bind<LoginModel>(LoginModelSymbol).to(LoginModel).inSingletonScope()
   bind<PreviewModel>(PreviewModelSymbol).to(PreviewModel).inSingletonScope()
-
   bind<GridModel>(GridModelSymbol).to(GridModel).inRequestScope()
   bind<TreeGridModel>(TreeGridModelSymbol).to(TreeGridModel).inRequestScope()
 }

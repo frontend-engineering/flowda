@@ -1,6 +1,6 @@
 import { treeDataInput } from './__features__/tree-data'
-import { convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { getData } from './__stories__/getData'
+import { convertMenuDataToAgTreeData, convertAgTreeDataToTreeData, stringifyMenuData } from './tree-grid-utils'
+import { z } from 'zod'
 
 describe('tree grid utils', () => {
   it('convert tree data to ag-grid tree data', () => {
@@ -57,62 +57,6 @@ describe('tree grid utils', () => {
         },
         {
           "hierarchy": [
-            "J8XJ",
-          ],
-          "id": "J8XJ",
-          "name": "订单",
-          "slug": "order_admin",
-        },
-        {
-          "hierarchy": [
-            "J8XJ",
-            "6v6G",
-          ],
-          "id": "6v6G",
-          "name": "产品",
-          "slug": "product",
-        },
-        {
-          "hierarchy": [
-            "J8XJ",
-            "6v6G",
-            "QoBb",
-          ],
-          "id": "QoBb",
-          "name": "产品列表",
-          "slug": "products",
-        },
-        {
-          "hierarchy": [
-            "J8XJ",
-            "ZzOq",
-          ],
-          "id": "ZzOq",
-          "name": "订单和支付",
-          "slug": "order",
-        },
-        {
-          "hierarchy": [
-            "J8XJ",
-            "ZzOq",
-            "m21G",
-          ],
-          "id": "m21G",
-          "name": "订单列表",
-          "slug": "orders",
-        },
-        {
-          "hierarchy": [
-            "J8XJ",
-            "ZzOq",
-            "J3zM",
-          ],
-          "id": "J3zM",
-          "name": "支付列表",
-          "slug": "pays",
-        },
-        {
-          "hierarchy": [
             "HD0U",
           ],
           "id": "HD0U",
@@ -158,6 +102,75 @@ describe('tree grid utils', () => {
           "slug": "request_error_logs",
         },
       ]
+    `)
+  })
+  it('convert back tree data to menu data', () => {
+    const input = convertMenuDataToAgTreeData(treeDataInput)
+    const output = convertAgTreeDataToTreeData(input)
+    console.log(output)
+    expect(stringifyMenuData(output, 2)).toMatchInlineSnapshot(`
+      "[
+        {
+          "id": "v6fB",
+          "name": "租户管理",
+          "slug": "tenant_admin",
+          "children": [
+            {
+              "id": "28Eq",
+              "name": "租户和用户",
+              "slug": "tenant",
+              "children": [
+                {
+                  "id": "7mjf",
+                  "name": "租户信息",
+                  "slug": "tenants"
+                },
+                {
+                  "id": "aSYt",
+                  "name": "菜单",
+                  "slug": "menus"
+                },
+                {
+                  "id": "FfOe",
+                  "name": "用户",
+                  "slug": "users"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "HD0U",
+          "name": "常用工具",
+          "slug": "utilities",
+          "children": [
+            {
+              "id": "a2MH",
+              "name": "通知",
+              "slug": "notification",
+              "children": [
+                {
+                  "id": "b0yA",
+                  "name": "短信通知",
+                  "slug": "sent_sms"
+                }
+              ]
+            },
+            {
+              "id": "jOej",
+              "name": "日志",
+              "slug": "log",
+              "children": [
+                {
+                  "id": "ZcjG",
+                  "name": "异常日志",
+                  "slug": "request_error_logs"
+                }
+              ]
+            }
+          ]
+        }
+      ]"
     `)
   })
 })

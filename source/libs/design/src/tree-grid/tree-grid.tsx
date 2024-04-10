@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import { observer } from 'mobx-react'
 import { TreeGridModel } from './tree-grid.model'
 import { AgGridReact } from 'ag-grid-react'
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model'

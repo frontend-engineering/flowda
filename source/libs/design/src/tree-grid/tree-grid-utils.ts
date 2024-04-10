@@ -1,4 +1,4 @@
-import { agMenuItemSchema, menuItemSchema } from '@flowda/types'
+import { agMenuItemSchema, MenuItem, menuItemSchema } from '@flowda/types'
 import { z } from 'zod'
 
 export function convertMenuDataToAgTreeData(menuData: z.infer<typeof menuItemSchema>[]): z.infer<typeof agMenuItemSchema>[] {
@@ -35,4 +35,34 @@ export function traverseUp(tree: z.infer<typeof menuItemSchema>, visit: (node: z
         parent = parent.parent
     }
     return ret
+}
+
+export function convertAgTreeDataToTreeData(input: (z.infer<typeof agMenuItemSchema> & { children?: [] })[]) {
+    const rootNodes: z.infer<typeof menuItemSchema>[] = []
+    const nodeMap: Record<string, (z.infer<typeof menuItemSchema>)> = {}
+
+    input.forEach((node) => {
+        node.children = []
+        nodeMap[node.id] = node
+    })
+
+    input.forEach((node) => {
+        const { hierarchy, ...rest } = node
+        const parentNode = hierarchy.length > 1 ? nodeMap[hierarchy[hierarchy.length - 2]] : null
+        if (parentNode) {
+            if (parentNode.children == null) parentNode.children = []
+            parentNode.children.push(node)
+        } else {
+            rootNodes.push(node)
+        }
+    })
+    return rootNodes
+}
+
+export function stringifyMenuData(input: MenuItem[], space?: number) {
+    return JSON.stringify(input, (k, value) => {
+        if (value.hierarchy) delete value.hierarchy
+        if (value.children && value.children.length === 0) delete value.children
+        return value
+    }, space)
 }
