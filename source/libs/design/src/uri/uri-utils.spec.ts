@@ -2,7 +2,8 @@ import 'reflect-metadata'
 import { URI as Uri } from 'vscode-uri'
 import * as qs from 'qs'
 import { URI } from '@theia/core'
-import { createTreeGridUri, uriWithoutId } from './uri-utils'
+import { convertTreeGridUriToGridUri, createTreeGridUri, uriWithoutId } from './uri-utils'
+import { treeGridUriQuerySchema } from '@flowda/types'
 /*
 
   foo://example.com:8042/over/there?name=ferret#nose
@@ -109,11 +110,11 @@ describe('uri utils', () => {
   })
 
   it('tree grid uri', () => {
-    const uri = 'grid://flowda?schemaName=MenuResourceSchema'
+    const uri = 'grid://flowda?schemaName=MenuResourceSchema&displayName=菜单'
     const output = createTreeGridUri(new URI(uri), '1', 'menuData')
     console.log(output)
     expect(output.toString()).toMatchInlineSnapshot(
-      `"tree-grid://flowda?schema%3DMenuResourceSchema%26id%3D1%26field%3DmenuData"`,
+      `"tree-grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%231%3AmenuData%26id%3D1%26field%3DmenuData"`,
     )
   })
 
@@ -145,5 +146,13 @@ describe('uri utils', () => {
         },
       }
     `)
+  })
+
+  it('tree grid uri -> gri uri', () => {
+    const treeGridUri =
+      'tree-grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%233%3AtreeData%26id%3D3%26field%3DtreeData'
+    const gridUri = convertTreeGridUriToGridUri(treeGridUri)
+    console.log(gridUri)
+    expect(gridUri).toMatchInlineSnapshot(`"grid://flowda?schemaName=MenuResourceSchema&displayName=菜单"`)
   })
 })

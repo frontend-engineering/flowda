@@ -2,6 +2,7 @@ import { injectable } from 'inversify'
 import { makeObservable } from 'mobx'
 import type { ColDef, GridApi } from 'ag-grid-community'
 import * as _ from 'radash'
+import { GridModel } from '../grid/grid.model'
 
 @injectable()
 export class TreeGridModel {
@@ -21,12 +22,18 @@ export class TreeGridModel {
     { field: 'icon', editable: true },
   ]
 
+  private gridModel?: GridModel
+
   handlers: Partial<{
     message: (title: string) => void
   }> = {}
 
   constructor() {
     makeObservable(this)
+  }
+
+  setGridModel(gridModel: GridModel) {
+    this.gridModel = gridModel
   }
 
   getDataPath(data: unknown): string[] {

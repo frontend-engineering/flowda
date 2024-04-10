@@ -7,3 +7,10 @@ export const handleContextMenuInputSchema = z.object({
   cellRendererInput: cellRendererInputSchema,
   column: ColumnUISchema
 })
+
+export const treeGridUriQuerySchema = z.object({
+  schemaName: z.string(),
+  displayName: z.string(),
+  id: z.string(),
+  field: z.string()
+})
