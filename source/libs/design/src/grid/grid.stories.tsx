@@ -1,6 +1,4 @@
 import 'reflect-metadata'
-import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-quartz.css'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Grid } from './grid'
 import { Container } from 'inversify'
@@ -46,7 +44,7 @@ class GridStory extends React.Component<{
       <>
         <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
         <Grid ref={ref => this.props.gridModel.setRef(ref)}
-              model={this.props.gridModel} />
+          model={this.props.gridModel} />
       </>
     )
   }
@@ -54,6 +52,7 @@ class GridStory extends React.Component<{
 
 
 const userGridModel = container.get<GridModel>(GridModelSymbol)
+userGridModel.resetRefPromise('flowda.UserResourceSchema')
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory
@@ -62,9 +61,10 @@ export const UserResource: StoryObj<typeof GridWrapper> = {
   },
 }
 const menuGridModel = container.get<GridModel>(GridModelSymbol)
+menuGridModel.resetRefPromise('flowda.UserResourceSchema')
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory gridModel={menuGridModel}
-                         schemaName={'flowda.MenuResourceSchema'} />,
+      schemaName={'flowda.MenuResourceSchema'} />,
   },
 }
