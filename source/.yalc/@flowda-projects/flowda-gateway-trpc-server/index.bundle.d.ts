@@ -643,35 +643,35 @@ declare class HelloRouter {
                 schemaName: string;
                 current: number;
                 pageSize: number;
-                filterModel: ({
-                    _ref?: string | undefined;
-                } | Record<string, {
+                filterModel: (Record<string, {
+                    filterType: "number" | "text";
                     filter: string | number;
                     type: "contains" | "equals";
-                    filterType: "number" | "text";
                 } | {
                     filterType: "text";
                     operator: "OR" | "AND";
                     conditions: {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     }[];
-                }>) & ({
+                }> | {
                     _ref?: string | undefined;
-                } | Record<string, {
+                }) & (Record<string, {
+                    filterType: "number" | "text";
                     filter: string | number;
                     type: "contains" | "equals";
-                    filterType: "number" | "text";
                 } | {
                     filterType: "text";
                     operator: "OR" | "AND";
                     conditions: {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     }[];
-                }> | undefined);
+                }> | {
+                    _ref?: string | undefined;
+                } | undefined);
                 id?: number | undefined;
             };
             _input_out: {
@@ -682,35 +682,35 @@ declare class HelloRouter {
                 schemaName: string;
                 current: number;
                 pageSize: number;
-                filterModel: ({
-                    _ref?: string | undefined;
-                } | Record<string, {
+                filterModel: (Record<string, {
+                    filterType: "number" | "text";
                     filter: string | number;
                     type: "contains" | "equals";
-                    filterType: "number" | "text";
                 } | {
                     filterType: "text";
                     operator: "OR" | "AND";
                     conditions: {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     }[];
-                }>) & ({
+                }> | {
                     _ref?: string | undefined;
-                } | Record<string, {
+                }) & (Record<string, {
+                    filterType: "number" | "text";
                     filter: string | number;
                     type: "contains" | "equals";
-                    filterType: "number" | "text";
                 } | {
                     filterType: "text";
                     operator: "OR" | "AND";
                     conditions: {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     }[];
-                }> | undefined);
+                }> | {
+                    _ref?: string | undefined;
+                } | undefined);
                 id?: number | undefined;
             };
             _output_in: typeof _trpc_server.unsetMarker;
@@ -1105,35 +1105,35 @@ declare class TrpcRouter {
                     schemaName: string;
                     current: number;
                     pageSize: number;
-                    filterModel: ({
-                        _ref?: string | undefined;
-                    } | Record<string, {
+                    filterModel: (Record<string, {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     } | {
                         filterType: "text";
                         operator: "OR" | "AND";
                         conditions: {
+                            filterType: "number" | "text";
                             filter: string | number;
                             type: "contains" | "equals";
-                            filterType: "number" | "text";
                         }[];
-                    }>) & ({
+                    }> | {
                         _ref?: string | undefined;
-                    } | Record<string, {
+                    }) & (Record<string, {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     } | {
                         filterType: "text";
                         operator: "OR" | "AND";
                         conditions: {
+                            filterType: "number" | "text";
                             filter: string | number;
                             type: "contains" | "equals";
-                            filterType: "number" | "text";
                         }[];
-                    }> | undefined);
+                    }> | {
+                        _ref?: string | undefined;
+                    } | undefined);
                     id?: number | undefined;
                 };
                 _input_out: {
@@ -1144,35 +1144,35 @@ declare class TrpcRouter {
                     schemaName: string;
                     current: number;
                     pageSize: number;
-                    filterModel: ({
-                        _ref?: string | undefined;
-                    } | Record<string, {
+                    filterModel: (Record<string, {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     } | {
                         filterType: "text";
                         operator: "OR" | "AND";
                         conditions: {
+                            filterType: "number" | "text";
                             filter: string | number;
                             type: "contains" | "equals";
-                            filterType: "number" | "text";
                         }[];
-                    }>) & ({
+                    }> | {
                         _ref?: string | undefined;
-                    } | Record<string, {
+                    }) & (Record<string, {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     } | {
                         filterType: "text";
                         operator: "OR" | "AND";
                         conditions: {
+                            filterType: "number" | "text";
                             filter: string | number;
                             type: "contains" | "equals";
-                            filterType: "number" | "text";
                         }[];
-                    }> | undefined);
+                    }> | {
+                        _ref?: string | undefined;
+                    } | undefined);
                     id?: number | undefined;
                 };
                 _output_in: typeof _trpc_server.unsetMarker;

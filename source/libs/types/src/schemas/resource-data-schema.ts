@@ -5,14 +5,24 @@ export const getResourceInputSchema = z.object({
   schemaName: z.string(),
 })
 
-export const getResourceDataInputSchema = z.object({
+export const findManyResourceDataInputSchema = z.object({
   schemaName: z.string(),
-  id: z.number().optional(),
   current: z.number(),
   pageSize: z.number(),
   sort: agSortSchema,
   filterModel: agFilterSchema,
 })
+
+export const findUniqueResourceDataInputSchema = z.object({
+  schemaName: z.string(),
+  id: z.number(),
+})
+
+export const getResourceDataInputSchema = z.union([
+  findManyResourceDataInputSchema,
+  findUniqueResourceDataInputSchema
+])
+
 
 export const getResourceDataOutputInnerSchema = z.object({
   pagination: z.object({

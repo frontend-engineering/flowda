@@ -1,4 +1,4 @@
-import { injectable, postConstruct } from 'inversify'
+import { injectable } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import * as _ from 'radash'
 import {
@@ -15,7 +15,6 @@ import {
   ResourceUISchema,
 } from '@flowda/types'
 import { z } from 'zod'
-import { createTreeGridUri, uriWithoutId } from '../uri/uri-utils'
 
 @injectable()
 export class GridModel {

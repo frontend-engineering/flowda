@@ -12,7 +12,6 @@ export type TreeGridProps = {
   model: TreeGridModel
 }
 
-@observer
 export class TreeGrid extends Component<TreeGridProps> {
   private gridRef: AgGridReact<any> | null = null
 

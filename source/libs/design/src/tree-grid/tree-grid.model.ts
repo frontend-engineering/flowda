@@ -1,12 +1,14 @@
 import { injectable } from 'inversify'
-import { makeObservable } from 'mobx'
 import type { ColDef, GridApi } from 'ag-grid-community'
 import * as _ from 'radash'
 import { GridModel } from '../grid/grid.model'
+import { URI } from '@theia/core'
+import { getTreeUriQuery, getUriSchemaName } from '../uri/uri-utils'
 
 @injectable()
 export class TreeGridModel {
   gridApi: GridApi | null = null
+  private uri?: string
 
   rowData: Array<{
     hierarchy: string[]
@@ -28,8 +30,20 @@ export class TreeGridModel {
     message: (title: string) => void
   }> = {}
 
-  constructor() {
-    makeObservable(this)
+  setUri(uri: string) {
+    this.uri = uri
+  }
+
+  async loadData() {
+    if (!this.gridModel) throw new Error(`this.gridModel is null, call setGridModel() first`)
+    if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
+    if (typeof this.gridModel.apis.getResourceData !== 'function') throw new Error('handlers.getResourceData is not implemented')
+    const uri = new URI(this.uri)
+    const query = getTreeUriQuery(this.uri)
+    const ret = await this.gridModel.apis.getResourceData({
+      schemaName: `${uri.authority}.${query.schemaName}`,
+      id: Number(query.id),
+    })
   }
 
   setGridModel(gridModel: GridModel) {

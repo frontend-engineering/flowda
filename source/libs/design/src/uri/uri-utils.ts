@@ -31,10 +31,16 @@ export function uriWithoutId(uri: string) {
 }
 
 export function convertTreeGridUriToGridUri(uriParam: string) {
+    const query = getTreeUriQuery(uriParam)
+    const uri = new URI(uriParam)
+    const displayName = query.displayName.split('#')[0]
+    const gridUri = `grid://${uri.authority}?schemaName=${query.schemaName}&displayName=${displayName}`
+    return gridUri
+}
+
+export function getTreeUriQuery(uriParam: string) {
     const uri = new URI(uriParam)
     const query = qs.parse(uri.query)
     const queryParsedRet = treeGridUriQuerySchema.parse(query)
-    const displayName = queryParsedRet.displayName.split('#')[0]
-    const gridUri = `grid://${uri.authority}?schemaName=${query.schemaName}&displayName=${displayName}`
-    return gridUri
+    return queryParsedRet
 }
