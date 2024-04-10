@@ -27,8 +27,12 @@ export const agSortSchema = z.array(
   }),
 )
 
-export const callRendererInputSchema = z.object({
-  value: z.union([z.string(), z.number()]),
+export const cellRendererInputSchema = z.object({
+  value: z.any(),
+  data: z.object({
+    id: z.union([z.string(), z.number()]).transform(arg => arg.toString())
+  }),
+  valueFormatted: z.string(),
   colDef: z.object({
     field: z.string(),
   }),

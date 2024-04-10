@@ -6,6 +6,11 @@ patchedDependencies:
     path: patches/zod-openapi@2.14.0.patch
 
 specifiers:
+  '@ag-grid-community/client-side-row-model': 31.1.1
+  '@ag-grid-community/core': 31.1.1
+  '@ag-grid-community/infinite-row-model': 31.1.1
+  '@ag-grid-enterprise/menu': 31.1.1
+  '@ag-grid-enterprise/row-grouping': 31.1.1
   '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi
   '@babel/core': 7.12.13
   '@babel/preset-react': ^7.14.5
@@ -58,12 +63,13 @@ specifiers:
   '@types/lodash': ^4.17.0
   '@types/node': 18.14.2
   '@types/pluralize': ^0.0.33
+  '@types/qs': ^6.9.14
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
-  ag-grid-community: ^31.1.1
-  ag-grid-react: ^31.1.1
+  ag-grid-community: 31.1.1
+  ag-grid-react: 31.1.1
   babel-loader: 8.1.0
   code-block-writer: ^11.0.3
   comment-parser: ^1.3.1
@@ -97,6 +103,7 @@ specifiers:
   pluralize: ^8.0.0
   prettier: ^2.6.2
   prisma: ^4.16.2
+  qs: ^6.12.0
   radash: ^12.0.0
   react: 18.2.0
   react-dom: 18.2.0
@@ -116,6 +123,7 @@ specifiers:
   tsx: ^4.7.1
   typescript: ~5.4.2
   url-loader: ^4.1.1
+  vscode-uri: ^3.0.8
   yaml: ^2.4.1
   zod: ^3.22.4
   zod-formik-adapter: ^1.2.0
@@ -123,6 +131,11 @@ specifiers:
   zod-prisma-types: file:.yalc/zod-prisma-types
 
 dependencies:
+  '@ag-grid-community/client-side-row-model': 31.1.1
+  '@ag-grid-community/core': 31.1.1
+  '@ag-grid-community/infinite-row-model': 31.1.1
+  '@ag-grid-enterprise/menu': 31.1.1
+  '@ag-grid-enterprise/row-grouping': 31.1.1
   '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme
   '@elastic/eui': 93.2.0_y2msmjfxa5ehnyeb76ca6txwn4
   '@emotion/react': 11.11.4_pmekkgnqduwlme35zpnqhenc34
@@ -145,6 +158,7 @@ dependencies:
   moment: 2.30.1
   openapi3-ts: 3.2.0
   pluralize: 8.0.0
+  qs: 6.12.0
   radash: 12.0.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -154,6 +168,7 @@ dependencies:
   rollup-plugin-dts: 6.1.0_savq4hhw7xqq5rxtv7vpziuczi
   ts-deepmerge: 4.0.0
   tslib: 2.6.2
+  vscode-uri: 3.0.8
   zod: 3.22.4
   zod-formik-adapter: 1.2.0_formik@1.5.8+zod@3.22.4
   zod-prisma-types: file:.yalc/zod-prisma-types
@@ -204,6 +219,7 @@ devDependencies:
   '@types/lodash': 4.17.0
   '@types/node': 18.14.2
   '@types/pluralize': 0.0.33
+  '@types/qs': 6.9.14
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
   '@typescript-eslint/eslint-plugin': 5.62.0_dmi7rjhslwyt5ghsy6mhaeexru
@@ -247,6 +263,59 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /@ag-grid-community/client-side-row-model/31.1.1:
+    resolution: {integrity: sha512-KBSPaEJ1q97xooJd7U6W8PUfzUDecnsvE+Y05Xg/s6i61fLKyDTxDVJB/kETxdST0+T8FgjFMaPjY0hAZBOhWg==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+    dev: false
+
+  /@ag-grid-community/core/31.1.1:
+    resolution: {integrity: sha512-WFN3yXpFR0uMJQZak6x4kzLl7nJPrrorUWf/KWH4ToP6PMZcc6cKT3jge3bJ0SBkzs2m7oQGnmi8rfTaHuXI4Q==}
+    dev: false
+
+  /@ag-grid-community/infinite-row-model/31.1.1:
+    resolution: {integrity: sha512-cOuqOZD+V0ShwlxZy0Q5UJAD4ixO9GteCsJyvueAybq7BO8MfYCfjAS+Wk/z6hPEsuoGLk6lupIzneNVyDmzfA==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/column-tool-panel/31.1.1:
+    resolution: {integrity: sha512-AiwjaCj0iX9V4+Xw4R2sQlJaCMAyh80bclgasIODKPDr98HZ76rAWHSXqdc37TAwHpFIEYeOsS98UewjvFJUBA==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+      '@ag-grid-enterprise/core': 31.1.1
+      '@ag-grid-enterprise/row-grouping': 31.1.1
+      '@ag-grid-enterprise/side-bar': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/core/31.1.1:
+    resolution: {integrity: sha512-jbLXQqfgZCTh1FQ6Dbsbmn/+EWAhPu+4stECLxdP3zVXPxJh1vOw717GjGQrduo5jWWdncj7mC9zOMSLMyzW1Q==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/menu/31.1.1:
+    resolution: {integrity: sha512-BhLKOliv2An91c5jQKKTwdLT7b+qw1zwqc79XoLCY52ld8swhH3ckbdkVibXv20uNHDYvSfG9QrTOH6MfaZ0nQ==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+      '@ag-grid-enterprise/column-tool-panel': 31.1.1
+      '@ag-grid-enterprise/core': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/row-grouping/31.1.1:
+    resolution: {integrity: sha512-CcyF8vzNEBzwEX4WuMYJ6hQ+F7RFoYqdYDyUj01Vz/dnLiZummT2a9bAdLXYCaNDg7fyrsjnqchiTv8g06qsmA==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+      '@ag-grid-enterprise/core': 31.1.1
+    dev: false
+
+  /@ag-grid-enterprise/side-bar/31.1.1:
+    resolution: {integrity: sha512-MjkNBaI4VOoiHzwmBm/qi7DoxzDXOBBGr4xA5Crmr7WJZ5f947P7bXM5cwJfu8pfUegyMgiKn0k/7FB2usUUZg==}
+    dependencies:
+      '@ag-grid-community/core': 31.1.1
+      '@ag-grid-enterprise/core': 31.1.1
+    dev: false
 
   /@ampproject/remapping/2.3.0:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -6249,7 +6318,7 @@ packages:
       '@storybook/csf': 0.1.3-next.0
       '@storybook/global': 5.0.0
       '@storybook/types': 7.0.0
-      '@types/qs': 6.9.12
+      '@types/qs': 6.9.14
       dequal: 2.0.3
       lodash: 4.17.21
       memoizerific: 1.11.3
@@ -6268,7 +6337,7 @@ packages:
       '@storybook/csf': 0.1.2
       '@storybook/global': 5.0.0
       '@storybook/types': 7.6.17
-      '@types/qs': 6.9.12
+      '@types/qs': 6.9.14
       dequal: 2.0.3
       lodash: 4.17.21
       memoizerific: 1.11.3
@@ -7332,7 +7401,7 @@ packages:
     resolution: {integrity: sha512-oaYtiBirUOPQGSWNGPWnzyAFJ0BP3cwvN4oWZQY+zUBwpVIGsKUkpBpSztp74drYcjavs7SKFZ4DX1V2QeN8rg==}
     dependencies:
       '@types/node': 18.14.2
-      '@types/qs': 6.9.12
+      '@types/qs': 6.9.14
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
     dev: true
@@ -7342,7 +7411,7 @@ packages:
     dependencies:
       '@types/body-parser': 1.19.5
       '@types/express-serve-static-core': 4.17.43
-      '@types/qs': 6.9.12
+      '@types/qs': 6.9.14
       '@types/serve-static': 1.15.5
     dev: true
 
@@ -7583,8 +7652,8 @@ packages:
   /@types/prop-types/15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
 
-  /@types/qs/6.9.12:
-    resolution: {integrity: sha512-bZcOkJ6uWrL0Qb2NAWKa7TBU+mJHPzhx9jjLL1KHF+XpzEcR7EXHvjbHlGtR/IsP1vyPrehuS6XqkmaePy//mg==}
+  /@types/qs/6.9.14:
+    resolution: {integrity: sha512-5khscbd3SwWMhFqylJBLQ0zIu7c1K6Vz0uBIt915BI3zV0q1nfjRQD3RqSBcPaO6PHEF4ov/t9y89fSiyThlPA==}
     dev: true
 
   /@types/range-parser/1.2.7:
@@ -9126,7 +9195,6 @@ packages:
       function-bind: 1.1.2
       get-intrinsic: 1.2.4
       set-function-length: 1.2.2
-    dev: true
 
   /callsites/3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
@@ -10241,7 +10309,6 @@ packages:
       es-define-property: 1.0.0
       es-errors: 1.3.0
       gopd: 1.0.1
-    dev: true
 
   /define-lazy-prop/2.0.0:
     resolution: {integrity: sha512-Ds09qNh8yw3khSjiJjiUInaGX9xlqZDY7JVryGxdxV7NPeuqQfplOpQ66yJFZut3jLa5zOwkXw1g9EI2uKh4Og==}
@@ -10737,12 +10804,10 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       get-intrinsic: 1.2.4
-    dev: true
 
   /es-errors/1.3.0:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /es-get-iterator/1.1.3:
     resolution: {integrity: sha512-sPZmqHBe6JIiTfN5q2pEi//TwxmAFHwj/XEuYjTuse78i8KxaqMTTzxPoFKuzRpDpTJ+0NAbpfenkmH2rePtuw==}
@@ -12039,7 +12104,6 @@ packages:
       has-proto: 1.0.3
       has-symbols: 1.0.3
       hasown: 2.0.1
-    dev: true
 
   /get-nonce/1.0.1:
     resolution: {integrity: sha512-FJhYRoDaiatfEkUK8HKlicmu/3SGFD51q3itKDGoSTysQJBnfOcxU5GxnhE1E6soB76MbT0MBtnKJuXyAx+96Q==}
@@ -12261,7 +12325,6 @@ packages:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
     dependencies:
       get-intrinsic: 1.2.4
-    dev: true
 
   /got/11.8.6:
     resolution: {integrity: sha512-6tfZ91bOr7bOXnK7PRDCGBLa1H4U080YHNaAQ2KsMGlLEzRbk44nsZF2E1IeRc3vtJHPVbKCYgdFbaGO2ljd8g==}
@@ -12334,17 +12397,14 @@ packages:
     resolution: {integrity: sha512-55JNKuIW+vq4Ke1BjOTjM2YctQIvCT7GFzHwmfZPGo5wnrgkid0YQtnAleFSqumZm4az3n2BS+erby5ipJdgrg==}
     dependencies:
       es-define-property: 1.0.0
-    dev: true
 
   /has-proto/1.0.3:
     resolution: {integrity: sha512-SJ1amZAJUiZS+PhsVLf5tGydlaVB8EdFpaSO4gmiUKUOxk8qzn5AIy4ZeJUmh22znIdk/uMAUT2pl3FxzVUH+Q==}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /has-symbols/1.0.3:
     resolution: {integrity: sha512-l3LCuF6MgDNwTDKkdYGEihYjt5pRPbEg46rtlmnSPlUbgmB8LOIrKJbYYFBSbnPaJexMKtiPO8hmeRjRz2Td+A==}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /has-tostringtag/1.0.2:
     resolution: {integrity: sha512-NqADB8VjPFLM2V0VvHUewwwsw0ZWBaIdgo+ieHtK3hasLz4qeCRjYcqfB6AQrBggRKppKF8L52/VqdVsO47Dlw==}
@@ -15271,7 +15331,6 @@ packages:
 
   /object-inspect/1.13.1:
     resolution: {integrity: sha512-5qoj1RUiKOMsCCNLV1CBiPYE10sziTsnmNxkAI/rZhiD63CF7IqdFGC/XzjWjpSgLf0LxXX3bDFIh0E18f6UhQ==}
-    dev: true
 
   /object-is/1.1.6:
     resolution: {integrity: sha512-F8cZ+KfGlSGi09lJT7/Nd6KJZ9ygtvYC0/UYYLI9nmQKLMnydpB9yvbv9K1uSkEu7FU9vYPmVwLg328tX+ot3Q==}
@@ -16433,7 +16492,6 @@ packages:
     engines: {node: '>=0.6'}
     dependencies:
       side-channel: 1.0.6
-    dev: true
 
   /querystringify/2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
@@ -17684,7 +17742,6 @@ packages:
       get-intrinsic: 1.2.4
       gopd: 1.0.1
       has-property-descriptors: 1.0.2
-    dev: true
 
   /set-function-name/2.0.2:
     resolution: {integrity: sha512-7PGFlmtwsEADb0WYyvCMa1t+yke6daIG4Wirafur5kcf+MhUnPms1UeR0CKQdTZD81yESwMHbtn+TR+dMviakQ==}
@@ -17742,7 +17799,6 @@ packages:
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
       object-inspect: 1.13.1
-    dev: true
 
   /signal-exit/3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
@@ -19604,6 +19660,10 @@ packages:
   /vscode-uri/2.1.2:
     resolution: {integrity: sha512-8TEXQxlldWAuIODdukIb+TR5s+9Ds40eSJrw+1iDDA9IFORPjMELarNQE3myz5XIkWWpdprmJjm1/SxMlWOC8A==}
     dev: true
+
+  /vscode-uri/3.0.8:
+    resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
+    dev: false
 
   /w3c-xmlserializer/4.0.0:
     resolution: {integrity: sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==}

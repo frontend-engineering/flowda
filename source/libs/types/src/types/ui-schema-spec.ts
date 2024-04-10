@@ -1,17 +1,23 @@
 import { z } from 'zod'
 import { ColumnKeySchema, ReferenceKeySchema, ResourceKeySchema } from './ui-schema-object'
 
-export const ResourceUISchema = ResourceKeySchema.omit({
-  properties: true,
-  required: true,
-})
-
 export const ColumnUISchema = ColumnKeySchema.extend({
   name: z.string(),
   validators: z.array(z.unknown()),
   reference: ReferenceKeySchema.optional(),
 })
 
+export const ResourceUISchema = ResourceKeySchema.omit({
+  properties: true,
+  required: true,
+})
+  .extend({
+    namespace: z.string().describe('网关作为命名空间'),
+    columns: z.array(ColumnUISchema),
+  })
+
+
+// todo: 去掉这种写法 zod 还不够强大，处理 template literal
 export const PluginKeySchema = z.custom<Record<`x-${string}`, unknown>>()
   .transform<Record<`x-${string}`, unknown>>((val, ctx) => {
     return Object.fromEntries(Object.entries(val).filter(([k, v]) => {

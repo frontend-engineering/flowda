@@ -1,39 +1,29 @@
 import 'reflect-metadata'
-import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-quartz.css'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Grid, GridProps } from './grid'
+import { Grid } from './grid'
 import { Container } from 'inversify'
 import { GridModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { GridModel } from './grid.model'
 
 import React from 'react'
-import { css, Global } from '@emotion/react'
 import { trpc } from '../../stories/trpc/trpc-client'
+import { GridWrapper } from '../../stories/grid-wrapper'
 
 const container = new Container()
 container.load(designModule)
 
-export class GridWrapper extends React.Component<GridProps> {
-  render() {
-    return <>
-      <Global styles={css`
-        html, body {
-          height: 100%;
-        }
+container.rebind<GridModel>(GridModelSymbol).to(GridModel).inRequestScope()
+  .onActivation(({ container }, gridModel) => {
+    gridModel.handlers.onContextMenu = (e) => {
+      console.log(e)
+    }
 
-        #storybook-root {
-          height: 100%;
-        }
-      `} />
-      <button onClick={() => this.props.model.refresh()}>Refresh</button>
-      <div className="ag-theme-quartz" style={{ height: '100%' }}>
-        <Grid model={this.props.model} />
-      </div>
-    </>
-  }
-}
+    gridModel.apis.getResourceData = (input) => trpc.hello.getResourceData.query(input)
+    gridModel.apis.getResourceSchema = (input) => trpc.hello.getResourceSchema.query(input)
+    gridModel.apis.putResourceData = (input) => trpc.hello.putResourceData.mutate(input)
+    return gridModel
+  })
 
 const meta: Meta<typeof GridWrapper> = {
   component: GridWrapper,
@@ -41,16 +31,40 @@ const meta: Meta<typeof GridWrapper> = {
 
 export default meta
 
-const gridModel = container.get<GridModel>(GridModelSymbol)
+class GridStory extends React.Component<{
+  gridModel: GridModel
+  schemaName: string
+}> {
+  componentDidMount() {
+    this.props.gridModel.getCol(this.props.schemaName)
+  }
 
-gridModel.handlers.getResourceData = (input) => trpc.hello.getResourceData.query(input)
-gridModel.handlers.getResourceSchema = (input) => trpc.hello.getResourceSchema.query(input)
-gridModel.handlers.putResourceData = (input) => trpc.hello.putResourceData.mutate(input)
+  render() {
+    return (
+      <>
+        <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
+        <Grid ref={ref => this.props.gridModel.setRef(ref)}
+          model={this.props.gridModel} />
+      </>
+    )
+  }
+}
 
-gridModel.getCol('resource.flowda.UserResourceSchema')
 
-export const Primary: StoryObj<typeof GridWrapper> = {
+const userGridModel = container.get<GridModel>(GridModelSymbol)
+userGridModel.resetRefPromise('grid://flowda?schemaName=UserResourceSchema')
+export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
-    model: gridModel,
+    children: <GridStory
+      gridModel={userGridModel}
+      schemaName={'flowda.UserResourceSchema'} />,
+  },
+}
+const menuGridModel = container.get<GridModel>(GridModelSymbol)
+menuGridModel.resetRefPromise('grid://flowda?schemaName=MenuResourceSchema')
+export const MenuResource: StoryObj<typeof GridWrapper> = {
+  args: {
+    children: <GridStory gridModel={menuGridModel}
+      schemaName={'flowda.MenuResourceSchema'} />,
   },
 }

@@ -1,8 +1,7 @@
-import { Component } from 'react'
+import * as React from 'react'
 import { AgGridReact } from 'ag-grid-react'
-import { observer } from 'mobx-react'
 import { GridModel } from './grid.model'
-import {
+import type {
   CellValueChangedEvent,
   ColDef,
   GetRowIdParams,
@@ -11,74 +10,74 @@ import {
   IGetRowsParams,
 } from 'ag-grid-community'
 import { shortenDatetime } from '../utils/time-utils'
-import { callRendererInputSchema } from '@flowda/types'
+import { cellRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
 
 export type GridProps = {
+  uri?: string
   model: GridModel
 }
 
-@observer
-export class Grid extends Component<GridProps> {
+export class Grid extends React.Component<GridProps> {
   private gridRef: AgGridReact | null = null
 
-  constructor(props: GridProps) {
-    super(props)
-    this.onGridReady = this.onGridReady.bind(this)
-    this.onCellValueChanged = this.onCellValueChanged.bind(this)
-  }
-
-  async onGridReady(params: GridReadyEvent) {
-    console.log('[Grid] onGridReady', this.props.model.schemaName)
-    this.props.model.gridApi = params.api
+  private readonly onGridReady = async (evt: GridReadyEvent) => {
+    // console.log('[Grid] onGridReady', this.props.model.schemaName)
+    this.props.model.gridApi = evt.api
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {
-        if (this.props.model.schemaName) {
-          const ret = await this.props.model.getData({
-            schemaName: this.props.model.schemaName,
-            // todo: 分页参数逻辑 后续重构可以下沉到 node 端，即服务端直接接收 startRow endRow
-            current: params.endRow / (params.endRow - params.startRow),
-            pageSize: params.endRow - params.startRow,
-            sort: params.sortModel,
-            filterModel: params.filterModel,
-          })
-
-          console.log(`[Grid] successCallback`)
-          params.successCallback(ret.data, ret.pagination.total)
-          // this.props.model.gridApi?.setGridOption('pinnedTopRowData', [ret.data[0]])
-          // 只在第一次有值的时候做 resize 后续分页或者刷新就不要 resize 了
-          if (!this.props.model.isNotEmpty && ret.data != null) {
-            setTimeout(() => this.autoResizeAll(), 0)
-          }
-          this.props.model.isNotEmpty = ret.data != null
-        } else {
-          console.warn('schemaName is null')
+        if (this.props.model.schemaName == null) {
+          console.warn('schemaName is null, ignored')
+          return
         }
+        if (this.props.model.columnDefs.length === 0) {
+          console.warn('columnDefs is empty, ignored')
+          return
+        }
+        const ret = await this.props.model.getData({
+          schemaName: this.props.model.schemaName,
+          // todo: 分页参数逻辑 后续重构可以下沉到 node 端，即服务端直接接收 startRow endRow
+          current: params.endRow / (params.endRow - params.startRow),
+          pageSize: params.endRow - params.startRow,
+          sort: params.sortModel,
+          filterModel: params.filterModel,
+        })
+
+        // console.log(`[Grid] successCallback`)
+        evt.api.hideOverlay()
+        params.successCallback(ret.data, ret.pagination.total)
+        // this.props.model.gridApi?.setGridOption('pinnedTopRowData', [ret.data[0]])
+        // 只在第一次有值的时候做 resize 后续分页或者刷新就不要 resize 了
+        if (!this.props.model.isNotEmpty && ret.data != null) {
+          setTimeout(() => this.autoResizeAll(), 0)
+        }
+        this.props.model.isNotEmpty = ret.data != null
       },
     }
-    params.api.setGridOption('datasource', datasource)
+    evt.api.setGridOption('datasource', datasource)
   }
 
-  async onCellValueChanged(evt: CellValueChangedEvent) {
-    console.log(
-      `[Grid] onCellValueChanged, id ${evt.data.id},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
-    )
+  private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
+    // console.log(
+    //   `[Grid] onCellValueChanged, id ${evt.data.id},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
+    // )
     await this.props.model.putData(evt.data.id, {
       [evt.colDef.field as string]: evt.newValue,
     })
   }
 
-  columnDefs() {
-    return this.props.model.columnDefs.map<ColDef>(item => {
+  setColDefs = () => {
+    const colDefs = this.props.model.columnDefs.map<ColDef>(item => {
       // todo: 图片需要搞一个 modal 并且上传修改
       if (item.name === 'image') {
         return {
           field: item.name,
           headerName: item.display_name,
           cellDataType: 'text',
-          cellRenderer: (param: z.infer<typeof callRendererInputSchema>) => {
+          cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
             if (!param.value) return param.value
             return (
               <img
@@ -112,9 +111,9 @@ export class Grid extends Component<GridProps> {
             editable: false,
             field: item.name,
             headerName: item.display_name,
-            cellRenderer: (param: z.infer<typeof callRendererInputSchema>) => {
+            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               return (
-                <div onContextMenu={this.props.model.onContextMenu}>
+                <div onContextMenu={(e) => this.props.model.onContextMenu(param, e)}>
                   <a
                     className="grid-reference-field"
                     href=""
@@ -132,7 +131,9 @@ export class Grid extends Component<GridProps> {
             },
           }
         }
-        case 'tag': {
+        // todo: 更新 schema parser 后，暂时不支持 tag
+        // 这块属于 plugin
+        /*case 'tag': {
           const options = item.format!.select_options!
           const refData = options.reduce((acc, cur) => {
             acc[cur.value] = cur.label
@@ -149,7 +150,7 @@ export class Grid extends Component<GridProps> {
             },
             refData: refData,
           }
-        }
+        }*/
         case 'integer':
           return {
             field: item.name,
@@ -195,6 +196,21 @@ export class Grid extends Component<GridProps> {
             filter: true,
             floatingFilter: true,
           }
+        case 'Json':
+          return {
+            editable: false,
+            field: item.name,
+            headerName: item.display_name,
+            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              return (
+                <div onContextMenu={(e) => {
+                  this.props.model.onContextMenu(param, e)
+                }}>
+                  {param.valueFormatted}
+                </div>
+              )
+            },
+          }
         default:
           return {
             editable: true,
@@ -203,6 +219,10 @@ export class Grid extends Component<GridProps> {
           }
       }
     })
+    if (!this.gridRef) {
+      throw new Error('this.gridRef is null')
+    }
+    this.gridRef.api.setGridOption('columnDefs', colDefs)
   }
 
   /*
@@ -215,7 +235,6 @@ export class Grid extends Component<GridProps> {
    todo 第一次调用之后 如果用户有调整过 则存储到 localStorage 优先用户本地存储
    */
   autoResizeAll() {
-    console.log(`[Grid] autoResizeAll`)
     const allColumnIds: string[] = []
     this.gridRef!.api.getColumns()!.forEach(column => {
       allColumnIds.push(column.getId())
@@ -226,11 +245,14 @@ export class Grid extends Component<GridProps> {
   override render() {
     return (
       <AgGridReact
-        ref={ref => (this.gridRef = ref)}
+        modules={[InfiniteRowModelModule]}
+        ref={ref => {
+          this.gridRef = ref
+        }}
         defaultColDef={{
           maxWidth: 400,
         }}
-        columnDefs={this.columnDefs()}
+        rowHeight={42}
         pagination={true}
         paginationPageSize={20}
         cacheBlockSize={20}
