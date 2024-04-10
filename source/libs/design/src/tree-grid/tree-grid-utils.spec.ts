@@ -1,5 +1,6 @@
 import { treeDataInput } from './__features__/tree-data'
 import { convertMenuDataToAgTreeData } from './tree-grid-utils'
+import { getData } from './__stories__/getData'
 
 describe('tree grid utils', () => {
   it('convert tree data to ag-grid tree data', () => {

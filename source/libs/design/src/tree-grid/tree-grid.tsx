@@ -32,7 +32,7 @@ export class TreeGrid extends Component<TreeGridProps> {
   private readonly getContextMenuItems = (params: GetContextMenuItemsParams<any, any>) => {
 
     if (!params.node) throw new Error(`Add child to ${params.value} but node is null`)
-    const title = params.node.data.title
+    const title = params.node.data.name
     const id = params.node.data.id
     return [
       {
@@ -44,7 +44,7 @@ export class TreeGrid extends Component<TreeGridProps> {
       {
         name: `Remove ${title}`,
         action: () => {
-          this.props.model.remove(id)
+          this.props.model.remove(params.node)
         },
       },
     ]

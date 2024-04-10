@@ -1,22 +1,16 @@
 import { injectable } from 'inversify'
-import type { ColDef, GridApi } from 'ag-grid-community'
+import type { ColDef, GridApi, RowNode } from 'ag-grid-community'
 import * as _ from 'radash'
 import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery, getUriSchemaName } from '../uri/uri-utils'
 import { convertMenuDataToAgTreeData } from './tree-grid-utils'
+import { agMenuItemSchema } from '@flowda/types'
+import { z } from 'zod'
 
 @injectable()
 export class TreeGridModel {
   gridApi: GridApi | null = null
-
-  rowData: Array<{
-    hierarchy: string[]
-    id: number
-    title?: string
-    url?: string
-    icon?: string
-  }> = []
 
   columnDefs: ColDef<any, any>[] = [
     { field: 'name', editable: true },
@@ -92,30 +86,49 @@ export class TreeGridModel {
 
   addChild(id: number) {
     // todo: 从 db 中获取自增 id
-    const newId = _.random(10, 100)
-    const findRet = this.rowData.find(i => i.id === id)
-    if (!findRet) throw new Error(`No row found, ${id}`)
-    this.rowData.push({
-      hierarchy: [...findRet.hierarchy, String(newId)],
-      id: newId,
-      title: '',
-    })
     if (!this.gridApi) throw new Error('gridApi is null')
-    this.gridApi.setGridOption('rowData', this.rowData)
+    const newId = _.uid(4)
+
+    let findRet: z.infer<typeof agMenuItemSchema> | null = null
+    this.gridApi.forEachNode(node => {
+      if (node.data.id === id) findRet = node.data
+    });
+    findRet = agMenuItemSchema.parse(findRet)
+    if (findRet == null) throw new Error(`No row found, ${id}`)
+
+    this.gridApi.applyTransaction({
+      add: [
+        {
+          hierarchy: [...findRet.hierarchy, String(newId)],
+          id: newId,
+          title: '',
+        }
+      ]
+    })
   }
 
-  remove(id: string) {
-    if (this.rowData.some(i => i.hierarchy[i.hierarchy.length - 1] !== id && i.hierarchy.indexOf(id) > -1)) {
-      // throw new Error('Cannot remove whose children is not empty')
-      console.warn(`Cannot remove whose children is not empty, id:${id}`)
+  remove(node: RowNode) {
+    if (!this.gridApi) throw new Error('gridApi is null')
+    let some = false
+    this.gridApi.forEachNode(eachnode => {
+      const h = eachnode.data.hierarchy
+      if (h[h.length - 1] !== node.key && h.indexOf(node.key) > -1) {
+        some = true
+      }
+    });
+
+    if (some) {
+      console.warn(`Cannot remove whose children is not empty, id:${node.key}`)
       if (typeof this.handlers.message === 'function') {
         this.handlers.message(`Cannot remove whose children is not empty`)
       }
       return
     }
-    const findIdx = this.rowData.findIndex(i => i.id === Number(id))
-    this.rowData.splice(findIdx, 1)
-    if (!this.gridApi) throw new Error('gridApi is null')
-    this.gridApi.setGridOption('rowData', this.rowData)
+
+    this.gridApi.applyTransaction({
+      remove: [
+        node.data
+      ]
+    })
   }
 }

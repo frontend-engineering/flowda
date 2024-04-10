@@ -34,7 +34,7 @@ export default meta
 
 const gridModel = container.get<GridModel>(GridModelSymbol)
 const treeGridModel = container.get<TreeGridModel>(TreeGridModelSymbol)
-const treeGridUri = 'tree-grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%233%3AtreeData%26id%3D3%26field%3DtreeData'
+const treeGridUri = 'tree-grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%231%3AtreeData%26id%3D1%26field%3DtreeData'
 treeGridModel.resetGridReadyPromise(treeGridUri)
 treeGridModel.setGridModel(gridModel)
 treeGridModel.loadData()
