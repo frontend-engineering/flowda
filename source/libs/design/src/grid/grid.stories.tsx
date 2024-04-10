@@ -52,7 +52,7 @@ class GridStory extends React.Component<{
 
 
 const userGridModel = container.get<GridModel>(GridModelSymbol)
-userGridModel.resetRefPromise('flowda.UserResourceSchema')
+userGridModel.resetRefPromise('grid://flowda?schemaName=UserResourceSchema')
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory
@@ -61,7 +61,7 @@ export const UserResource: StoryObj<typeof GridWrapper> = {
   },
 }
 const menuGridModel = container.get<GridModel>(GridModelSymbol)
-menuGridModel.resetRefPromise('flowda.UserResourceSchema')
+menuGridModel.resetRefPromise('grid://flowda?schemaName=MenuResourceSchema')
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory gridModel={menuGridModel}

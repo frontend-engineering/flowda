@@ -203,7 +203,9 @@ export class Grid extends React.Component<GridProps> {
             headerName: item.display_name,
             cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               return (
-                <div onContextMenu={(e) => this.props.model.onContextMenu(param, e)}>
+                <div onContextMenu={(e) => {
+                  this.props.model.onContextMenu(param, e)
+                }}>
                   {param.valueFormatted}
                 </div>
               )

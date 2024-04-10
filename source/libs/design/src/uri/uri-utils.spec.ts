@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { URI as Uri } from 'vscode-uri'
 import * as qs from 'qs'
 import { URI } from '@theia/core'
+import { createTreeGridUri, uriWithoutId } from './uri-utils'
 /*
 
   foo://example.com:8042/over/there?name=ferret#nose
@@ -108,27 +109,38 @@ describe('uri utils', () => {
   })
 
   it('tree grid uri', () => {
-    // resource.flowda.MenuResourceSchema:///菜单
-    const uri = 'tree-grid://flowda?schema=MenuResourceSchema&id=0&field=menuData'
-    const output = Uri.parse(uri)
+    const uri = 'grid://flowda?schemaName=MenuResourceSchema'
+    const output = createTreeGridUri(new URI(uri), '1', 'menuData')
     console.log(output)
+    expect(output).toMatchInlineSnapshot(`"tree-grid://flowda?schema=MenuResourceSchema&id=1&field=menuData"`)
+  })
 
-    expect(output).toMatchInlineSnapshot(`
-      {
-        "$mid": 1,
-        "authority": "flowda",
-        "query": "schema=MenuResourceSchema&id=0&field=menuData",
-        "scheme": "tree-grid",
+  it('isUriEqual', () => {
+    const a = 'grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95:1'
+    const b = 'grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95'
+    expect(uriWithoutId(a)).toEqual(b)
+
+    const aUri = new URI(a)
+    const bUri = new URI(b)
+    const ret = aUri === bUri
+    expect(aUri).toMatchInlineSnapshot(`
+      URI {
+        "codeUri": {
+          "$mid": 1,
+          "authority": "flowda",
+          "query": "schemaName=MenuResourceSchema&displayName=菜单:1",
+          "scheme": "grid",
+        },
       }
     `)
-
-    const query = qs.parse(output.query)
-    console.log(query)
-    expect(query).toMatchInlineSnapshot(`
-      {
-        "field": "menuData",
-        "id": "0",
-        "schema": "MenuResourceSchema",
+    expect(bUri).toMatchInlineSnapshot(`
+      URI {
+        "codeUri": {
+          "$mid": 1,
+          "authority": "flowda",
+          "query": "schemaName=MenuResourceSchema&displayName=菜单",
+          "scheme": "grid",
+        },
       }
     `)
   })
