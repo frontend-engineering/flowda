@@ -56,13 +56,13 @@ export function convertAgTreeDataToTreeData(input: (z.infer<typeof agMenuItemSch
             rootNodes.push(node)
         }
     })
-    return rootNodes
+    return JSON.parse(stringifyMenuData(rootNodes))
 }
 
-export function stringifyMenuData(input: MenuItem[], space?: number) {
+export function stringifyMenuData(input: MenuItem[]) {
     return JSON.stringify(input, (k, value) => {
         if (value.hierarchy) delete value.hierarchy
         if (value.children && value.children.length === 0) delete value.children
         return value
-    }, space)
+    })
 }

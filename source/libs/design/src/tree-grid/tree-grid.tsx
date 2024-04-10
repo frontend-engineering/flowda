@@ -15,9 +15,7 @@ export class TreeGrid extends Component<TreeGridProps> {
   private gridRef: AgGridReact<any> | null = null
 
   private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
-    console.log(
-      `[Grid] onCellValueChanged, id ${evt.data.hierarchy},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
-    )
+    
   }
 
   private readonly onGridReady = (params: GridReadyEvent) => {
@@ -31,17 +29,17 @@ export class TreeGrid extends Component<TreeGridProps> {
   private readonly getContextMenuItems = (params: GetContextMenuItemsParams<any, any>) => {
 
     if (!params.node) throw new Error(`Add child to ${params.value} but node is null`)
-    const title = params.node.data.name
+    const name = params.node.data.name || params.node.key
     const id = params.node.data.id
     return [
       {
-        name: `Add child to ${title}`,
+        name: `Add child to ${name}`,
         action: () => {
           this.props.model.addChild(id)
         },
       },
       {
-        name: `Remove ${title}`,
+        name: `Remove ${name}`,
         action: () => {
           this.props.model.remove(params.node)
         },
@@ -76,7 +74,7 @@ export class TreeGrid extends Component<TreeGridProps> {
         getContextMenuItems={this.getContextMenuItems}
         getDataPath={this.props.model.getDataPath}
         onGridReady={this.onGridReady}
-        onCellValueChanged={this.onCellValueChanged}
+        onCellValueChanged={this.props.model.handleCellValueChanged}
       />
     )
   }

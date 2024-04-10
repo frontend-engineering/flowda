@@ -1,10 +1,10 @@
 import { injectable } from 'inversify'
-import type { ColDef, GridApi, IRowNode } from 'ag-grid-community'
+import type { CellValueChangedEvent, ColDef, GridApi, IRowNode } from 'ag-grid-community'
 import * as _ from 'radash'
 import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
-import { convertMenuDataToAgTreeData } from './tree-grid-utils'
+import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
 import { agMenuItemSchema } from '@flowda/types'
 import { z } from 'zod'
 
@@ -65,7 +65,11 @@ export class TreeGridModel {
       schemaName: `${uri.authority}.${query.schemaName}`,
       id: Number(query.id),
     })
-    const treeData = convertMenuDataToAgTreeData(ret[query.field])
+    let menuData = ret[query.field]
+    if (typeof menuData === 'string') {
+      menuData = JSON.parse(ret[query.field])
+    }
+    const treeData = convertMenuDataToAgTreeData(menuData)
     if (!this.gridReadyPromise) throw new Error('gridReadyPromise is null, call resetGridReadyPromise() first')
     await this.gridReadyPromise
     if (!this.gridApi) throw new Error('gridApi is null')
@@ -84,8 +88,37 @@ export class TreeGridModel {
     return data.hierarchy
   }
 
+  private convertAndSaveMenuData() {
+    if (!this.gridApi) throw new Error('gridApi is null')
+    const agTreeData: z.infer<typeof agMenuItemSchema>[] = [];
+    this.gridApi.forEachNode(node => {
+      agTreeData.push(node.data)
+    })
+    const menuData = convertAgTreeDataToTreeData(agTreeData)
+    if (!this.gridModel) throw new Error(`this.gridModel is null, call setGridModel() first`)
+    if (typeof this.gridModel.apis.putResourceData !== 'function') throw new Error('handlers.putResourceData is not implemented')
+    if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
+    const uri = new URI(this.uri)
+    const query = getTreeUriQuery(this.uri)
+    try {
+      this.gridModel.apis.putResourceData(
+        {
+          schemaName: `${uri.authority}.${query.schemaName}`,
+          id: Number(query.id),
+          updatedValue: {
+            [query.field]: menuData
+          }
+        }
+      )
+    } catch (e) {
+      if (typeof this.handlers.message === 'function') {
+        this.handlers.message(`Update failed, try to reload data from backend`)
+        this.loadData()
+      }
+    }
+  }
+
   addChild(id: number) {
-    // todo: 从 db 中获取自增 id
     if (!this.gridApi) throw new Error('gridApi is null')
     const newId = _.uid(4)
 
@@ -101,10 +134,10 @@ export class TreeGridModel {
         {
           hierarchy: [...findRet.hierarchy, String(newId)],
           id: newId,
-          title: '',
         },
       ],
     })
+    this.convertAndSaveMenuData()
   }
 
   remove(node: IRowNode | null) {
@@ -123,6 +156,7 @@ export class TreeGridModel {
     })
 
     if (some) {
+      // todo: 对接 theia logger
       console.warn(`Cannot remove whose children is not empty, id:${node.key}`)
       if (typeof this.handlers.message === 'function') {
         this.handlers.message(`Cannot remove whose children is not empty`)
@@ -135,5 +169,11 @@ export class TreeGridModel {
         node.data,
       ],
     })
+    this.convertAndSaveMenuData()
+  }
+
+  handleCellValueChanged = (evt: CellValueChangedEvent) => {
+    if (!this.gridApi) throw new Error('gridApi is null')
+    this.convertAndSaveMenuData()
   }
 }
