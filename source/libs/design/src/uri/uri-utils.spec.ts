@@ -5,6 +5,7 @@ import {
   convertTreeGridUriToGridUri,
   createRefUri,
   createTreeGridUri,
+  isUriLikeEqual,
   mergeUriFilterModel,
   updateUriFilterModel,
   uriWithoutId,
@@ -12,6 +13,7 @@ import {
 import { handleContextMenuInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import * as qs from 'qs'
+import * as _ from 'radash'
 /*
 
   foo://example.com:8042/over/there?name=ferret#nose
@@ -24,6 +26,18 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
+  it('case uri unmatched', () => {
+    const a =
+      'grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3DMenu%26filterModel%255Bid%255D%255BfilterType%255D%3Dnumber%26filterModel%255Bid%255D%255Btype%255D%3Dequals%26filterModel%255Bid%255D%255Bfilter%255D%3D3'
+    const b =
+      'grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3DMenu%26filterModel%5Bid%5D%5BfilterType%5D%3Dnumber%26filterModel%5Bid%5D%5Btype%5D%3Dequals%26filterModel%5Bid%5D%5Bfilter%5D%3D3'
+    const uria = new URI(a)
+    const urib = new URI(b)
+
+    expect(uria.query).toEqual(uria.query)
+    expect(isUriLikeEqual(uria, urib)).toBe(true)
+  })
+
   it('create uri query from ag-grid filterModel', () => {
     const filterModel = {
       id: {
