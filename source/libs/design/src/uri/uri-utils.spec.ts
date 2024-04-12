@@ -5,9 +5,11 @@ import {
   convertTreeGridUriToGridUri,
   createRefUri,
   createTreeGridUri,
+  extractId,
   isUriLikeEqual,
   mergeUriFilterModel,
   updateUriFilterModel,
+  uriAsKey,
   uriWithoutId,
 } from './uri-utils'
 import { handleContextMenuInputSchema } from '@flowda/types'
@@ -26,7 +28,27 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
-  it('case uri unmatched', () => {
+  it('recentlyVisibleIds', () => {
+    const recentlyVisibleIds = [
+      // "resource-editor-opener:grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%25E7%25A7%259F%25E6%2588%25B7%25E4%25BF%25A1%25E6%2581%25AF:1",
+      'resource-editor-opener:grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3DMenu%26filterModel%5Bid%5D%5BfilterType%5D%3Dnumber%26filterModel%5Bid%5D%5Btype%5D%3Dequals%26filterModel%5Bid%5D%5Bfilter%5D%3D1:1',
+    ]
+    const uri =
+      'grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3DMenu%26filterModel%5Bid%5D%5BfilterType%5D%3Dnumber%26filterModel%5Bid%5D%5Btype%5D%3Dequals%26filterModel%5Bid%5D%5Bfilter%5D%3D3'
+
+    const ret = recentlyVisibleIds.find(id => {
+      const uri1 = uriWithoutId(id.replace('resource-editor-opener:', ''))
+      // console.log(uriAsKey(uri1))
+      // console.log(uriAsKey(uri))
+      return uriAsKey(uri1) === uriAsKey(uri)
+    })
+    expect(ret).toMatchInlineSnapshot(
+      `"resource-editor-opener:grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3DMenu%26filterModel%5Bid%5D%5BfilterType%5D%3Dnumber%26filterModel%5Bid%5D%5Btype%5D%3Dequals%26filterModel%5Bid%5D%5Bfilter%5D%3D1:1"`,
+    )
+    expect(extractId(ret!)).toMatchInlineSnapshot(`1`)
+  })
+
+  it('uri like equal', () => {
     const a =
       'grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3DMenu%26filterModel%255Bid%255D%255BfilterType%255D%3Dnumber%26filterModel%255Bid%255D%255Btype%255D%3Dequals%26filterModel%255Bid%255D%255Bfilter%255D%3D3'
     const b =

@@ -24,7 +24,8 @@ export function createTreeGridUri(uri: string | URI, id: string, field: string) 
     return new URI(`tree-grid://${uri.authority}?schemaName=${encodeURIComponent(`${getUriSchemaName(uri)}&displayName=${displayName}#${id}:${field}`)}&id=${id}&field=${field}`)
 }
 
-export function uriAsKey(uri: URI) {
+export function uriAsKey(uri: URI | string) {
+    if (typeof uri === 'string') uri = new URI(uri)
     const query = qs.parse(uri.query)
     const { displayName, filterModel, ...rest } = query
     return `${uri.scheme}://${uri.authority}?${qs.stringify(rest)}`
@@ -32,6 +33,11 @@ export function uriAsKey(uri: URI) {
 
 export function uriWithoutId(uri: string) {
     return uri.slice(0, uri.lastIndexOf(':'))
+}
+
+export function extractId(id: string) {
+    const count = parseInt(id.slice(id.lastIndexOf(':') + 1))
+    return count
 }
 
 export function convertTreeGridUriToGridUri(uriParam: string) {
@@ -116,6 +122,16 @@ export function updateUriFilterModel(uri: URI | string, filterModel: z.infer<typ
 }
 
 export function isUriLikeEqual(a: URI | string, b: URI | string) {
+    if (typeof a === 'string') a = new URI(a)
+    if (typeof b === 'string') b = new URI(b)
+    return a.scheme === b.scheme
+        && a.authority === b.authority
+        && a.path.toString() === b.path.toString()
+        && _.isEqual(qs.parse(a.query), qs.parse(b.query))
+        && a.fragment === b.fragment
+}
+
+export function isUriAsKeyLikeEqual(a: URI | string, b: URI | string) {
     if (typeof a === 'string') a = new URI(a)
     if (typeof b === 'string') b = new URI(b)
     return a.scheme === b.scheme

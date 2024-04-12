@@ -15,7 +15,7 @@ import {
   ManageableModel,
 } from '@flowda/types'
 import { z } from 'zod'
-import { isUriLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
+import { isUriAsKeyLikeEqual, isUriLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -86,7 +86,7 @@ export class GridModel implements ManageableModel {
         this.uri = uri
       } else {
         // double check 下 防止 gridModel grid 未对应
-        if (!isUriLikeEqual(uri, this.uri)) throw new Error(`setRef uri is not matched, current: ${this.uri}, input: ${uri}`)
+        if (!isUriAsKeyLikeEqual(uri, this.uri)) throw new Error(`setRef uri is not matched, current: ${this.uri}, input: ${uri}`)
       }
     }
 
