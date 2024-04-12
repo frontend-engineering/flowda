@@ -16,9 +16,7 @@ export const agFilterInner2Schema = z.object({
   conditions: z.array(agFilterInnerSchema),
 })
 
-export const agFilterSchema = z
-  .record(agFilterInnerSchema.or(agFilterInner2Schema))
-  .or(z.object({ _ref: z.string().optional() }))
+export const agFilterSchema = z.record(agFilterInnerSchema.or(agFilterInner2Schema))
 
 export const agSortSchema = z.array(
   z.object({

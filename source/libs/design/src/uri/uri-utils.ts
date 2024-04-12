@@ -3,7 +3,7 @@ import { URI } from '@theia/core'
 import * as qs from 'qs'
 import { z } from 'zod'
 import * as _ from 'radash'
-
+import { omitBy, isUndefined } from 'lodash'
 export function getUriDisplayName(uri: URI): string {
     const query = qs.parse(uri.query)
     if (!('displayName' in query) || typeof query.displayName !== 'string') throw new Error(`query must have displayName and is string, ${uri.toString()}`)
@@ -71,11 +71,16 @@ export function mergeUriFilterModel(uri: URI | string, filterModel: z.infer<type
         ...origFilterModel,
         ...filterModel,
     }
-    // _.mapValues(ret, (v) => {
-    //     if (v?.filterType === 'number') v.filter = Number(v.filter)
-    //     return v
-    // })
-    return ret
+    const ret2 = Object.keys(ret).reduce((acc, k) => {
+        if (filterModel[k] === undefined) {
+            return acc
+        }
+        const v = ret[k]
+        if (v.filterType === 'number') v.filter = Number(v.filter)
+        acc[k] = v
+        return acc
+    }, {} as z.infer<typeof agFilterSchema>)
+    return ret2
 }
 
 export function updateUriFilterModel(uri: URI | string, filterModel: z.infer<typeof agFilterSchema>) {

@@ -55,6 +55,7 @@ describe('uri utils', () => {
     const uri_ = new URI(uri)
     const ret = updateUriFilterModel(uri_, filterModel)
     const uriRet = ret.toString()
+    console.log(uriRet)
     const uriRet_ = new URI(uriRet)
     expect(qs.parse(uriRet_.query)['filterModel']).toMatchInlineSnapshot(`
       {
@@ -98,6 +99,15 @@ describe('uri utils', () => {
         },
       }
     `)
+  })
+
+  it('merge filterModel in uri query', () => {
+    const filterModel = {
+    }
+    const uri = 'grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%25E7%25A7%259F%25E6%2588%25B7%25E4%25BF%25A1%25E6%2581%25AF%26filterModel%255Bid%255D%255BfilterType%255D%3Dnumber%26filterModel%255Bid%255D%255Btype%255D%3Dequals%26filterModel%255Bid%255D%255Bfilter%255D%3D1'
+    const uri_ = new URI(uri)
+    const ret = mergeUriFilterModel(uri_, filterModel)
+    expect(ret).toMatchInlineSnapshot(`{}`)
   })
 
   it('parse uri filterModel', () => {
