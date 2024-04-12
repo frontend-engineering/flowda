@@ -55,9 +55,20 @@ export function createRefUri(input: z.infer<typeof handleContextMenuInputSchema>
     if (input.column.reference == null) throw new Error(`column_type reference should have reference, ${input.column.name}`)
     const id = input.cellRendererInput?.value?.[input.column.reference.primary_key]
     if (id == null) throw new Error(`column:${input.column.name} ${input.column.reference.primary_key} value is null`)
-    const schemaName = input.column.reference.model_name
+    const schemaName = `${input.column.reference.model_name}ResourceSchema`
     //    ^?
-    const retUri = `grid://${uri.authority}?schemaName=${schemaName}ResourceSchema&displayName=${input.column.reference.display_name}&${input.column.reference.primary_key}=${id}`
+    const query = {
+        schemaName,
+        displayName: input.column.reference.display_name,
+        filterModel: {
+            [input.column.reference.primary_key]: {
+                filterType: 'number',
+                type: 'equals',
+                filter: id,
+            },
+        }
+    }
+    const retUri = `grid://${uri.authority}?${qs.stringify(query)}`
     return new URI(retUri)
 }
 

@@ -10,7 +10,6 @@ import {
   getResourceDataOutputSchema,
   getResourceInputSchema,
   handleContextMenuInputSchema,
-  type JSONObject,
   putResourceDataInputSchema,
   ResourceUISchema,
   ManageableModel,
