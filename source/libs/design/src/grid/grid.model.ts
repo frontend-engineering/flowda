@@ -26,6 +26,10 @@ export class GridModel implements ManageableModel {
   isNotEmpty = false
   gridApi: GridApi | null = null
 
+  get isFirstGetRows() {
+    return this._isFirstGetRows
+  }
+
   /**
    * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
    * 原因是 setColDefs 有 React（cellRenderer）不能放在 grid.model 里
@@ -48,6 +52,7 @@ export class GridModel implements ManageableModel {
   private ref: unknown
   private uri?: string
   private refResolve?: (value: boolean | PromiseLike<boolean>) => void
+  private _isFirstGetRows = true
 
   getUri() {
     if (!this.uri) throw new Error('uri is null')
@@ -60,6 +65,7 @@ export class GridModel implements ManageableModel {
    */
   resetRefPromise(uri: string) {
     this.uri = uri
+    this._isFirstGetRows = true
     this.refPromise = new Promise<boolean>((resolve) => {
       this.refResolve = resolve
     })
@@ -136,6 +142,7 @@ export class GridModel implements ManageableModel {
     if (typeof this.apis.getResourceData !== 'function') {
       throw new Error('apis.getResourceData is not implemented')
     }
+    this._isFirstGetRows = false
     params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
     this.gridApi?.setFilterModel(params.filterModel)
     const uri = updateUriFilterModel(this.getUri(), params.filterModel)

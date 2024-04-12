@@ -15,6 +15,7 @@ import { z } from 'zod'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
 import { getReferenceDisplay } from './grid-utils'
+import { getUriFilterModel } from '../uri/uri-utils'
 
 export type GridProps = {
   uri?: string
@@ -43,7 +44,10 @@ export class Grid extends React.Component<GridProps> {
           current: params.endRow / (params.endRow - params.startRow),
           pageSize: params.endRow - params.startRow,
           sort: params.sortModel,
-          filterModel: params.filterModel,
+          filterModel: this.props.model.isFirstGetRows ? {
+            ...params.filterModel,
+            ...getUriFilterModel(this.props.model.getUri())
+          } : params.filterModel,
         })
 
         evt.api.hideOverlay() // 不清楚为什么，突然需要手动 hideOverlay

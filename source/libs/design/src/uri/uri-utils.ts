@@ -61,12 +61,20 @@ export function createRefUri(input: z.infer<typeof handleContextMenuInputSchema>
     return new URI(retUri)
 }
 
-export function mergeUriFilterModel(uri: URI | string, filterModel: z.infer<typeof agFilterSchema>): z.infer<typeof agFilterSchema> {
+export function getUriFilterModel(uri: URI | string): z.infer<typeof agFilterSchema> {
     if (typeof uri === 'string') {
         uri = new URI(uri)
     }
     const query = qs.parse(uri.query)
-    const origFilterModel = qs.parse(query['filterModel'] as string) as z.infer<typeof agFilterSchema>
+    const ret = qs.parse(query['filterModel'] as string) as z.infer<typeof agFilterSchema>
+    return _.mapValues(ret, (v) => {
+        if (v.filterType === 'number') v.filter = Number(v.filter)
+        return v
+    })
+}
+
+export function mergeUriFilterModel(uri: URI | string, filterModel: z.infer<typeof agFilterSchema>): z.infer<typeof agFilterSchema> {
+    const origFilterModel = getUriFilterModel(uri)
     const ret = {
         ...origFilterModel,
         ...filterModel,
