@@ -1,9 +1,17 @@
 import 'reflect-metadata'
 import { URI as Uri } from 'vscode-uri'
-import * as qs from 'qs'
 import { URI } from '@theia/core'
-import { convertTreeGridUriToGridUri, createTreeGridUri, uriWithoutId } from './uri-utils'
-import { treeGridUriQuerySchema } from '@flowda/types'
+import {
+  convertTreeGridUriToGridUri,
+  createRefUri,
+  createTreeGridUri,
+  mergeUriFilterModel,
+  updateUriFilterModel,
+  uriWithoutId,
+} from './uri-utils'
+import { handleContextMenuInputSchema } from '@flowda/types'
+import { z } from 'zod'
+import * as qs from 'qs'
 /*
 
   foo://example.com:8042/over/there?name=ferret#nose
@@ -16,6 +24,147 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
+  it('create uri query from ag-grid filterModel', () => {
+    const filterModel = {
+      id: {
+        filterType: 'number',
+        type: 'equals',
+        filter: 1,
+      },
+      name: {
+        filterType: 'string',
+        type: 'equals',
+        filter: 'hi',
+      },
+    }
+    const ret = qs.stringify(filterModel)
+    expect(ret).toMatchInlineSnapshot(
+      `"id%5BfilterType%5D=number&id%5Btype%5D=equals&id%5Bfilter%5D=1&name%5BfilterType%5D=string&name%5Btype%5D=equals&name%5Bfilter%5D=hi"`,
+    )
+  })
+
+  it('update filterModel in uri query', () => {
+    const filterModel = {
+      id: {
+        filterType: 'number',
+        type: 'equals',
+        filter: 1,
+      },
+    } as const
+    const uri = 'grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF'
+    const uri_ = new URI(uri)
+    const ret = updateUriFilterModel(uri_, filterModel)
+    const uriRet = ret.toString()
+    const uriRet_ = new URI(uriRet)
+    expect(qs.parse(uriRet_.query)['filterModel']).toMatchInlineSnapshot(`
+      {
+        "id": {
+          "filter": "1",
+          "filterType": "number",
+          "type": "equals",
+        },
+      }
+    `)
+    expect(ret).toMatchInlineSnapshot(`
+      URI {
+        "codeUri": {
+          "$mid": 1,
+          "authority": "flowda",
+          "external": "grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%25E7%25A7%259F%25E6%2588%25B7%25E4%25BF%25A1%25E6%2581%25AF%26filterModel%255Bid%255D%255BfilterType%255D%3Dnumber%26filterModel%255Bid%255D%255Btype%255D%3Dequals%26filterModel%255Bid%255D%255Bfilter%255D%3D1",
+          "query": "schemaName=TenantResourceSchema&displayName=%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF&filterModel%5Bid%5D%5BfilterType%5D=number&filterModel%5Bid%5D%5Btype%5D=equals&filterModel%5Bid%5D%5Bfilter%5D=1",
+          "scheme": "grid",
+        },
+      }
+    `)
+  })
+
+  it('merge filterModel in uri query', () => {
+    const filterModel = {
+      id: {
+        filterType: 'number',
+        type: 'equals',
+        filter: 1,
+      },
+    } as const
+    const uri = 'grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF'
+    const uri_ = new URI(uri)
+    const ret = mergeUriFilterModel(uri_, filterModel)
+    expect(ret).toMatchInlineSnapshot(`
+      {
+        "id": {
+          "filter": 1,
+          "filterType": "number",
+          "type": "equals",
+        },
+      }
+    `)
+  })
+
+  it('parse uri filterModel', () => {
+    const query =
+      'schemaName=MenuResourceSchema&displayName=%E8%8F%9C%E5%8D%95&filterModel%5Bid%5D%5BfilterType%5D=number&filterModel%5Bid%5D%5Btype%5D=equals&filterModel%5Bid%5D%5Bfilter%5D=3'
+    const ret = qs.parse(query)
+    expect(ret).toMatchInlineSnapshot(`
+      {
+        "displayName": "菜单",
+        "filterModel": {
+          "id": {
+            "filter": "3",
+            "filterType": "number",
+            "type": "equals",
+          },
+        },
+        "schemaName": "MenuResourceSchema",
+      }
+    `)
+  })
+
+  it('create reference uri', () => {
+    const handleContextInput: z.infer<typeof handleContextMenuInputSchema> = {
+      uri: 'grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF',
+      cellRendererInput: {
+        value: {
+          id: 1,
+        },
+        data: {
+          id: '2',
+        },
+        valueFormatted: null,
+        colDef: {
+          field: 'menu',
+        },
+      },
+      column: {
+        column_type: 'reference',
+        display_name: 'Menu',
+        name: 'menu',
+        validators: [
+          {
+            required: true,
+          },
+        ],
+        reference: {
+          display_name: 'Menu',
+          model_name: 'Menu',
+          reference_type: 'has_one',
+          foreign_key: 'tenantId',
+          primary_key: 'id',
+        },
+      },
+    }
+    const ret = createRefUri(handleContextInput)
+    expect(ret).toMatchInlineSnapshot(`
+      URI {
+        "codeUri": {
+          "$mid": 1,
+          "authority": "flowda",
+          "query": "schemaName=MenuResourceSchema&displayName=Menu&id=1",
+          "scheme": "grid",
+        },
+      }
+    `)
+  })
+
   it('vscode uri', () => {
     // const uri = 'resource.flowda.MenuResourceSchema:///菜单'
     const uri = 'urn:example:animal:ferret:nose'

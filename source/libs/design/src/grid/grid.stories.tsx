@@ -5,7 +5,6 @@ import { Container } from 'inversify'
 import { GridModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { GridModel } from './grid.model'
-
 import React from 'react'
 import { trpc } from '../../stories/trpc/trpc-client'
 import { GridWrapper } from '../../stories/grid-wrapper'
@@ -50,6 +49,14 @@ class GridStory extends React.Component<{
   }
 }
 
+const tenantGridModel = container.get<GridModel>(GridModelSymbol)
+tenantGridModel.resetRefPromise('grid://flowda?schemaName=TenantResourceSchema')
+export const TenantResource: StoryObj<typeof GridWrapper> = {
+  args: {
+    children: <GridStory gridModel={tenantGridModel}
+      schemaName={'flowda.TenantResourceSchema'} />,
+  },
+}
 
 const userGridModel = container.get<GridModel>(GridModelSymbol)
 userGridModel.resetRefPromise('grid://flowda?schemaName=UserResourceSchema')

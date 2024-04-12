@@ -32,7 +32,7 @@ export const cellRendererInputSchema = z.object({
   data: z.object({
     id: z.union([z.string(), z.number()]).transform(arg => arg.toString())
   }),
-  valueFormatted: z.string(),
+  valueFormatted: z.string().nullable(),
   colDef: z.object({
     field: z.string(),
   }),

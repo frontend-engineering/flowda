@@ -13,13 +13,13 @@ import {
   type JSONObject,
   putResourceDataInputSchema,
   ResourceUISchema,
+  ManageableModel,
 } from '@flowda/types'
 import { z } from 'zod'
+import { mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 
 @injectable()
-export class GridModel {
-  static KEY = 'resourceQuery'
-
+export class GridModel implements ManageableModel {
   columnDefs: z.infer<typeof ColumnUISchema>[] = []
   schemaName: string | null = null
   schema: z.infer<typeof ResourceUISchema> | null = null
@@ -44,10 +44,15 @@ export class GridModel {
     putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
   }> = {}
 
-  private filterModel: z.infer<typeof agFilterSchema> | null = null
+  // private filterModel: z.infer<typeof agFilterSchema> | null = null
   private ref: unknown
   private uri?: string
   private refResolve?: (value: boolean | PromiseLike<boolean>) => void
+
+  getUri() {
+    if (!this.uri) throw new Error('uri is null')
+    return this.uri
+  }
 
   /**
    * 在 ResourceWidgetFactory#createWidget 重置 promise
@@ -117,9 +122,8 @@ export class GridModel {
     // @ts-expect-error
     this.ref['setColDefs']()
 
-    if (!_.isEmpty(this.filterModel)) {
-      setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
-    }
+    // todo: 改成直接从 uri -> filterModel
+    // setTimeout(() => this.gridApi?.setFilterModel({}), 0) // 等待 re render
   }
 
   async getData(params: {
@@ -129,22 +133,15 @@ export class GridModel {
     sort: SortModelItem[]
     filterModel: z.infer<typeof agFilterSchema>
   }) {
-    const resourceQuery = this.getResourceQuery()
-    const schemaQuery = resourceQuery[params.schemaName] as JSONObject
-    this.filterModel = getFinalFilterModel(params.filterModel, this.filterModel, schemaQuery)
-    if (this.filterModel != null) {
-      resourceQuery[params.schemaName] = this.filterModel
-    }
-    if (this.columnDefs && this.columnDefs.length > 0 && params.filterModel != this.filterModel && !_.isEmpty(this.filterModel)) {
-      setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
-    }
-    localStorage.setItem(GridModel.KEY, JSON.stringify(resourceQuery))
     if (typeof this.apis.getResourceData !== 'function') {
-      throw new Error('handlers.getResourceData is not implemented')
+      throw new Error('apis.getResourceData is not implemented')
     }
-    const dataRet = await this.apis.getResourceData(
-      Object.assign({}, params, { filterModel: this.filterModel }),
-    )
+    params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
+    this.gridApi?.setFilterModel(params.filterModel)
+    const uri = updateUriFilterModel(this.getUri(), params.filterModel)
+    this.uri = uri.toString()
+
+    const dataRet = await this.apis.getResourceData(params)
     const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
     if (parseRet.success) {
       return parseRet.data
@@ -153,18 +150,6 @@ export class GridModel {
       data: [dataRet],
       pagination: { total: 1 },
     }
-  }
-
-  getResourceQuery(): JSONObject {
-    const prev = localStorage.getItem(GridModel.KEY)
-    if (prev != null) {
-      try {
-        return JSON.parse(prev)
-      } catch (e) {
-        //
-      }
-    }
-    return {}
   }
 
   async putData(id: number, updatedValue: unknown) {
@@ -191,7 +176,6 @@ export class GridModel {
       if (this.schema == null) throw new Error('schema is null')
       const column = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
       if (!column) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
-      // const uri = createTreeGridUri(this.uri, parsedRet.data.id, parsedRet.colDef.field)
       this.handlers.onContextMenu({
         uri: this.uri,
         cellRendererInput: parsedRet,
@@ -216,6 +200,10 @@ export class GridModel {
 }
 
 /**
+ * @deprecated 改成从 uri 恢复，任何 filter 手动修改都同步修改 uri
+ * 之前设计太复杂了，因为之前不清楚 vscode-uri 的机制，以及 edit-manager 如何管理 uri
+ * 就临时外接了一套管理 filter 持久化的
+ * 
  * 情况1：刷新 尝试从 localStorage 恢复
  *       注意：非刷新 关闭 tab 则认为清空条件
  * 情况2：非刷新，跳转修改 filter，则覆盖

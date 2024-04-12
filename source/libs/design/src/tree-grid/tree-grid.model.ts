@@ -5,11 +5,11 @@ import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
 import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { agMenuItemSchema } from '@flowda/types'
+import { ManageableModel, agMenuItemSchema } from '@flowda/types'
 import { z } from 'zod'
 
 @injectable()
-export class TreeGridModel {
+export class TreeGridModel implements ManageableModel {
   gridApi: GridApi | null = null
 
   columnDefs: ColDef<any, any>[] = [
@@ -29,6 +29,11 @@ export class TreeGridModel {
   handlers: Partial<{
     message: (title: string) => void
   }> = {}
+
+  getUri() {
+    if (!this.uri) throw new Error('uri is null')
+    return this.uri
+  }
 
   resetGridReadyPromise(uri: string) {
     this.setUri(uri)
