@@ -116,7 +116,8 @@ export function updateUriFilterModel(uri: URI | string, filterModel: z.infer<typ
         ...query,
         filterModel
     }
-    const ret = uri.withQuery(qs.stringify(query2))
+    const query3 = qs.stringify(query2, { encode: false })
+    const ret = uri.withQuery(query3)
     return ret
 }
 

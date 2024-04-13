@@ -73,9 +73,9 @@ describe('uri utils', () => {
         filter: 'hi',
       },
     }
-    const ret = qs.stringify(filterModel)
+    const ret = qs.stringify(filterModel, { encode: false })
     expect(ret).toMatchInlineSnapshot(
-      `"id%5BfilterType%5D=number&id%5Btype%5D=equals&id%5Bfilter%5D=1&name%5BfilterType%5D=string&name%5Btype%5D=equals&name%5Bfilter%5D=hi"`,
+      `"id[filterType]=number&id[type]=equals&id[filter]=1&name[filterType]=string&name[type]=equals&name[filter]=hi"`,
     )
   })
 
@@ -107,7 +107,7 @@ describe('uri utils', () => {
         "codeUri": {
           "$mid": 1,
           "authority": "flowda",
-          "query": "schemaName=TenantResourceSchema&displayName=%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF&filterModel%5Bid%5D%5BfilterType%5D=number&filterModel%5Bid%5D%5Btype%5D=equals&filterModel%5Bid%5D%5Bfilter%5D=1",
+          "query": "schemaName=TenantResourceSchema&displayName=租户信息&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=1",
           "scheme": "grid",
         },
       }
