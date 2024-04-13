@@ -662,21 +662,8 @@ declare const writeModelFiles: CreateFiles;
 declare const skipGenerator: () => boolean;
 
 declare const writeModelOrType: ({ fileWriter: { writer, writeImport, writeImportSet, writeJSDoc, writeHeading, }, dmmf, getSingleFileContent, }: ContentWriterOptions, model: ExtendedDMMFModel) => void;
-declare function writeModelOpenApi(model: ExtendedDMMFModel): {};
+declare function writeModelOpenApi(model: ExtendedDMMFModel): lodash.Dictionary<string | boolean | null>;
 
-declare function writeFieldOpenApi(field: ExtendedDMMFField): lodash.Dictionary<string | boolean | undefined> | {
-    display_name: string;
-    slug: string;
-    model_name: string;
-    visible: boolean;
-    foreign_key: string | null;
-    primary_key: any;
-} | {
-    display_name: string;
-    model_name: string;
-    foreign_key: string | null;
-    primary_key: any;
-    reference_type: string;
-};
+declare function writeFieldOpenApi(field: ExtendedDMMFField): lodash.Dictionary<any>;
 
 export { DirectoryHelper, ExtendedDMMF, ExtendedDMMFModel, FileWriter, generateMultipleFiles, generateSingleFile, loadDMMF, parseGeneratorConfig, skipGenerator, writeFieldOpenApi, writeModelFiles, writeModelOpenApi, writeModelOrType };

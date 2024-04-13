@@ -20,11 +20,13 @@ describe('prisma 02 generated zod to openapi', function () {
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
+            "visible": true,
           },
           "name": {
             "column_type": "String",
             "display_name": "Name",
             "type": "string",
+            "visible": true,
           },
         },
         "required": [
@@ -53,11 +55,13 @@ describe('prisma 02 generated zod to openapi', function () {
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
+            "visible": true,
           },
           "name": {
             "column_type": "String",
             "display_name": "Name",
             "type": "string",
+            "visible": true,
           },
           "userProfiles": {
             "display_name": "User Profiles",
@@ -67,7 +71,7 @@ describe('prisma 02 generated zod to openapi', function () {
             "primary_key": "id",
             "slug": "user_profiles",
             "type": "array",
-            "visible": true,
+            "visible": false,
           },
           "users": {
             "display_name": "Users",
@@ -108,17 +112,20 @@ describe('prisma 02 generated zod to openapi', function () {
             "column_type": "String",
             "display_name": "Email",
             "type": "string",
+            "visible": true,
           },
           "id": {
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
+            "visible": true,
           },
           "name": {
             "column_type": "String",
             "display_name": "Name",
             "nullable": true,
             "type": "string",
+            "visible": true,
           },
           "tenant": {
             "display_name": "Tenant",
@@ -131,6 +138,7 @@ describe('prisma 02 generated zod to openapi', function () {
             "column_type": "Int",
             "display_name": "Tenant Id",
             "type": "integer",
+            "visible": true,
           },
           "userProfile": {
             "display_name": "User Profile",
@@ -139,6 +147,7 @@ describe('prisma 02 generated zod to openapi', function () {
             "nullable": true,
             "primary_key": "id",
             "reference_type": "has_one",
+            "visible": true,
           },
         },
         "required": [

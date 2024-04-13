@@ -5,9 +5,9 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const VerificationTokenSchema = z.object({
-  identifier: z.string().column({ display_name: 'Identifier', column_type: 'String' }),
-  token: z.string().column({ display_name: 'Token', column_type: 'String' }),
-  expires: z.date().column({ display_name: 'Expires', column_type: 'DateTime' }),
+  identifier: z.string().column({ display_name: 'Identifier', column_type: 'String', visible: true }),
+  token: z.string().column({ display_name: 'Token', column_type: 'String', visible: true }),
+  expires: z.date().column({ display_name: 'Expires', column_type: 'DateTime', visible: true }),
 }).resource({
   name: 'VerificationToken',
   slug: 'verification_tokens',

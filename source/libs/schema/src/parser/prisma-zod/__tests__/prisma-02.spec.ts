@@ -48,6 +48,7 @@ describe('prisma-02', function () {
       {
         "column_type": "String",
         "display_name": "Name",
+        "visible": true,
       }
     `)
   })
@@ -78,6 +79,7 @@ describe('prisma-02', function () {
       {
         "column_type": "Int",
         "display_name": "Tenant Id",
+        "visible": true,
       }
     `)
   })
@@ -109,8 +111,8 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const TenantSchema = z.object({
-        id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
-        name: z.string().column({ display_name: 'Name', column_type: 'String' }),
+        id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
+        name: z.string().column({ display_name: 'Name', column_type: 'String', visible: true }),
       }).resource({
         name: 'Tenant',
         slug: 'tenants',
@@ -147,7 +149,7 @@ describe('prisma-02', function () {
           display_name: 'User Profiles',
           slug: 'user_profiles',
           model_name: 'UserProfile',
-          visible: true,
+          visible: false,
           foreign_key: 'tenantId',
           primary_key: 'id'
         }),
@@ -158,10 +160,10 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
-        email: z.string().column({ display_name: 'Email', column_type: 'String' }),
-        name: z.string().nullish().column({ display_name: 'Name', column_type: 'String' }),
-        tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int' }),
+        id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
+        email: z.string().column({ display_name: 'Email', column_type: 'String', visible: true }),
+        name: z.string().nullish().column({ display_name: 'Name', column_type: 'String', visible: true }),
+        tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int', visible: true }),
       }).resource({
         name: 'User',
         slug: 'users',
@@ -198,7 +200,8 @@ describe('prisma-02', function () {
           model_name: 'UserProfile',
           foreign_key: 'userId',
           primary_key: 'id',
-          reference_type: 'has_one'
+          reference_type: 'has_one',
+          visible: true
         }),
       }))
 
@@ -207,10 +210,10 @@ describe('prisma-02', function () {
       /////////////////////////////////////////
 
       export const UserProfileSchema = z.object({
-        id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
-        fullName: z.string().column({ display_name: 'Full Name', column_type: 'String' }),
-        userId: z.number().int().column({ display_name: 'User Id', column_type: 'Int' }),
-        tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int' }),
+        id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
+        fullName: z.string().column({ display_name: 'Full Name', column_type: 'String', visible: true }),
+        userId: z.number().int().column({ display_name: 'User Id', column_type: 'Int', visible: true }),
+        tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int', visible: false }),
       }).resource({
         name: 'UserProfile',
         slug: 'user_profiles',

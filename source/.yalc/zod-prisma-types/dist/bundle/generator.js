@@ -248,6 +248,13 @@ function writeOpenApi(openapi) {
         [`x-${plugin}`]: openapiRet,
     };
 }
+function visible(openapi) {
+    return !('visible' in openapi)
+        ? true
+        : openapi.visible === 'false'
+            ? false
+            : true;
+}
 
 class ExtendedDMMFEnum extends FormattedNames {
     constructor(generatorConfig, enums) {
@@ -3431,7 +3438,7 @@ function writeFieldOpenApi(field) {
     }, {});
     if (field.relationName) {
         if (field.isList) {
-            return {
+            return _.omitBy({
                 ...{
                     display_name: ___namespace.title(field.name),
                     slug: ___namespace.snake(field.name),
@@ -3449,9 +3456,10 @@ function writeFieldOpenApi(field) {
                         : null,
                 },
                 ...openapi,
-            };
+                visible: visible(openapi),
+            }, _.isUndefined);
         }
-        return {
+        return _.omitBy({
             ...{
                 display_name: ___namespace.title(field.name),
                 model_name: field.type,
@@ -3464,7 +3472,10 @@ function writeFieldOpenApi(field) {
                 reference_type: field.relatedField ? 'has_one' : 'belongs_to',
             },
             ...openapi,
-        };
+            visible: field.relatedField
+                ? visible(openapi)
+                : undefined,
+        }, _.isUndefined);
     }
     return _.omitBy({
         ...{
@@ -3472,11 +3483,7 @@ function writeFieldOpenApi(field) {
             column_type: field.type,
         },
         ...openapi,
-        visible: !('visible' in openapi)
-            ? undefined
-            : openapi.visible === 'false'
-                ? false
-                : true,
+        visible: visible(openapi),
     }, _.isUndefined);
 }
 
@@ -4001,7 +4008,7 @@ function writeModelOpenApi(model) {
         };
         return acc;
     }, {});
-    return {
+    return _.omitBy({
         ...{
             name: model.name,
             slug: ___namespace.snake(plur__default.default(model.name)),
@@ -4013,7 +4020,8 @@ function writeModelOpenApi(model) {
             display_primary_key: 'true',
         },
         ...openapi,
-    };
+        visible: visible(openapi),
+    }, _.isUndefined);
 }
 
 const writeModelFields = (options) => {
