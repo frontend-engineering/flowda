@@ -57,7 +57,7 @@ export function getTreeUriQuery(uri: string | URI) {
 
 export function createRefUri(input: z.infer<typeof handleContextMenuInputSchema>) {
     const uri = new URI(input.uri)
-    if (input.column.column_type !== 'reference') throw new Error(`column_type should be reference, ${input.column.name}, ${input.column.column_type}`)
+    if (input.column?.column_type !== 'reference') throw new Error(`column_type should be reference, ${input.column?.name}, ${input.column?.column_type}`)
     if (input.column.reference == null) throw new Error(`column_type reference should have reference, ${input.column.name}`)
     const id = input.cellRendererInput?.value?.[input.column.reference.primary_key]
     if (id == null) throw new Error(`column:${input.column.name} ${input.column.reference.primary_key} value is null`)
@@ -139,4 +139,23 @@ export function isUriAsKeyLikeEqual(a: URI | string, b: URI | string) {
         && a.path.toString() === b.path.toString()
         && _.isEqual(qs.parse(a.query), qs.parse(b.query))
         && a.fragment === b.fragment
+}
+
+export function createAssociationUri(input: z.infer<typeof handleContextMenuInputSchema>) {
+    if (input.association?.model_name == null) throw new Error('should be association')
+    const uri = new URI(input.uri)
+    const query = {
+        schemaName: `${input.association?.model_name}ResourceSchema`,
+        displayName: input.association.display_name,
+        filterModel: {
+            [input.association.foreign_key]: {
+                filterType: 'number',
+                type: 'equals',
+                // @ts-expect-error
+                filter: input.cellRendererInput.data?.[input.association.primary_key],
+            },
+        },
+    }
+    const ret = `${uri.scheme}://${uri.authority}?${qs.stringify(query, { encode: false })}`
+    return new URI(ret)
 }

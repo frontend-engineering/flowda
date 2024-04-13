@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@flowda-projects/flowda-gateway-trpc-server": {
-      "signature": "4a3590427081b4ad89011f05e4a3c1b9",
+      "signature": "59d2d35fe32f2cf6913818645ef124d9",
       "link": true
     },
     "@anatine/zod-openapi": {

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ColumnKeySchema, ReferenceKeySchema, ResourceKeySchema } from './ui-schema-object'
+import { AssociationKeySchema, ColumnKeySchema, ReferenceKeySchema, ResourceKeySchema } from './ui-schema-object'
 
 export const ColumnUISchema = ColumnKeySchema.extend({
   name: z.string(),
@@ -14,6 +14,7 @@ export const ResourceUISchema = ResourceKeySchema.omit({
   .extend({
     namespace: z.string().describe('网关作为命名空间'),
     columns: z.array(ColumnUISchema),
+    associations: z.array(AssociationKeySchema),
   })
 
 
