@@ -276,11 +276,11 @@ declare class TrpcService {
         }>;
         _meta: object;
         _ctx_out: {
-            user: ctxUserSchemaDto | undefined;
-            requestId: string;
             req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
             res: express.Response<any, Record<string, any>>;
+            requestId: string;
             _diagnosis: any[];
+            user: ctxUserSchemaDto | undefined;
             tenant: ctxTenantSchemaDto | undefined;
         };
         _input_in: typeof _trpc_server.unsetMarker;
@@ -504,11 +504,11 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
-                user: ctxUserSchemaDto | undefined;
-                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
+                requestId: string;
                 _diagnosis: any[];
+                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
@@ -523,17 +523,17 @@ declare class HelloRouter {
             id: string;
             name: string;
             selected: boolean;
-            uri: string | undefined;
-            expanded: boolean | undefined;
-            children: never[] | undefined;
-        }[] | {
-            id: string;
-            name: string;
-            selected: boolean;
             uri: {
                 scheme: string;
                 name: string;
             };
+        }[] | {
+            id: string;
+            name: string;
+            selected: boolean;
+            uri: string | undefined;
+            expanded: boolean | undefined;
+            children: never[] | undefined;
         }[] | undefined>;
         getResourceSchema: _trpc_server.BuildProcedure<"query", {
             _config: _trpc_server.RootConfig<{
@@ -560,11 +560,11 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
-                user: ctxUserSchemaDto | undefined;
-                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
+                requestId: string;
                 _diagnosis: any[];
+                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
@@ -628,94 +628,62 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
-                user: ctxUserSchemaDto | undefined;
-                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
+                requestId: string;
                 _diagnosis: any[];
+                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
-                schemaName: string;
                 sort: {
                     sort: "asc" | "desc";
                     colId: string;
                 }[];
+                schemaName: string;
                 current: number;
                 pageSize: number;
-                filterModel: (Record<string, {
+                filterModel: Record<string, {
+                    filterType: "number" | "text";
                     filter: string | number;
                     type: "contains" | "equals";
-                    filterType: "number" | "text";
                 } | {
                     filterType: "text";
                     operator: "OR" | "AND";
                     conditions: {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     }[];
-                }> | {
-                    _ref?: string | undefined;
-                }) & (Record<string, {
-                    filter: string | number;
-                    type: "contains" | "equals";
-                    filterType: "number" | "text";
-                } | {
-                    filterType: "text";
-                    operator: "OR" | "AND";
-                    conditions: {
-                        filter: string | number;
-                        type: "contains" | "equals";
-                        filterType: "number" | "text";
-                    }[];
-                }> | {
-                    _ref?: string | undefined;
-                } | undefined);
+                }>;
             } | {
-                schemaName: string;
                 id: number;
+                schemaName: string;
             };
             _input_out: {
-                schemaName: string;
                 sort: {
                     sort: "asc" | "desc";
                     colId: string;
                 }[];
+                schemaName: string;
                 current: number;
                 pageSize: number;
-                filterModel: (Record<string, {
+                filterModel: Record<string, {
+                    filterType: "number" | "text";
                     filter: string | number;
                     type: "contains" | "equals";
-                    filterType: "number" | "text";
                 } | {
                     filterType: "text";
                     operator: "OR" | "AND";
                     conditions: {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     }[];
-                }> | {
-                    _ref?: string | undefined;
-                }) & (Record<string, {
-                    filter: string | number;
-                    type: "contains" | "equals";
-                    filterType: "number" | "text";
-                } | {
-                    filterType: "text";
-                    operator: "OR" | "AND";
-                    conditions: {
-                        filter: string | number;
-                        type: "contains" | "equals";
-                        filterType: "number" | "text";
-                    }[];
-                }> | {
-                    _ref?: string | undefined;
-                } | undefined);
+                }>;
             } | {
-                schemaName: string;
                 id: number;
+                schemaName: string;
             };
             _output_in: typeof _trpc_server.unsetMarker;
             _output_out: typeof _trpc_server.unsetMarker;
@@ -745,21 +713,21 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
-                user: ctxUserSchemaDto | undefined;
-                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
+                requestId: string;
                 _diagnosis: any[];
+                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
-                id: number;
                 schemaName: string;
+                id: number;
                 updatedValue?: any;
             };
             _input_out: {
-                id: number;
                 schemaName: string;
+                id: number;
                 updatedValue?: any;
             };
             _output_in: typeof _trpc_server.unsetMarker;
@@ -970,11 +938,11 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
-                    user: ctxUserSchemaDto | undefined;
-                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
+                    requestId: string;
                     _diagnosis: any[];
+                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
@@ -989,17 +957,17 @@ declare class TrpcRouter {
                 id: string;
                 name: string;
                 selected: boolean;
-                uri: string | undefined;
-                expanded: boolean | undefined;
-                children: never[] | undefined;
-            }[] | {
-                id: string;
-                name: string;
-                selected: boolean;
                 uri: {
                     scheme: string;
                     name: string;
                 };
+            }[] | {
+                id: string;
+                name: string;
+                selected: boolean;
+                uri: string | undefined;
+                expanded: boolean | undefined;
+                children: never[] | undefined;
             }[] | undefined>;
             getResourceSchema: _trpc_server.BuildProcedure<"query", {
                 _config: _trpc_server.RootConfig<{
@@ -1026,11 +994,11 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
-                    user: ctxUserSchemaDto | undefined;
-                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
+                    requestId: string;
                     _diagnosis: any[];
+                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
@@ -1094,94 +1062,62 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
-                    user: ctxUserSchemaDto | undefined;
-                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
+                    requestId: string;
                     _diagnosis: any[];
+                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
-                    schemaName: string;
                     sort: {
                         sort: "asc" | "desc";
                         colId: string;
                     }[];
+                    schemaName: string;
                     current: number;
                     pageSize: number;
-                    filterModel: (Record<string, {
+                    filterModel: Record<string, {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     } | {
                         filterType: "text";
                         operator: "OR" | "AND";
                         conditions: {
+                            filterType: "number" | "text";
                             filter: string | number;
                             type: "contains" | "equals";
-                            filterType: "number" | "text";
                         }[];
-                    }> | {
-                        _ref?: string | undefined;
-                    }) & (Record<string, {
-                        filter: string | number;
-                        type: "contains" | "equals";
-                        filterType: "number" | "text";
-                    } | {
-                        filterType: "text";
-                        operator: "OR" | "AND";
-                        conditions: {
-                            filter: string | number;
-                            type: "contains" | "equals";
-                            filterType: "number" | "text";
-                        }[];
-                    }> | {
-                        _ref?: string | undefined;
-                    } | undefined);
+                    }>;
                 } | {
-                    schemaName: string;
                     id: number;
+                    schemaName: string;
                 };
                 _input_out: {
-                    schemaName: string;
                     sort: {
                         sort: "asc" | "desc";
                         colId: string;
                     }[];
+                    schemaName: string;
                     current: number;
                     pageSize: number;
-                    filterModel: (Record<string, {
+                    filterModel: Record<string, {
+                        filterType: "number" | "text";
                         filter: string | number;
                         type: "contains" | "equals";
-                        filterType: "number" | "text";
                     } | {
                         filterType: "text";
                         operator: "OR" | "AND";
                         conditions: {
+                            filterType: "number" | "text";
                             filter: string | number;
                             type: "contains" | "equals";
-                            filterType: "number" | "text";
                         }[];
-                    }> | {
-                        _ref?: string | undefined;
-                    }) & (Record<string, {
-                        filter: string | number;
-                        type: "contains" | "equals";
-                        filterType: "number" | "text";
-                    } | {
-                        filterType: "text";
-                        operator: "OR" | "AND";
-                        conditions: {
-                            filter: string | number;
-                            type: "contains" | "equals";
-                            filterType: "number" | "text";
-                        }[];
-                    }> | {
-                        _ref?: string | undefined;
-                    } | undefined);
+                    }>;
                 } | {
-                    schemaName: string;
                     id: number;
+                    schemaName: string;
                 };
                 _output_in: typeof _trpc_server.unsetMarker;
                 _output_out: typeof _trpc_server.unsetMarker;
@@ -1211,21 +1147,21 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
-                    user: ctxUserSchemaDto | undefined;
-                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
+                    requestId: string;
                     _diagnosis: any[];
+                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
-                    id: number;
                     schemaName: string;
+                    id: number;
                     updatedValue?: any;
                 };
                 _input_out: {
-                    id: number;
                     schemaName: string;
+                    id: number;
                     updatedValue?: any;
                 };
                 _output_in: typeof _trpc_server.unsetMarker;

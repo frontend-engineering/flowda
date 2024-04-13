@@ -5,11 +5,11 @@ import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
 import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { agMenuItemSchema } from '@flowda/types'
+import { ManageableModel, agMenuItemSchema } from '@flowda/types'
 import { z } from 'zod'
 
 @injectable()
-export class TreeGridModel {
+export class TreeGridModel implements ManageableModel {
   gridApi: GridApi | null = null
 
   columnDefs: ColDef<any, any>[] = [
@@ -30,7 +30,13 @@ export class TreeGridModel {
     message: (title: string) => void
   }> = {}
 
-  resetGridReadyPromise(uri: string) {
+  getUri() {
+    if (!this.uri) throw new Error('uri is null')
+    return this.uri
+  }
+
+  resetGridReadyPromise(uri: string | URI) {
+    if (typeof uri === 'string') uri = new URI(uri)
     this.setUri(uri)
     this.gridReadyPromise = new Promise<boolean>((resolve) => {
       this.gridReadyResolve = resolve
@@ -43,7 +49,8 @@ export class TreeGridModel {
     this.gridReadyResolve(true)
   }
 
-  setUri(uri: string) {
+  setUri(uri: string | URI) {
+    if (typeof uri !== 'string') uri = uri.toString(true)
     if (uri != null) {
       if (this.uri == null) {
         this.uri = uri
@@ -52,6 +59,10 @@ export class TreeGridModel {
         if (uri !== this.uri) throw new Error(`setRef uri is not matched, current: ${this.uri}, input: ${uri}`)
       }
     }
+  }
+
+  resetIsFirstGetRows() {
+    // noop
   }
 
   async loadData() {

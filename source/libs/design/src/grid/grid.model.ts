@@ -10,21 +10,25 @@ import {
   getResourceDataOutputSchema,
   getResourceInputSchema,
   handleContextMenuInputSchema,
-  type JSONObject,
   putResourceDataInputSchema,
   ResourceUISchema,
+  ManageableModel,
 } from '@flowda/types'
 import { z } from 'zod'
+import { isUriAsKeyLikeEqual, isUriLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
+import { URI } from '@theia/core'
 
 @injectable()
-export class GridModel {
-  static KEY = 'resourceQuery'
-
+export class GridModel implements ManageableModel {
   columnDefs: z.infer<typeof ColumnUISchema>[] = []
   schemaName: string | null = null
   schema: z.infer<typeof ResourceUISchema> | null = null
   isNotEmpty = false
   gridApi: GridApi | null = null
+
+  get isFirstGetRows() {
+    return this._isFirstGetRows
+  }
 
   /**
    * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
@@ -44,17 +48,33 @@ export class GridModel {
     putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
   }> = {}
 
-  private filterModel: z.infer<typeof agFilterSchema> | null = null
+  // private filterModel: z.infer<typeof agFilterSchema> | null = null
   private ref: unknown
-  private uri?: string
+  private _uri?: URI
   private refResolve?: (value: boolean | PromiseLike<boolean>) => void
+  private _isFirstGetRows = true
+
+  getUri() {
+    if (!this._uri) throw new Error('uri is null')
+    return this._uri.toString(true)
+  }
+
+  setUri(uri: string | URI) {
+    if (typeof uri === 'string') uri = new URI(uri)
+    this._uri = uri
+  }
+
+  resetIsFirstGetRows() {
+    this._isFirstGetRows = true
+  }
 
   /**
    * 在 ResourceWidgetFactory#createWidget 重置 promise
    * 因为目前 grid.model 在 tab 关闭并不会销毁 todo 可以销毁 这样流程简单很多
    */
-  resetRefPromise(uri: string) {
-    this.uri = uri
+  resetRefPromise(uri: string | URI) {
+    this.setUri(uri)
+    this.resetIsFirstGetRows()
     this.refPromise = new Promise<boolean>((resolve) => {
       this.refResolve = resolve
     })
@@ -72,11 +92,11 @@ export class GridModel {
   setRef(ref: unknown, uri?: string) {
     this.ref = ref
     if (uri != null) {
-      if (this.uri == null) {
-        this.uri = uri
+      if (this._uri == null) {
+        this.setUri(uri)
       } else {
         // double check 下 防止 gridModel grid 未对应
-        if (uri !== this.uri) throw new Error(`setRef uri is not matched, current: ${this.uri}, input: ${uri}`)
+        if (!isUriAsKeyLikeEqual(uri, this._uri)) throw new Error(`setRef uri is not matched, current: ${this._uri}, input: ${uri}`)
       }
     }
 
@@ -117,9 +137,8 @@ export class GridModel {
     // @ts-expect-error
     this.ref['setColDefs']()
 
-    if (!_.isEmpty(this.filterModel)) {
-      setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
-    }
+    // todo: 改成直接从 uri -> filterModel
+    // setTimeout(() => this.gridApi?.setFilterModel({}), 0) // 等待 re render
   }
 
   async getData(params: {
@@ -129,22 +148,16 @@ export class GridModel {
     sort: SortModelItem[]
     filterModel: z.infer<typeof agFilterSchema>
   }) {
-    const resourceQuery = this.getResourceQuery()
-    const schemaQuery = resourceQuery[params.schemaName] as JSONObject
-    this.filterModel = getFinalFilterModel(params.filterModel, this.filterModel, schemaQuery)
-    if (this.filterModel != null) {
-      resourceQuery[params.schemaName] = this.filterModel
-    }
-    if (this.columnDefs && this.columnDefs.length > 0 && params.filterModel != this.filterModel && !_.isEmpty(this.filterModel)) {
-      setTimeout(() => this.gridApi?.setFilterModel(this.filterModel), 0) // 等待 re render
-    }
-    localStorage.setItem(GridModel.KEY, JSON.stringify(resourceQuery))
     if (typeof this.apis.getResourceData !== 'function') {
-      throw new Error('handlers.getResourceData is not implemented')
+      throw new Error('apis.getResourceData is not implemented')
     }
-    const dataRet = await this.apis.getResourceData(
-      Object.assign({}, params, { filterModel: this.filterModel }),
-    )
+    this._isFirstGetRows = false
+    params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
+    this.gridApi?.setFilterModel(params.filterModel)
+    const uri = updateUriFilterModel(this.getUri(), params.filterModel)
+    this.setUri(uri)
+
+    const dataRet = await this.apis.getResourceData(params)
     const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
     if (parseRet.success) {
       return parseRet.data
@@ -153,18 +166,6 @@ export class GridModel {
       data: [dataRet],
       pagination: { total: 1 },
     }
-  }
-
-  getResourceQuery(): JSONObject {
-    const prev = localStorage.getItem(GridModel.KEY)
-    if (prev != null) {
-      try {
-        return JSON.parse(prev)
-      } catch (e) {
-        //
-      }
-    }
-    return {}
   }
 
   async putData(id: number, updatedValue: unknown) {
@@ -187,13 +188,12 @@ export class GridModel {
   readonly onContextMenu = (cellRendererInput: z.infer<typeof cellRendererInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (typeof this.handlers.onContextMenu === 'function') {
       const parsedRet = cellRendererInputSchema.parse(cellRendererInput)
-      if (this.uri == null) throw new Error('uri is null')
+      if (this._uri == null) throw new Error('uri is null')
       if (this.schema == null) throw new Error('schema is null')
       const column = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
       if (!column) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
-      // const uri = createTreeGridUri(this.uri, parsedRet.data.id, parsedRet.colDef.field)
       this.handlers.onContextMenu({
-        uri: this.uri,
+        uri: this.getUri(),
         cellRendererInput: parsedRet,
         column
       }, e)
@@ -213,41 +213,4 @@ export class GridModel {
       })
     }
   }
-}
-
-/**
- * 情况1：刷新 尝试从 localStorage 恢复
- *       注意：非刷新 关闭 tab 则认为清空条件
- * 情况2：非刷新，跳转修改 filter，则覆盖
- * 情况3：非刷新 手动修改 优先级最高
- *
- * @param param ag grid 前端传入
- * @param mem 内存 grid model 维护
- * @param storage localStorage
- */
-export function getFinalFilterModel(param: z.infer<typeof agFilterSchema>, mem: z.infer<typeof agFilterSchema> | null, storage: JSONObject): z.infer<typeof agFilterSchema> | null {
-  const parseRet = agFilterSchema.safeParse(storage)
-  if (/*情况1*/ mem == null && parseRet.success) {
-    return tryExtractFilterModelFromRef(storage)
-  }
-  if (/*情况2*/ parseRet.success && parseRet.data._ref === '1') {
-    const parseRet2 = agFilterSchema.safeParse(_.omit(storage, ['_ref']))
-    if (parseRet2.success) {
-      return parseRet2.data
-    }
-  }
-
-  /*情况3*/
-  return param
-}
-
-export function tryExtractFilterModelFromRef(storage: JSONObject): z.infer<typeof agFilterSchema> {
-  const parseRet = agFilterSchema.parse(storage)
-  if (parseRet._ref === '1') {
-    const parseRet2 = agFilterSchema.safeParse(_.omit(storage, ['_ref']))
-    if (parseRet2.success) {
-      return parseRet2.data
-    }
-  }
-  return parseRet
 }

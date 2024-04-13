@@ -14,6 +14,8 @@ import { cellRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
+import { getReferenceDisplay } from './grid-utils'
+import { getUriFilterModel } from '../uri/uri-utils'
 
 export type GridProps = {
   uri?: string
@@ -24,7 +26,6 @@ export class Grid extends React.Component<GridProps> {
   private gridRef: AgGridReact | null = null
 
   private readonly onGridReady = async (evt: GridReadyEvent) => {
-    // console.log('[Grid] onGridReady', this.props.model.schemaName)
     this.props.model.gridApi = evt.api
 
     const datasource: IDatasource = {
@@ -43,11 +44,13 @@ export class Grid extends React.Component<GridProps> {
           current: params.endRow / (params.endRow - params.startRow),
           pageSize: params.endRow - params.startRow,
           sort: params.sortModel,
-          filterModel: params.filterModel,
+          filterModel: this.props.model.isFirstGetRows ? {
+            ...params.filterModel,
+            ...getUriFilterModel(this.props.model.getUri())
+          } : params.filterModel,
         })
 
-        // console.log(`[Grid] successCallback`)
-        evt.api.hideOverlay()
+        evt.api.hideOverlay() // 不清楚为什么，突然需要手动 hideOverlay
         params.successCallback(ret.data, ret.pagination.total)
         // this.props.model.gridApi?.setGridOption('pinnedTopRowData', [ret.data[0]])
         // 只在第一次有值的时候做 resize 后续分页或者刷新就不要 resize 了
@@ -61,9 +64,6 @@ export class Grid extends React.Component<GridProps> {
   }
 
   private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
-    // console.log(
-    //   `[Grid] onCellValueChanged, id ${evt.data.id},col: ${evt.colDef.field}, ${evt.newValue} <- ${evt.oldValue}`,
-    // )
     await this.props.model.putData(evt.data.id, {
       [evt.colDef.field as string]: evt.newValue,
     })
@@ -72,34 +72,34 @@ export class Grid extends React.Component<GridProps> {
   setColDefs = () => {
     const colDefs = this.props.model.columnDefs.map<ColDef>(item => {
       // todo: 图片需要搞一个 modal 并且上传修改
-      if (item.name === 'image') {
-        return {
-          field: item.name,
-          headerName: item.display_name,
-          cellDataType: 'text',
-          cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
-            if (!param.value) return param.value
-            return (
-              <img
-                style={{
-                  cursor: 'pointer',
-                  width: 38,
-                  borderRadius: '50%',
-                  border: '0.5px solid white',
-                  boxShadow: '0px 1px 6px rgba(0, 0, 0, 0.2)',
-                }}
-                src={param.value as string}
-              />
-            )
-          },
-        }
-      }
+      // if (item.name === 'image') { // todo: 这里用 plugin model 实现
+      //   return {
+      //     field: item.name,
+      //     headerName: item.display_name,
+      //     cellDataType: 'text',
+      //     cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+      //       if (!param.value) return param.value
+      //       return (
+      //         <img
+      //           style={{
+      //             cursor: 'pointer',
+      //             width: 38,
+      //             borderRadius: '50%',
+      //             border: '0.5px solid white',
+      //             boxShadow: '0px 1px 6px rgba(0, 0, 0, 0.2)',
+      //           }}
+      //           src={param.value as string}
+      //         />
+      //       )
+      //     },
+      //   }
+      // }
       if (item.name === this.props.model.schema?.primary_key) {
         return {
           minWidth: 110,
           field: item.name,
           headerName: item.display_name,
-          cellDataType: 'number',
+          cellDataType: item.column_type === 'String' ? 'string' : 'number',
           pinned: 'left',
           filter: true,
           floatingFilter: true,
@@ -112,20 +112,28 @@ export class Grid extends React.Component<GridProps> {
             field: item.name,
             headerName: item.display_name,
             cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              if (!param.value) {
+                return <span>.</span>
+              }
+              /* 做到一半的 hover
+              <a
+                className="grid-reference-field"
+                href=""
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  this.props.model.onRefClick(param.colDef.field, param.value)
+                }}
+                onMouseEnter={this.props.model.onMouseEnter}
+              >
+                {getReferenceDisplay(item.reference!, param.value)}
+              </a>
+              */
               return (
-                <div onContextMenu={(e) => this.props.model.onContextMenu(param, e)}>
-                  <a
-                    className="grid-reference-field"
-                    href=""
-                    onClick={e => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      this.props.model.onRefClick(param.colDef.field, param.value)
-                    }}
-                    onMouseEnter={this.props.model.onMouseEnter}
-                  >
-                    {param.value}
-                  </a>
+                <div onContextMenu={(e) => {
+                  this.props.model.onContextMenu(param, e)
+                }}>
+                  {getReferenceDisplay(item.reference!, param.value)}
                 </div>
               )
             },
