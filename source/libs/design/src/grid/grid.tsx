@@ -159,12 +159,14 @@ export class Grid extends React.Component<GridProps> {
             refData: refData,
           }
         }*/
+        case 'Int':
         case 'integer':
           return {
             field: item.name,
             headerName: item.display_name,
             cellDataType: 'number',
           }
+        case 'Boolean':
         case 'boolean':
           return {
             field: item.name,
@@ -195,6 +197,7 @@ export class Grid extends React.Component<GridProps> {
             // cellRenderer: ShortDatetime,
           }
         case 'string':
+        case 'String':
         case 'textarea':
           return {
             editable: true,
