@@ -6,13 +6,13 @@ import * as _ from 'radash'
 
 export function getUriDisplayName(uri: URI): string {
     const query = qs.parse(uri.query)
-    if (!('displayName' in query) || typeof query.displayName !== 'string') throw new Error(`query must have displayName and is string, ${uri.toString()}`)
+    if (!('displayName' in query) || typeof query.displayName !== 'string') throw new Error(`query must have displayName and is string, ${uri.toString(true)}`)
     return query.displayName
 }
 
 export function getUriSchemaName(uri: URI): string {
     const query = qs.parse(uri.query)
-    if (!('schemaName' in query) || typeof query.schemaName !== 'string') throw new Error(`query must have schemaName and is string, ${uri.toString()}`)
+    if (!('schemaName' in query) || typeof query.schemaName !== 'string') throw new Error(`query must have schemaName and is string, ${uri.toString(true)}`)
     return query.schemaName
 }
 
@@ -40,16 +40,16 @@ export function extractId(id: string) {
     return count
 }
 
-export function convertTreeGridUriToGridUri(uriParam: string) {
-    const query = getTreeUriQuery(uriParam)
-    const uri = new URI(uriParam)
+export function convertTreeGridUriToGridUri(uri: string | URI) {
+    if (typeof uri === 'string') uri = new URI(uri)
+    const query = getTreeUriQuery(uri)
     const displayName = query.displayName.split('#')[0]
     const gridUri = `grid://${uri.authority}?schemaName=${query.schemaName}&displayName=${displayName}`
     return gridUri
 }
 
-export function getTreeUriQuery(uriParam: string) {
-    const uri = new URI(uriParam)
+export function getTreeUriQuery(uri: string | URI) {
+    if (typeof uri === 'string') uri = new URI(uri)
     const query = qs.parse(uri.query)
     const queryParsedRet = treeGridUriQuerySchema.parse(query)
     return queryParsedRet
@@ -62,7 +62,6 @@ export function createRefUri(input: z.infer<typeof handleContextMenuInputSchema>
     const id = input.cellRendererInput?.value?.[input.column.reference.primary_key]
     if (id == null) throw new Error(`column:${input.column.name} ${input.column.reference.primary_key} value is null`)
     const schemaName = `${input.column.reference.model_name}ResourceSchema`
-    //    ^?
     const query = {
         schemaName,
         displayName: input.column.reference.display_name,

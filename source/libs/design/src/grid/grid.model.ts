@@ -16,6 +16,7 @@ import {
 } from '@flowda/types'
 import { z } from 'zod'
 import { isUriAsKeyLikeEqual, isUriLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
+import { URI } from '@theia/core'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -62,7 +63,8 @@ export class GridModel implements ManageableModel {
    * 在 ResourceWidgetFactory#createWidget 重置 promise
    * 因为目前 grid.model 在 tab 关闭并不会销毁 todo 可以销毁 这样流程简单很多
    */
-  resetRefPromise(uri: string) {
+  resetRefPromise(uri: string | URI) {
+    if (typeof uri !== 'string') uri = uri.toString(true)
     this.uri = uri
     this._isFirstGetRows = true
     this.refPromise = new Promise<boolean>((resolve) => {

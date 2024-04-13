@@ -35,7 +35,8 @@ export class TreeGridModel implements ManageableModel {
     return this.uri
   }
 
-  resetGridReadyPromise(uri: string) {
+  resetGridReadyPromise(uri: string | URI) {
+    if (typeof uri === 'string') uri = new URI(uri)
     this.setUri(uri)
     this.gridReadyPromise = new Promise<boolean>((resolve) => {
       this.gridReadyResolve = resolve
@@ -48,7 +49,8 @@ export class TreeGridModel implements ManageableModel {
     this.gridReadyResolve(true)
   }
 
-  setUri(uri: string) {
+  setUri(uri: string | URI) {
+    if (typeof uri !== 'string') uri = uri.toString(true)
     if (uri != null) {
       if (this.uri == null) {
         this.uri = uri
