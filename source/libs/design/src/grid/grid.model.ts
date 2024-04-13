@@ -59,9 +59,13 @@ export class GridModel implements ManageableModel {
     return this._uri.toString(true)
   }
 
-  private setUri(uri: string | URI) {
+  setUri(uri: string | URI) {
     if (typeof uri === 'string') uri = new URI(uri)
     this._uri = uri
+  }
+
+  resetIsFirstGetRows() {
+    this._isFirstGetRows = true
   }
 
   /**
@@ -70,7 +74,7 @@ export class GridModel implements ManageableModel {
    */
   resetRefPromise(uri: string | URI) {
     this.setUri(uri)
-    this._isFirstGetRows = true
+    this.resetIsFirstGetRows()
     this.refPromise = new Promise<boolean>((resolve) => {
       this.refResolve = resolve
     })
