@@ -24,7 +24,7 @@ generator zod {
   coerceDate                = false // default is true
   writeNullishInModelTypes  = true // default is false
   // prismaClientPath                 = "./generated/client" // optional
-  extendZod = "../../../../../zod-openapi/extend-zod"
+  extendZod                 = "../../../../../zod-openapi/extend-zod"
 }
 
 datasource db {
@@ -38,11 +38,15 @@ datasource db {
 /// @schema [searchable_columns=email,name]
 /// @schema {legacy} [route_prefix=/admin]
 model User {
-  id    Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   /// @schema [display_name=邮箱]
-  email String  @unique
+  email String @unique
+
   /// @schema [display_name=用户名]
+  /// @schema [visible=false]
   /// @schema {legacy} [prisma=false]
-  name  String?
+  name String?
+
   extendedDescriptionData Json?
 }
