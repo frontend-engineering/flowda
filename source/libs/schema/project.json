@@ -62,7 +62,7 @@
       "options": {
         "jestConfig": "libs/schema/jest.config.ts",
         "passWithNoTests": true,
-        "updateSnapshot": false
+        "updateSnapshot": true
       },
       "configurations": {
         "ci": {

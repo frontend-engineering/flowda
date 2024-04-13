@@ -8,4 +8,7 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/schema',
-};
+  moduleNameMapper: {
+    'zod-prisma-types': '../../.yalc/zod-prisma-types/dist/bundle/generator',
+  },
+}

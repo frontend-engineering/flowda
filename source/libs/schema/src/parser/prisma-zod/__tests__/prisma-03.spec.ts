@@ -29,6 +29,7 @@ describe('prisma-03', function () {
         name: z.string().nullish().column({
           display_name: '用户名',
           column_type: 'String',
+          visible: false,
           'x-legacy': { prisma: 'false' }
         }),
         extendedDescriptionData: z.any().optional().nullish().column({ display_name: 'Extended Description Data', column_type: 'Json' }),

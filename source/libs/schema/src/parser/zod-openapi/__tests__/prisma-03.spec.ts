@@ -33,6 +33,7 @@ describe('prisma 03 generated zod to openapi', function () {
             "display_name": "用户名",
             "nullable": true,
             "type": "string",
+            "visible": false,
             "x-legacy": {
               "prisma": "false",
             },

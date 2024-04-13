@@ -5,6 +5,7 @@ export type ColumnKey = {
   display_name: string
   description?: string
   example?: string
+  visible?: boolean,
   [p: `x-${string}`]: unknown,
 }
 export const ColumnKeySchema = z.object({
@@ -12,6 +13,7 @@ export const ColumnKeySchema = z.object({
   display_name: z.string(),
   description: z.string().optional(),
   example: z.string().optional(),
+  visible: z.boolean().optional(),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {

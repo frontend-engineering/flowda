@@ -31,7 +31,7 @@ function _interopNamespace(e) {
     return Object.freeze(n);
 }
 
-var fs__default = /*#__PURE__*/_interopDefault(fs);
+var fs__namespace = /*#__PURE__*/_interopNamespace(fs);
 var ___default = /*#__PURE__*/_interopDefault(_);
 var path__default = /*#__PURE__*/_interopDefault(path);
 var ___namespace = /*#__PURE__*/_interopNamespace(_$1);
@@ -44,11 +44,11 @@ class DirectoryHelper {
         return this.pathOrDirExists(path) || Boolean(this.createDir(path));
     }
     static createDir(path, options) {
-        fs__default.default.mkdirSync(path, options || { recursive: true });
+        fs__namespace.mkdirSync(path, options || { recursive: true });
         return this.pathOrDirExists(path) ? path : undefined;
     }
     static pathOrDirExists(path) {
-        return fs__default.default.existsSync(path);
+        return fs__namespace.existsSync(path);
     }
     static removeDir(path) {
         if (!path)
@@ -56,7 +56,7 @@ class DirectoryHelper {
         if (!this.pathOrDirExists(path))
             return;
         try {
-            fs__default.default.rmdirSync(path, { recursive: true });
+            fs__namespace.rmdirSync(path, { recursive: true });
         }
         catch (err) {
             if (err instanceof Error)
@@ -2923,7 +2923,7 @@ class FileWriter {
             writeHeading: this.writeHeading.bind(this),
             writeJSDoc: this.writeJSDoc.bind(this),
         });
-        fs__default.default.writeFileSync(path, this.writer.toString());
+        fs__namespace.writeFileSync(path, this.writer.toString());
     }
     writeImport(importName, importPath) {
         this.writer.writeLine(`import ${importName} from '${importPath}';`);
@@ -2966,7 +2966,7 @@ class FileWriter {
 }
 
 const loadDMMF = async (schemaPath) => {
-    const datamodel = fs__default.default.readFileSync(schemaPath, 'utf-8');
+    const datamodel = fs__namespace.readFileSync(schemaPath, 'utf-8');
     const dmmf = await internals.getDMMF({ datamodel });
     return dmmf;
 };
@@ -3466,13 +3466,18 @@ function writeFieldOpenApi(field) {
             ...openapi,
         };
     }
-    return {
+    return _.omitBy({
         ...{
             display_name: ___namespace.title(field.name),
             column_type: field.type,
         },
         ...openapi,
-    };
+        visible: !('visible' in openapi)
+            ? undefined
+            : openapi.visible === 'false'
+                ? false
+                : true,
+    }, _.isUndefined);
 }
 
 const writeJsDoc = (writer, jsDoc) => {
