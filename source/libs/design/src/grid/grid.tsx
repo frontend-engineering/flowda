@@ -111,6 +111,8 @@ export class Grid extends React.Component<GridProps> {
             editable: false,
             field: item.name,
             headerName: item.display_name,
+            filter: true,
+            floatingFilter: true,
             cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               if (!param.value) {
                 return <span>.</span>
@@ -131,7 +133,9 @@ export class Grid extends React.Component<GridProps> {
               */
               return (
                 <div onContextMenu={(e) => {
-                  this.props.model.onContextMenu(param, e)
+                  this.props.model.onContextMenu(param, e, {
+                    type: 'reference'
+                  })
                 }}>
                   {getReferenceDisplay(item.reference!, param.value)}
                 </div>
@@ -165,6 +169,8 @@ export class Grid extends React.Component<GridProps> {
             field: item.name,
             headerName: item.display_name,
             cellDataType: 'number',
+            filter: true,
+            floatingFilter: true,
           }
         case 'Boolean':
         case 'boolean':
@@ -215,7 +221,9 @@ export class Grid extends React.Component<GridProps> {
             cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               return (
                 <div onContextMenu={(e) => {
-                  this.props.model.onContextMenu(param, e)
+                  this.props.model.onContextMenu(param, e, {
+                    type: 'Json'
+                  })
                 }}>
                   {param.valueFormatted}
                 </div>
@@ -233,7 +241,29 @@ export class Grid extends React.Component<GridProps> {
     if (!this.gridRef) {
       throw new Error('this.gridRef is null')
     }
-    this.gridRef.api.setGridOption('columnDefs', colDefs)
+    const associations = this.props.model.schema?.associations
+    let assColDefs: ColDef[] = []
+    if (associations != null) {
+      assColDefs = associations.map<ColDef>(ass => {
+        return {
+          editable: false,
+          field: ass.model_name,
+          headerName: ass.display_name,
+          cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+            return (
+              <div onContextMenu={(e) => {
+                this.props.model.onContextMenu(param, e, {
+                  type: 'association'
+                })
+              }}>
+                {`#${(param.data as any)[ass.primary_key]} ${ass.display_name}`}
+              </div>
+            )
+          }
+        }
+      })
+    }
+    this.gridRef.api.setGridOption('columnDefs', colDefs.concat(assColDefs))
   }
 
   /*

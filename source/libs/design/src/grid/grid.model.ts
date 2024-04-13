@@ -122,7 +122,7 @@ export class GridModel implements ManageableModel {
       const schemaRes = await this.apis.getResourceSchema({
         schemaName: this.schemaName,
       })
-      if (schemaRes.columns.length > 0 && !_.isEqual(this.columnDefs, schemaRes.columns)) {
+      if (schemaRes.columns.length > 0) {
         this.columnDefs = schemaRes.columns
       }
       this.schema = schemaRes
@@ -136,9 +136,6 @@ export class GridModel implements ManageableModel {
     }
     // @ts-expect-error
     this.ref['setColDefs']()
-
-    // todo: 改成直接从 uri -> filterModel
-    // setTimeout(() => this.gridApi?.setFilterModel({}), 0) // 等待 re render
   }
 
   async getData(params: {
@@ -185,18 +182,31 @@ export class GridModel implements ManageableModel {
     }
   }
 
-  readonly onContextMenu = (cellRendererInput: z.infer<typeof cellRendererInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  readonly onContextMenu = (cellRendererInput: z.infer<typeof cellRendererInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>, options?: {
+    type: 'reference' | 'association' | 'Json' | undefined,
+  }) => {
     if (typeof this.handlers.onContextMenu === 'function') {
       const parsedRet = cellRendererInputSchema.parse(cellRendererInput)
       if (this._uri == null) throw new Error('uri is null')
       if (this.schema == null) throw new Error('schema is null')
-      const column = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
-      if (!column) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
-      this.handlers.onContextMenu({
-        uri: this.getUri(),
-        cellRendererInput: parsedRet,
-        column
-      }, e)
+      if (options?.type === 'association') {
+        const ass = this.schema.associations.find(ass => ass.model_name === parsedRet.colDef.field)
+        if (!ass) throw new Error(`no association def: ${this.schemaName}, ${parsedRet.colDef.field}`)
+        this.handlers.onContextMenu({
+          uri: this.getUri(),
+          cellRendererInput: parsedRet,
+          association: ass
+        }, e)
+      } else {
+        const column = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
+        if (!column) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
+        this.handlers.onContextMenu({
+          uri: this.getUri(),
+          cellRendererInput: parsedRet,
+          column
+        }, e)
+      }
+
     }
   }
 

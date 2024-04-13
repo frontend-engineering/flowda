@@ -3,6 +3,7 @@ import { URI as Uri } from 'vscode-uri'
 import { URI } from '@theia/core'
 import {
   convertTreeGridUriToGridUri,
+  createAssociationUri,
   createRefUri,
   createTreeGridUri,
   extractId,
@@ -28,6 +29,42 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
+  it('association uri', () => {
+    const input = {
+      uri: 'grid://flowda?schemaName=TenantResourceSchema',
+      cellRendererInput: {
+        data: {
+          id: 9,
+        },
+        valueFormatted: null,
+        colDef: {
+          field: 'User',
+        },
+      },
+      association: {
+        display_name: 'Users',
+        slug: 'users',
+        model_name: 'User',
+        foreign_key: 'tenantId',
+        primary_key: 'id',
+        visible: true,
+        schema_name: 'UserResourceSchema',
+      },
+    } as const
+    const ret = createAssociationUri(input)
+    console.log(ret)
+    expect(ret).toMatchInlineSnapshot(`
+      URI {
+        "codeUri": {
+          "$mid": 1,
+          "authority": "flowda",
+          "query": "schemaName=UserResourceSchema&displayName=Users&filterModel[tenantId][filterType]=number&filterModel[tenantId][type]=equals&filterModel[tenantId][filter]=9",
+          "scheme": "grid",
+        },
+      }
+    `)
+  })
+
   it('recentlyVisibleIds', () => {
     const recentlyVisibleIds = [
       // "resource-editor-opener:grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%25E7%25A7%259F%25E6%2588%25B7%25E4%25BF%25A1%25E6%2581%25AF:1",

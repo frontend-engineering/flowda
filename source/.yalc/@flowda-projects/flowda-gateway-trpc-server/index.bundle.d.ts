@@ -657,8 +657,8 @@ declare class HelloRouter {
                     }[];
                 }>;
             } | {
-                id: number;
                 schemaName: string;
+                id: number;
             };
             _input_out: {
                 sort: {
@@ -682,8 +682,8 @@ declare class HelloRouter {
                     }[];
                 }>;
             } | {
-                id: number;
                 schemaName: string;
+                id: number;
             };
             _output_in: typeof _trpc_server.unsetMarker;
             _output_out: typeof _trpc_server.unsetMarker;
@@ -1091,8 +1091,8 @@ declare class TrpcRouter {
                         }[];
                     }>;
                 } | {
-                    id: number;
                     schemaName: string;
+                    id: number;
                 };
                 _input_out: {
                     sort: {
@@ -1116,8 +1116,8 @@ declare class TrpcRouter {
                         }[];
                     }>;
                 } | {
-                    id: number;
                     schemaName: string;
+                    id: number;
                 };
                 _output_in: typeof _trpc_server.unsetMarker;
                 _output_out: typeof _trpc_server.unsetMarker;
