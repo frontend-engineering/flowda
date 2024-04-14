@@ -44,10 +44,12 @@ export class Grid extends React.Component<GridProps> {
           current: params.endRow / (params.endRow - params.startRow),
           pageSize: params.endRow - params.startRow,
           sort: params.sortModel,
-          filterModel: this.props.model.isFirstGetRows ? {
-            ...params.filterModel,
-            ...getUriFilterModel(this.props.model.getUri())
-          } : params.filterModel,
+          filterModel: this.props.model.isFirstGetRows
+            ? {
+                ...params.filterModel,
+                ...getUriFilterModel(this.props.model.getUri()),
+              }
+            : params.filterModel,
         })
 
         evt.api.hideOverlay() // 不清楚为什么，突然需要手动 hideOverlay
@@ -134,11 +136,13 @@ export class Grid extends React.Component<GridProps> {
                 </a>
                 */
                 return (
-                  <div onContextMenu={(e) => {
-                    this.props.model.onContextMenu(param, e, {
-                      type: 'reference'
-                    })
-                  }}>
+                  <div
+                    onContextMenu={e => {
+                      this.props.model.onContextMenu(param, e, {
+                        type: 'reference',
+                      })
+                    }}
+                  >
                     {getReferenceDisplay(item.reference!, param.value)}
                   </div>
                 )
@@ -181,6 +185,7 @@ export class Grid extends React.Component<GridProps> {
               headerName: item.display_name,
               cellDataType: 'boolean',
             }
+          case 'DateTime':
           case 'datetime':
             return {
               field: item.name,
@@ -222,11 +227,13 @@ export class Grid extends React.Component<GridProps> {
               headerName: item.display_name,
               cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
                 return (
-                  <div onContextMenu={(e) => {
-                    this.props.model.onContextMenu(param, e, {
-                      type: 'Json'
-                    })
-                  }}>
+                  <div
+                    onContextMenu={e => {
+                      this.props.model.onContextMenu(param, e, {
+                        type: 'Json',
+                      })
+                    }}
+                  >
                     {param.valueFormatted}
                   </div>
                 )
@@ -247,25 +254,27 @@ export class Grid extends React.Component<GridProps> {
     let assColDefs: ColDef[] = []
     if (associations != null) {
       assColDefs = associations
-      .filter(item => item.visible)
-      .map<ColDef>(ass => {
-        return {
-          editable: false,
-          field: ass.model_name,
-          headerName: ass.display_name,
-          cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
-            return (
-              <div onContextMenu={(e) => {
-                this.props.model.onContextMenu(param, e, {
-                  type: 'association'
-                })
-              }}>
-                {`#${(param.data as any)?.[ass.primary_key]} ${ass.display_name}`}
-              </div>
-            )
+        .filter(item => item.visible)
+        .map<ColDef>(ass => {
+          return {
+            editable: false,
+            field: ass.model_name,
+            headerName: ass.display_name,
+            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              return (
+                <div
+                  onContextMenu={e => {
+                    this.props.model.onContextMenu(param, e, {
+                      type: 'association',
+                    })
+                  }}
+                >
+                  {`#${(param.data as any)?.[ass.primary_key]} ${ass.display_name}`}
+                </div>
+              )
+            },
           }
-        }
-      })
+        })
     }
     this.gridRef.api.setGridOption('columnDefs', colDefs.concat(assColDefs))
   }
@@ -309,4 +318,3 @@ export class Grid extends React.Component<GridProps> {
     )
   }
 }
-
