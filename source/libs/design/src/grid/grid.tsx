@@ -70,181 +70,185 @@ export class Grid extends React.Component<GridProps> {
   }
 
   setColDefs = () => {
-    const colDefs = this.props.model.columnDefs.map<ColDef>(item => {
-      // todo: 图片需要搞一个 modal 并且上传修改
-      // if (item.name === 'image') { // todo: 这里用 plugin model 实现
-      //   return {
-      //     field: item.name,
-      //     headerName: item.display_name,
-      //     cellDataType: 'text',
-      //     cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
-      //       if (!param.value) return param.value
-      //       return (
-      //         <img
-      //           style={{
-      //             cursor: 'pointer',
-      //             width: 38,
-      //             borderRadius: '50%',
-      //             border: '0.5px solid white',
-      //             boxShadow: '0px 1px 6px rgba(0, 0, 0, 0.2)',
-      //           }}
-      //           src={param.value as string}
-      //         />
-      //       )
-      //     },
-      //   }
-      // }
-      if (item.name === this.props.model.schema?.primary_key) {
-        return {
-          minWidth: 110,
-          field: item.name,
-          headerName: item.display_name,
-          cellDataType: item.column_type === 'String' ? 'string' : 'number',
-          pinned: 'left',
-          filter: true,
-          floatingFilter: true,
-        }
-      }
-      switch (item.column_type) {
-        case 'reference': {
+    const colDefs = this.props.model.columnDefs
+      .filter(item => item.visible)
+      .map<ColDef>(item => {
+        // todo: 图片需要搞一个 modal 并且上传修改
+        // if (item.name === 'image') { // todo: 这里用 plugin model 实现
+        //   return {
+        //     field: item.name,
+        //     headerName: item.display_name,
+        //     cellDataType: 'text',
+        //     cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+        //       if (!param.value) return param.value
+        //       return (
+        //         <img
+        //           style={{
+        //             cursor: 'pointer',
+        //             width: 38,
+        //             borderRadius: '50%',
+        //             border: '0.5px solid white',
+        //             boxShadow: '0px 1px 6px rgba(0, 0, 0, 0.2)',
+        //           }}
+        //           src={param.value as string}
+        //         />
+        //       )
+        //     },
+        //   }
+        // }
+        if (item.name === this.props.model.schema?.primary_key) {
           return {
-            editable: false,
+            minWidth: 110,
             field: item.name,
             headerName: item.display_name,
+            cellDataType: item.column_type === 'String' ? 'string' : 'number',
+            pinned: 'left',
             filter: true,
             floatingFilter: true,
-            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
-              if (!param.value) {
-                return <span>.</span>
-              }
-              /* 做到一半的 hover
-              <a
-                className="grid-reference-field"
-                href=""
-                onClick={e => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  this.props.model.onRefClick(param.colDef.field, param.value)
-                }}
-                onMouseEnter={this.props.model.onMouseEnter}
-              >
-                {getReferenceDisplay(item.reference!, param.value)}
-              </a>
-              */
-              return (
-                <div onContextMenu={(e) => {
-                  this.props.model.onContextMenu(param, e, {
-                    type: 'reference'
-                  })
-                }}>
+          }
+        }
+        switch (item.column_type) {
+          case 'reference': {
+            return {
+              editable: false,
+              field: item.name,
+              headerName: item.display_name,
+              filter: true,
+              floatingFilter: true,
+              cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+                if (!param.value) {
+                  return <span>.</span>
+                }
+                /* 做到一半的 hover
+                <a
+                  className="grid-reference-field"
+                  href=""
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    this.props.model.onRefClick(param.colDef.field, param.value)
+                  }}
+                  onMouseEnter={this.props.model.onMouseEnter}
+                >
                   {getReferenceDisplay(item.reference!, param.value)}
-                </div>
-              )
-            },
+                </a>
+                */
+                return (
+                  <div onContextMenu={(e) => {
+                    this.props.model.onContextMenu(param, e, {
+                      type: 'reference'
+                    })
+                  }}>
+                    {getReferenceDisplay(item.reference!, param.value)}
+                  </div>
+                )
+              },
+            }
           }
+          // todo: 更新 schema parser 后，暂时不支持 tag
+          // 这块属于 plugin
+          /*case 'tag': {
+            const options = item.format!.select_options!
+            const refData = options.reduce((acc, cur) => {
+              acc[cur.value] = cur.label
+              return acc
+            }, {} as Record<string, string>)
+            return {
+              editable: true,
+              field: item.name,
+              headerName: item.display_name,
+              cellEditor: 'agSelectCellEditor',
+              cellDataType: 'text',
+              cellEditorParams: {
+                values: options.map(o => o.value),
+              },
+              refData: refData,
+            }
+          }*/
+          case 'Int':
+          case 'integer':
+            return {
+              field: item.name,
+              headerName: item.display_name,
+              cellDataType: 'number',
+              filter: true,
+              floatingFilter: true,
+            }
+          case 'Boolean':
+          case 'boolean':
+            return {
+              field: item.name,
+              headerName: item.display_name,
+              cellDataType: 'boolean',
+            }
+          case 'datetime':
+            return {
+              field: item.name,
+              headerName: item.display_name,
+              // cellDataType: 'date', // todo: 需要后端支持
+              valueFormatter: params => {
+                if (params.value) {
+                  return shortenDatetime(params.value)
+                } else {
+                  return params.value
+                }
+              },
+              // tooltipField: item.name, // 不能和 tooltipValueGetter 一起用
+              tooltipValueGetter: params => {
+                if (params.value) {
+                  const ret = dayjs(params.value).format('YYYY-MM-DD HH:mm:ss')
+                  return ret
+                } else {
+                  return params.value
+                }
+              },
+              // cellRenderer: ShortDatetime,
+            }
+          case 'string':
+          case 'String':
+          case 'textarea':
+            return {
+              editable: true,
+              field: item.name,
+              headerName: item.display_name,
+              cellDataType: 'text',
+              filter: true,
+              floatingFilter: true,
+            }
+          case 'Json':
+            return {
+              editable: false,
+              field: item.name,
+              headerName: item.display_name,
+              cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+                return (
+                  <div onContextMenu={(e) => {
+                    this.props.model.onContextMenu(param, e, {
+                      type: 'Json'
+                    })
+                  }}>
+                    {param.valueFormatted}
+                  </div>
+                )
+              },
+            }
+          default:
+            return {
+              editable: true,
+              field: item.name,
+              headerName: item.display_name,
+            }
         }
-        // todo: 更新 schema parser 后，暂时不支持 tag
-        // 这块属于 plugin
-        /*case 'tag': {
-          const options = item.format!.select_options!
-          const refData = options.reduce((acc, cur) => {
-            acc[cur.value] = cur.label
-            return acc
-          }, {} as Record<string, string>)
-          return {
-            editable: true,
-            field: item.name,
-            headerName: item.display_name,
-            cellEditor: 'agSelectCellEditor',
-            cellDataType: 'text',
-            cellEditorParams: {
-              values: options.map(o => o.value),
-            },
-            refData: refData,
-          }
-        }*/
-        case 'Int':
-        case 'integer':
-          return {
-            field: item.name,
-            headerName: item.display_name,
-            cellDataType: 'number',
-            filter: true,
-            floatingFilter: true,
-          }
-        case 'Boolean':
-        case 'boolean':
-          return {
-            field: item.name,
-            headerName: item.display_name,
-            cellDataType: 'boolean',
-          }
-        case 'datetime':
-          return {
-            field: item.name,
-            headerName: item.display_name,
-            // cellDataType: 'date', // todo: 需要后端支持
-            valueFormatter: params => {
-              if (params.value) {
-                return shortenDatetime(params.value)
-              } else {
-                return params.value
-              }
-            },
-            // tooltipField: item.name, // 不能和 tooltipValueGetter 一起用
-            tooltipValueGetter: params => {
-              if (params.value) {
-                const ret = dayjs(params.value).format('YYYY-MM-DD HH:mm:ss')
-                return ret
-              } else {
-                return params.value
-              }
-            },
-            // cellRenderer: ShortDatetime,
-          }
-        case 'string':
-        case 'String':
-        case 'textarea':
-          return {
-            editable: true,
-            field: item.name,
-            headerName: item.display_name,
-            cellDataType: 'text',
-            filter: true,
-            floatingFilter: true,
-          }
-        case 'Json':
-          return {
-            editable: false,
-            field: item.name,
-            headerName: item.display_name,
-            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
-              return (
-                <div onContextMenu={(e) => {
-                  this.props.model.onContextMenu(param, e, {
-                    type: 'Json'
-                  })
-                }}>
-                  {param.valueFormatted}
-                </div>
-              )
-            },
-          }
-        default:
-          return {
-            editable: true,
-            field: item.name,
-            headerName: item.display_name,
-          }
-      }
-    })
+      })
     if (!this.gridRef) {
       throw new Error('this.gridRef is null')
     }
     const associations = this.props.model.schema?.associations
     let assColDefs: ColDef[] = []
     if (associations != null) {
-      assColDefs = associations.map<ColDef>(ass => {
+      assColDefs = associations
+      .filter(item => item.visible)
+      .map<ColDef>(ass => {
         return {
           editable: false,
           field: ass.model_name,
@@ -256,7 +260,7 @@ export class Grid extends React.Component<GridProps> {
                   type: 'association'
                 })
               }}>
-                {`#${(param.data as any)[ass.primary_key]} ${ass.display_name}`}
+                {`#${(param.data as any)?.[ass.primary_key]} ${ass.display_name}`}
               </div>
             )
           }
