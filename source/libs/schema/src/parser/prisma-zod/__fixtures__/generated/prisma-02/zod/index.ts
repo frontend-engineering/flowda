@@ -32,8 +32,18 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const TenantSchema = z.object({
-  id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
-  name: z.string().column({ display_name: 'Name', column_type: 'String', visible: true }),
+  id: z.number().int().column({
+    display_name: 'Id',
+    column_type: 'Int',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  name: z.string().column({
+    display_name: 'Name',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
 }).resource({
   name: 'Tenant',
   slug: 'tenants',
@@ -81,10 +91,30 @@ export const TenantWithRelationsSchema: z.ZodObject<any> = TenantSchema.merge(z.
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
-  email: z.string().column({ display_name: 'Email', column_type: 'String', visible: true }),
-  name: z.string().nullish().column({ display_name: 'Name', column_type: 'String', visible: true }),
-  tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int', visible: true }),
+  id: z.number().int().column({
+    display_name: 'Id',
+    column_type: 'Int',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  email: z.string().column({
+    display_name: 'Email',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  name: z.string().nullish().column({
+    display_name: 'Name',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  tenantId: z.number().int().column({
+    display_name: 'Tenant Id',
+    column_type: 'Int',
+    visible: true,
+    access_type: 'read_write'
+  }),
 }).resource({
   name: 'User',
   slug: 'users',
@@ -131,10 +161,30 @@ export const UserWithRelationsSchema: z.ZodObject<any> = UserSchema.merge(z.obje
 /////////////////////////////////////////
 
 export const UserProfileSchema = z.object({
-  id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
-  fullName: z.string().column({ display_name: 'Full Name', column_type: 'String', visible: true }),
-  userId: z.number().int().column({ display_name: 'User Id', column_type: 'Int', visible: true }),
-  tenantId: z.number().int().column({ display_name: 'Tenant Id', column_type: 'Int', visible: false }),
+  id: z.number().int().column({
+    display_name: 'Id',
+    column_type: 'Int',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  fullName: z.string().column({
+    display_name: 'Full Name',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  userId: z.number().int().column({
+    display_name: 'User Id',
+    column_type: 'Int',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  tenantId: z.number().int().column({
+    display_name: 'Tenant Id',
+    column_type: 'Int',
+    visible: false,
+    access_type: 'read_write'
+  }),
 }).resource({
   name: 'UserProfile',
   slug: 'user_profiles',

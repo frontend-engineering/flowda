@@ -23,13 +23,29 @@ describe('prisma-01', function () {
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
-        email: z.string().column({ display_name: 'Email', column_type: 'String', visible: true }),
-        name: z.string().nullish().column({ display_name: 'Name', column_type: 'String', visible: true }),
+        id: z.number().int().column({
+          display_name: 'Id',
+          column_type: 'Int',
+          visible: true,
+          access_type: 'read_write'
+        }),
+        email: z.string().column({
+          display_name: 'Email',
+          column_type: 'String',
+          visible: true,
+          access_type: 'read_write'
+        }),
+        name: z.string().nullish().column({
+          display_name: 'Name',
+          column_type: 'String',
+          visible: true,
+          access_type: 'read_write'
+        }),
         extendedDescriptionData: z.any().optional().nullish().column({
           display_name: 'Extended Description Data',
           column_type: 'Json',
-          visible: true
+          visible: true,
+          access_type: 'read_write'
         }),
       }).resource({
         name: 'User',

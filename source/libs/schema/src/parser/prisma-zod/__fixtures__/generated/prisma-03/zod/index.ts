@@ -52,7 +52,7 @@ export type InputJsonValueType = z.infer<typeof InputJsonValue>;
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','email','name','extendedDescriptionData']);
+export const UserScalarFieldEnumSchema = z.enum(['id','createdAt','updatedAt','isDeleted','email','name','extendedDescriptionData']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -70,18 +70,48 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
-  email: z.string().column({ display_name: '邮箱', column_type: 'String', visible: true }),
+  id: z.number().int().column({
+    display_name: 'Id',
+    column_type: 'Int',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  createdAt: z.date().column({
+    display_name: 'Created At',
+    column_type: 'DateTime',
+    access_type: 'read_only',
+    visible: true
+  }),
+  updatedAt: z.date().column({
+    display_name: 'Updated At',
+    column_type: 'DateTime',
+    visible: true,
+    access_type: 'read_only'
+  }),
+  isDeleted: z.boolean().column({
+    display_name: 'Is Deleted',
+    column_type: 'Boolean',
+    visible: false,
+    access_type: 'read_only'
+  }),
+  email: z.string().column({
+    display_name: '邮箱',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
   name: z.string().nullish().column({
     display_name: '用户名',
     column_type: 'String',
     visible: false,
-    'x-legacy': { prisma: 'false' }
+    'x-legacy': { prisma: 'false' },
+    access_type: 'read_write'
   }),
   extendedDescriptionData: z.any().optional().nullish().column({
     display_name: 'Extended Description Data',
     column_type: 'Json',
-    visible: true
+    visible: true,
+    access_type: 'read_write'
   }),
 }).resource({
   name: 'User',

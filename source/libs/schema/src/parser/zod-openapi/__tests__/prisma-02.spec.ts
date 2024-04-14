@@ -17,12 +17,14 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "id": {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
             "visible": true,
           },
           "name": {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Name",
             "type": "string",
@@ -52,12 +54,14 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "id": {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
             "visible": true,
           },
           "name": {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Name",
             "type": "string",
@@ -109,18 +113,21 @@ describe('prisma 02 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "email": {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Email",
             "type": "string",
             "visible": true,
           },
           "id": {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
             "visible": true,
           },
           "name": {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Name",
             "nullable": true,
@@ -135,6 +142,7 @@ describe('prisma 02 generated zod to openapi', function () {
             "reference_type": "belongs_to",
           },
           "tenantId": {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Tenant Id",
             "type": "integer",

@@ -202,6 +202,16 @@ const configSchema = zod.z.object({
     inputTypePath: zod.z.string().optional().default('inputTypeSchemas'),
     outputTypePath: zod.z.string().optional().default('outputTypeSchemas'),
     extendZod: zod.z.string().optional().default(''),
+    defaultInvisibleField: zod.z
+        .string()
+        .optional()
+        .default('')
+        .transform((v) => v.split(',')),
+    defaultReadOnlyField: zod.z
+        .string()
+        .optional()
+        .default('')
+        .transform((v) => v.split(',')),
 });
 
 const parseGeneratorConfig = (generatorOptions) => {
@@ -3483,7 +3493,12 @@ function writeFieldOpenApi(field) {
             column_type: field.type,
         },
         ...openapi,
-        visible: visible(openapi),
+        visible: field.generatorConfig.defaultInvisibleField.indexOf(field.name) > -1
+            ? false
+            : visible(openapi),
+        access_type: field.generatorConfig.defaultReadOnlyField.indexOf(field.name) > -1
+            ? 'read_only'
+            : 'read_write',
     }, _.isUndefined);
 }
 
