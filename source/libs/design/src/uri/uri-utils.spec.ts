@@ -7,6 +7,7 @@ import {
   createRefUri,
   createTreeGridUri,
   extractId,
+  isUriAsKeyLikeEqual,
   isUriLikeEqual,
   mergeUriFilterModel,
   updateUriFilterModel,
@@ -29,6 +30,12 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
+  it('', () => {
+    const a = 'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=3'
+    const b = 'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=1'
+    const ret = isUriAsKeyLikeEqual(a, b)
+    expect(ret).toBe(true)
+  })
   it('association uri', () => {
     const input = {
       uri: 'grid://flowda?schemaName=TenantResourceSchema',

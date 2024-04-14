@@ -29,6 +29,7 @@ describe('prisma-02', function () {
         "class_name": "Tenant",
         "columns": [
           {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Id",
             "name": "id",
@@ -41,6 +42,7 @@ describe('prisma-02', function () {
             "visible": true,
           },
           {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Name",
             "name": "name",
@@ -74,6 +76,7 @@ describe('prisma-02', function () {
         "class_name": "User",
         "columns": [
           {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Id",
             "name": "id",
@@ -86,6 +89,7 @@ describe('prisma-02', function () {
             "visible": true,
           },
           {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Email",
             "name": "email",
@@ -98,6 +102,7 @@ describe('prisma-02', function () {
             "visible": true,
           },
           {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Name",
             "name": "name",
@@ -106,6 +111,7 @@ describe('prisma-02', function () {
             "visible": true,
           },
           {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Tenant Id",
             "name": "tenantId",
@@ -124,6 +130,7 @@ describe('prisma-02', function () {
             "visible": true,
           },
           {
+            "access_type": "read_write",
             "column_type": "reference",
             "display_name": "User Profile",
             "name": "userProfile",

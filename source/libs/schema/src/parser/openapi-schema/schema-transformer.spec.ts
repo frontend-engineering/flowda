@@ -34,6 +34,7 @@ describe('schema transformer', function () {
         "associations": [],
         "columns": [
           {
+            "access_type": "read_write",
             "column_type": "Json",
             "display_name": "Extended Description Data",
             "name": "extendedDescriptionData",
@@ -42,6 +43,7 @@ describe('schema transformer', function () {
             "visible": true,
           },
           {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "可编辑链接",
             "name": "editableUrl",

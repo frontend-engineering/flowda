@@ -134,11 +134,7 @@ export function isUriLikeEqual(a: URI | string, b: URI | string) {
 export function isUriAsKeyLikeEqual(a: URI | string, b: URI | string) {
     if (typeof a === 'string') a = new URI(a)
     if (typeof b === 'string') b = new URI(b)
-    return a.scheme === b.scheme
-        && a.authority === b.authority
-        && a.path.toString() === b.path.toString()
-        && _.isEqual(qs.parse(a.query), qs.parse(b.query))
-        && a.fragment === b.fragment
+    return uriAsKey(a) === uriAsKey(b)
 }
 
 export function createAssociationUri(input: z.infer<typeof handleContextMenuInputSchema>) {

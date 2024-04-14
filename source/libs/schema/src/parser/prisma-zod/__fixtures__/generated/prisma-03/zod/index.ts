@@ -52,7 +52,7 @@ export type InputJsonValueType = z.infer<typeof InputJsonValue>;
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','email','name','extendedDescriptionData']);
+export const UserScalarFieldEnumSchema = z.enum(['id','createdAt','email','name','extendedDescriptionData']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -71,6 +71,12 @@ export const NullsOrderSchema = z.enum(['first','last']);
 
 export const UserSchema = z.object({
   id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
+  createdAt: z.date().column({
+    display_name: 'Created At',
+    column_type: 'DateTime',
+    access_type: 'read_only',
+    visible: true
+  }),
   email: z.string().column({ display_name: '邮箱', column_type: 'String', visible: true }),
   name: z.string().nullish().column({
     display_name: '用户名',

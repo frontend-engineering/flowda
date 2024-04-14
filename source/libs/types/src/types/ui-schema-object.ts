@@ -6,6 +6,7 @@ export type ColumnKey = {
   description?: string
   example?: string
   visible: boolean,
+  access_type?: 'read_only' | 'read_write',
   [p: `x-${string}`]: unknown,
 }
 export const ColumnKeySchema = z.object({
@@ -14,6 +15,7 @@ export const ColumnKeySchema = z.object({
   description: z.string().optional(),
   example: z.string().optional(),
   visible: z.boolean(),
+  access_type: z.union([z.literal('read_only'), z.literal('read_write')]).default('read_write'),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
@@ -64,7 +66,7 @@ export const ReferenceKeySchema = z.union([
     primary_key: z.string(),
     visible: z.boolean(),
   }),
-])  satisfies z.ZodType<ReferenceKey>
+]) satisfies z.ZodType<ReferenceKey>
 
 export type ResourceKey = {
   class_name: string

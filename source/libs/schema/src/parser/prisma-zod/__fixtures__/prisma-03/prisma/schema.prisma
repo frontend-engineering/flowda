@@ -38,7 +38,9 @@ datasource db {
 /// @schema [searchable_columns=email,name]
 /// @schema {legacy} [route_prefix=/admin]
 model User {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
+  /// @schema [access_type=read_only]
+  createdAt DateTime @default(now())
 
   /// @schema [display_name=邮箱]
   email String @unique

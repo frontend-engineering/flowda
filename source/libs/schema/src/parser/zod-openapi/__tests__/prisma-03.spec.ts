@@ -13,6 +13,14 @@ describe('prisma 03 generated zod to openapi', function () {
         "name": "User",
         "primary_key": "id",
         "properties": {
+          "createdAt": {
+            "access_type": "read_only",
+            "column_type": "DateTime",
+            "display_name": "Created At",
+            "format": "date-time",
+            "type": "string",
+            "visible": true,
+          },
           "email": {
             "column_type": "String",
             "display_name": "邮箱",
@@ -44,6 +52,7 @@ describe('prisma 03 generated zod to openapi', function () {
         },
         "required": [
           "id",
+          "createdAt",
           "email",
         ],
         "searchable_columns": "email,name",
