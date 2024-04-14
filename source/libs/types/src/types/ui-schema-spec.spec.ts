@@ -1,4 +1,3 @@
-import { ColumnKeySchema, ReferenceKeySchema } from './ui-schema-object'
 import { ColumnUISchema, PluginKeySchema } from './ui-schema-spec'
 
 describe('ui schema spec', function () {
@@ -24,6 +23,7 @@ describe('ui schema spec', function () {
     // console.log(ret)
     expect(ret).toMatchInlineSnapshot(`
       {
+        "access_type": "read_write",
         "column_type": "reference",
         "display_name": "User Profile",
         "name": "userProfile",

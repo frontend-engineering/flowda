@@ -33,7 +33,9 @@ export function createGeneratorOptions({ dmmf }: {
         useMultipleFiles: 'false',
         addSelectType: 'false',
         writeNullishInModelTypes: 'true',
-        extendZod: './placeholder'
+        extendZod: './placeholder',
+        defaultInvisibleField: 'isDeleted',
+        defaultReadOnlyField: 'isDeleted,createdAt,updatedAt'
       },
       binaryTargets: [],
       previewFeatures: [],

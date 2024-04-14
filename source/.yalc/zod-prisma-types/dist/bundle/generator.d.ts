@@ -20,87 +20,29 @@ declare class DirectoryHelper {
   static removeDir(path?: string | null): void;
 }
 
-declare const configSchema: z.ZodObject<
-  {
-    useMultipleFiles: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    createInputTypes: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    createModelTypes: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    createOptionalDefaultValuesTypes: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    createRelationValuesTypes: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    createPartialTypes: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    addInputTypeValidation: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    addIncludeType: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    addSelectType: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    validateWhereUniqueInput: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    useDefaultValidators: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    coerceDate: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
-    writeNullishInModelTypes: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
+declare const configSchema: z.ZodObject<{
+    useMultipleFiles: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    createInputTypes: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    createModelTypes: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    createOptionalDefaultValuesTypes: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    createRelationValuesTypes: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    createPartialTypes: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    addInputTypeValidation: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    addIncludeType: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    addSelectType: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    validateWhereUniqueInput: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    useDefaultValidators: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    coerceDate: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
+    writeNullishInModelTypes: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
     prismaClientPath: z.ZodDefault<z.ZodString>;
     provider: z.ZodOptional<z.ZodString>;
-    isMongoDb: z.ZodEffects<
-      z.ZodDefault<z.ZodOptional<z.ZodString>>,
-      boolean,
-      string | undefined
-    >;
+    isMongoDb: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, boolean, string | undefined>;
     inputTypePath: z.ZodDefault<z.ZodOptional<z.ZodString>>;
     outputTypePath: z.ZodDefault<z.ZodOptional<z.ZodString>>;
     extendZod: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-  },
-  'strip',
-  z.ZodTypeAny,
-  {
+    defaultInvisibleField: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, string[], string | undefined>;
+    defaultReadOnlyField: z.ZodEffects<z.ZodDefault<z.ZodOptional<z.ZodString>>, string[], string | undefined>;
+}, "strip", z.ZodTypeAny, {
     useMultipleFiles: boolean;
     createInputTypes: boolean;
     createModelTypes: boolean;
@@ -119,9 +61,10 @@ declare const configSchema: z.ZodObject<
     inputTypePath: string;
     outputTypePath: string;
     extendZod: string;
+    defaultInvisibleField: string[];
+    defaultReadOnlyField: string[];
     provider?: string | undefined;
-  },
-  {
+}, {
     useMultipleFiles?: string | undefined;
     createInputTypes?: string | undefined;
     createModelTypes?: string | undefined;
@@ -141,8 +84,9 @@ declare const configSchema: z.ZodObject<
     inputTypePath?: string | undefined;
     outputTypePath?: string | undefined;
     extendZod?: string | undefined;
-  }
->;
+    defaultInvisibleField?: string | undefined;
+    defaultReadOnlyField?: string | undefined;
+}>;
 type GeneratorConfig = z.infer<typeof configSchema>;
 
 interface StringVariants {
@@ -644,6 +588,8 @@ declare const parseGeneratorConfig: (
   inputTypePath: string;
   outputTypePath: string;
   extendZod: string;
+  defaultInvisibleField: string[];
+  defaultReadOnlyField: string[];
   provider?: string | undefined;
 };
 
@@ -661,8 +607,23 @@ declare const writeModelFiles: CreateFiles;
 
 declare const skipGenerator: () => boolean;
 
-declare const writeModelOrType: ({ fileWriter: { writer, writeImport, writeImportSet, writeJSDoc, writeHeading, }, dmmf, getSingleFileContent, }: ContentWriterOptions, model: ExtendedDMMFModel) => void;
-declare function writeModelOpenApi(model: ExtendedDMMFModel): lodash.Dictionary<string | boolean | null>;
+declare const writeModelOrType: (
+  {
+    fileWriter: {
+      writer,
+      writeImport,
+      writeImportSet,
+      writeJSDoc,
+      writeHeading,
+    },
+    dmmf,
+    getSingleFileContent,
+  }: ContentWriterOptions,
+  model: ExtendedDMMFModel,
+) => void;
+declare function writeModelOpenApi(
+  model: ExtendedDMMFModel,
+): lodash.Dictionary<string | boolean | null>;
 
 declare function writeFieldOpenApi(field: ExtendedDMMFField): lodash.Dictionary<any>;
 

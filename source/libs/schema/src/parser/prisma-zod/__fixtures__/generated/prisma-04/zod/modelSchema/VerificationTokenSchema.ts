@@ -5,9 +5,24 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const VerificationTokenSchema = z.object({
-  identifier: z.string().column({ display_name: 'Identifier', column_type: 'String', visible: true }),
-  token: z.string().column({ display_name: 'Token', column_type: 'String', visible: true }),
-  expires: z.date().column({ display_name: 'Expires', column_type: 'DateTime', visible: true }),
+  identifier: z.string().column({
+    display_name: 'Identifier',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  token: z.string().column({
+    display_name: 'Token',
+    column_type: 'String',
+    visible: true,
+    access_type: 'read_write'
+  }),
+  expires: z.date().column({
+    display_name: 'Expires',
+    column_type: 'DateTime',
+    visible: true,
+    access_type: 'read_write'
+  }),
 }).resource({
   name: 'VerificationToken',
   slug: 'verification_tokens',

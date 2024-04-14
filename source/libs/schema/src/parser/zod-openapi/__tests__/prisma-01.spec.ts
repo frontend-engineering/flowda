@@ -13,24 +13,28 @@ describe('prisma 01 generated zod to openapi', function () {
         "primary_key": "id",
         "properties": {
           "email": {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Email",
             "type": "string",
             "visible": true,
           },
           "extendedDescriptionData": {
+            "access_type": "read_write",
             "column_type": "Json",
             "display_name": "Extended Description Data",
             "nullable": true,
             "visible": true,
           },
           "id": {
+            "access_type": "read_write",
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
             "visible": true,
           },
           "name": {
+            "access_type": "read_write",
             "column_type": "String",
             "display_name": "Name",
             "nullable": true,
