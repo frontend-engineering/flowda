@@ -13,6 +13,7 @@ describe('schema transformer', function () {
             display_name: 'Extended Description Data',
             nullable: true,
             column_type: 'Json',
+            visible: true,
           },
           editableUrl: {
             display_name: '可编辑链接',
@@ -21,6 +22,7 @@ describe('schema transformer', function () {
               prisma: 'false',
             },
             column_type: 'String',
+            visible: true,
           },
         },
         required: ['editableUrl'],
@@ -37,6 +39,7 @@ describe('schema transformer', function () {
             "name": "extendedDescriptionData",
             "reference": undefined,
             "validators": [],
+            "visible": true,
           },
           {
             "column_type": "String",
@@ -48,6 +51,7 @@ describe('schema transformer', function () {
                 "required": true,
               },
             ],
+            "visible": true,
             "x-legacy": {
               "override_type": "text",
               "prisma": "false",

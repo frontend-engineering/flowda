@@ -23,7 +23,7 @@ describe('prisma-02', function () {
             "model_name": "UserProfile",
             "primary_key": "id",
             "slug": "user_profiles",
-            "visible": true,
+            "visible": false,
           },
         ],
         "class_name": "Tenant",
@@ -38,6 +38,7 @@ describe('prisma-02', function () {
                 "required": true,
               },
             ],
+            "visible": true,
           },
           {
             "column_type": "String",
@@ -49,6 +50,7 @@ describe('prisma-02', function () {
                 "required": true,
               },
             ],
+            "visible": true,
           },
         ],
         "display_name": "Tenants",
@@ -81,6 +83,7 @@ describe('prisma-02', function () {
                 "required": true,
               },
             ],
+            "visible": true,
           },
           {
             "column_type": "String",
@@ -92,6 +95,7 @@ describe('prisma-02', function () {
                 "required": true,
               },
             ],
+            "visible": true,
           },
           {
             "column_type": "String",
@@ -99,6 +103,7 @@ describe('prisma-02', function () {
             "name": "name",
             "reference": undefined,
             "validators": [],
+            "visible": true,
           },
           {
             "column_type": "Int",
@@ -116,6 +121,7 @@ describe('prisma-02', function () {
                 "required": true,
               },
             ],
+            "visible": true,
           },
           {
             "column_type": "reference",
@@ -127,8 +133,10 @@ describe('prisma-02', function () {
               "model_name": "UserProfile",
               "primary_key": "id",
               "reference_type": "has_one",
+              "visible": true,
             },
             "validators": [],
+            "visible": true,
           },
         ],
         "display_name": "Users",

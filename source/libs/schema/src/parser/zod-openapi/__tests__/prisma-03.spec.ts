@@ -17,22 +17,26 @@ describe('prisma 03 generated zod to openapi', function () {
             "column_type": "String",
             "display_name": "邮箱",
             "type": "string",
+            "visible": true,
           },
           "extendedDescriptionData": {
             "column_type": "Json",
             "display_name": "Extended Description Data",
             "nullable": true,
+            "visible": true,
           },
           "id": {
             "column_type": "Int",
             "display_name": "Id",
             "type": "integer",
+            "visible": true,
           },
           "name": {
             "column_type": "String",
             "display_name": "用户名",
             "nullable": true,
             "type": "string",
+            "visible": false,
             "x-legacy": {
               "prisma": "false",
             },

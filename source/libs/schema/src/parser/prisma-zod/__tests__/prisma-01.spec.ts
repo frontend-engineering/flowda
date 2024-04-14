@@ -23,10 +23,14 @@ describe('prisma-01', function () {
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
-        email: z.string().column({ display_name: 'Email', column_type: 'String' }),
-        name: z.string().nullish().column({ display_name: 'Name', column_type: 'String' }),
-        extendedDescriptionData: z.any().optional().nullish().column({ display_name: 'Extended Description Data', column_type: 'Json' }),
+        id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
+        email: z.string().column({ display_name: 'Email', column_type: 'String', visible: true }),
+        name: z.string().nullish().column({ display_name: 'Name', column_type: 'String', visible: true }),
+        extendedDescriptionData: z.any().optional().nullish().column({
+          display_name: 'Extended Description Data',
+          column_type: 'Json',
+          visible: true
+        }),
       }).resource({
         name: 'User',
         slug: 'users',

@@ -78,6 +78,7 @@ export function processJsonschema(jsonschema: ResourceKey) {
         //            ^?
         validators: [],
         name: cur,
+        visible: prop.visible,
         reference: prop,
       })
     } else if ('column_type' in prop) {

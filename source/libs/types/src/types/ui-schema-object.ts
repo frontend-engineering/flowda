@@ -5,6 +5,7 @@ export type ColumnKey = {
   display_name: string
   description?: string
   example?: string
+  visible: boolean,
   [p: `x-${string}`]: unknown,
 }
 export const ColumnKeySchema = z.object({
@@ -12,6 +13,7 @@ export const ColumnKeySchema = z.object({
   display_name: z.string(),
   description: z.string().optional(),
   example: z.string().optional(),
+  visible: z.boolean(),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
@@ -34,17 +36,35 @@ export const AssociationKeySchema = z.object({
 export type ReferenceKey = {
   display_name: string
   model_name: string
-  reference_type: 'belongs_to' | 'has_one'
+  reference_type: 'belongs_to'
   foreign_key: string
   primary_key: string
+} | {
+  display_name: string
+  model_name: string
+  reference_type: 'has_one'
+  foreign_key: string
+  primary_key: string
+  visible: boolean
 }
-export const ReferenceKeySchema = z.object({
-  display_name: z.string(),
-  model_name: z.string(),
-  reference_type: z.union([z.literal('belongs_to'), z.literal('has_one')]),
-  foreign_key: z.string(),
-  primary_key: z.string(),
-}) satisfies z.ZodType<ReferenceKey>
+
+export const ReferenceKeySchema = z.union([
+  z.object({
+    display_name: z.string(),
+    model_name: z.string(),
+    reference_type: z.literal('belongs_to'),
+    foreign_key: z.string(),
+    primary_key: z.string(),
+  }),
+  z.object({
+    display_name: z.string(),
+    model_name: z.string(),
+    reference_type: z.literal('has_one'),
+    foreign_key: z.string(),
+    primary_key: z.string(),
+    visible: z.boolean(),
+  }),
+])  satisfies z.ZodType<ReferenceKey>
 
 export type ResourceKey = {
   class_name: string

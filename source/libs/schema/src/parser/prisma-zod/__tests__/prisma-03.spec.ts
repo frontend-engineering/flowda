@@ -24,14 +24,19 @@ describe('prisma-03', function () {
       /////////////////////////////////////////
 
       export const UserSchema = z.object({
-        id: z.number().int().column({ display_name: 'Id', column_type: 'Int' }),
-        email: z.string().column({ display_name: '邮箱', column_type: 'String' }),
+        id: z.number().int().column({ display_name: 'Id', column_type: 'Int', visible: true }),
+        email: z.string().column({ display_name: '邮箱', column_type: 'String', visible: true }),
         name: z.string().nullish().column({
           display_name: '用户名',
           column_type: 'String',
+          visible: false,
           'x-legacy': { prisma: 'false' }
         }),
-        extendedDescriptionData: z.any().optional().nullish().column({ display_name: 'Extended Description Data', column_type: 'Json' }),
+        extendedDescriptionData: z.any().optional().nullish().column({
+          display_name: 'Extended Description Data',
+          column_type: 'Json',
+          visible: true
+        }),
       }).resource({
         name: 'User',
         slug: 'users',
