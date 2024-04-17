@@ -1,12 +1,16 @@
 import { z } from 'zod'
 
-export const buildRollupConfigInputSchema = z.object({
-  bundleInput: z.string(),
-  bundleFile: z.string(),
-  bundleAlias: z.record(z.string(), z.string())
+export const rollupTransparentSchema = z.object({
+  bundleAlias: z.record(z.string(), z.string()).default({}),
+  bundleSuppressWarnCodes: z.array(z.string()).default([]),
 })
 
-export const devExecutorSchema = z.object({
+export const buildRollupConfigInputSchema = rollupTransparentSchema.extend({
+  bundleInput: z.string(),
+  bundleFile: z.string(),
+})
+
+export const devExecutorSchema = rollupTransparentSchema.extend({
   outputPath: z.string(),
 
   main: z.string().optional(),
@@ -15,6 +19,5 @@ export const devExecutorSchema = z.object({
   yalc: z.boolean().default(true),
   bundleDts: z.boolean().default(true),
   assets: z.array(z.any()).default([]),
-  bundleAlias: z.record(z.string(), z.string()).default({}),
-  onlyTypes: z.boolean().default(false)
+  onlyTypes: z.boolean().default(false),
 })

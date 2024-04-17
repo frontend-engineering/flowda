@@ -1,4 +1,4 @@
-import { type ExecutorContext, readJsonFile, writeJsonFile, offsetFromRoot } from '@nrwl/devkit'
+import { type ExecutorContext, readJsonFile, writeJsonFile } from '@nrwl/devkit'
 import { buildRollupConfigInputSchema, devExecutorSchema } from './zod-def'
 import { z } from 'zod'
 import * as rollup from 'rollup'
@@ -13,6 +13,10 @@ import * as _ from 'radash'
 
 export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSchema>): rollup.RollupOptions {
   return {
+    onwarn: (warning, next) => {
+      if (input.bundleSuppressWarnCodes.indexOf(warning.code) > -1) return
+      next(warning)
+    },
     input: input.bundleInput,
     output: [
       {
@@ -23,8 +27,8 @@ export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSc
     plugins: [
       dts({}),
       alias({
-        entries: input.bundleAlias
-      })
+        entries: input.bundleAlias,
+      }),
     ],
   }
 }
@@ -47,18 +51,19 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
     },
     {
       ...context,
-      targetName: 'build' // fix: isBuildable 会检查 deps 是否存在相同 target, 位置：checkDependencies > calculateProjectDependencies
+      targetName: 'build', // fix: isBuildable 会检查 deps 是否存在相同 target, 位置：checkDependencies > calculateProjectDependencies
     },
   )
 
   for await (const output of tscGenerator) {
     yield output
     if (options.bundleDts) {
-      const rollupOptions = buildRollupConfig({
+      const rollupOptions = buildRollupConfig(buildRollupConfigInputSchema.parse({
         bundleInput: path.join(options.outputPath, `src/index.d.ts`),
         bundleFile: path.join(options.outputPath, `index.bundle.d.ts`),
-        bundleAlias: _.mapValues(options.bundleAlias, value => path.join(context.root, value))
-      })
+        bundleAlias: _.mapValues(options.bundleAlias, value => path.join(context.root, value)),
+        bundleSuppressWarnCodes: options.bundleSuppressWarnCodes,
+      }))
       try {
         consola.start(`Bundling ${context.projectName} .d.ts...`)
         const bundle = await rollup.rollup(rollupOptions)

@@ -15,7 +15,8 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
       "options": {
-        "watch": false
+        "watch": false,
+        "bundleSuppressWarnCodes": ["UNRESOLVED_IMPORT"]
       }
     },
     "build": {
