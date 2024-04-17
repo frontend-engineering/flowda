@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@flowda-projects/flowda-gateway-trpc-server": {
-      "signature": "ddff6170f3a7b28d2b749bc5dd59e457",
+      "signature": "79d4fe98fd66fcbd7c981fc48ca67217",
       "link": true
     },
     "@anatine/zod-openapi": {
@@ -10,7 +10,7 @@
       "file": true
     },
     "zod-prisma-types": {
-      "signature": "848eb552fa6d1dac9eba133add7adbac",
+      "signature": "df523c41b2046446e1993d586776a85e",
       "file": true,
       "replaced": "link:../zod-prisma-types/packages/generator"
     }

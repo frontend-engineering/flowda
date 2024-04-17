@@ -276,11 +276,11 @@ declare class TrpcService {
         }>;
         _meta: object;
         _ctx_out: {
+            user: ctxUserSchemaDto | undefined;
+            requestId: string;
             req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
             res: express.Response<any, Record<string, any>>;
-            requestId: string;
             _diagnosis: any[];
-            user: ctxUserSchemaDto | undefined;
             tenant: ctxTenantSchemaDto | undefined;
         };
         _input_in: typeof _trpc_server.unsetMarker;
@@ -504,11 +504,11 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
+                user: ctxUserSchemaDto | undefined;
+                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
-                requestId: string;
                 _diagnosis: any[];
-                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
@@ -523,17 +523,17 @@ declare class HelloRouter {
             id: string;
             name: string;
             selected: boolean;
-            uri: {
-                scheme: string;
-                name: string;
-            };
+            uri: string | undefined;
+            expanded: boolean | undefined;
+            children: never[] | undefined;
         }[] | {
             id: string;
             name: string;
             selected: boolean;
-            uri: string | undefined;
-            expanded: boolean | undefined;
-            children: never[] | undefined;
+            uri: {
+                scheme: string;
+                name: string;
+            };
         }[] | undefined>;
         getResourceSchema: _trpc_server.BuildProcedure<"query", {
             _config: _trpc_server.RootConfig<{
@@ -560,11 +560,11 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
+                user: ctxUserSchemaDto | undefined;
+                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
-                requestId: string;
                 _diagnosis: any[];
-                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
@@ -577,9 +577,9 @@ declare class HelloRouter {
             _output_out: typeof _trpc_server.unsetMarker;
         }, {
             display_name: string;
+            visible: boolean;
             slug: string;
             primary_key: string | null;
-            visible: boolean;
             class_name: string;
             display_primary_key: string;
             name: string;
@@ -588,6 +588,8 @@ declare class HelloRouter {
             columns: {
                 column_type: string;
                 display_name: string;
+                visible: boolean;
+                access_type: "read_only" | "read_write";
                 name: string;
                 validators: unknown[];
                 description?: string | undefined;
@@ -597,8 +599,23 @@ declare class HelloRouter {
                     model_name: string;
                     foreign_key: string;
                     primary_key: string;
-                    reference_type: "belongs_to" | "has_one";
+                    reference_type: "belongs_to";
+                } | {
+                    display_name: string;
+                    visible: boolean;
+                    model_name: string;
+                    foreign_key: string;
+                    primary_key: string;
+                    reference_type: "has_one";
                 } | undefined;
+            }[];
+            associations: {
+                display_name: string;
+                visible: boolean;
+                slug: string;
+                model_name: string;
+                foreign_key: string;
+                primary_key: string;
             }[];
             display_column?: string | undefined;
             searchable_columns?: string | undefined;
@@ -628,11 +645,11 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
+                user: ctxUserSchemaDto | undefined;
+                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
-                requestId: string;
                 _diagnosis: any[];
-                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
@@ -713,21 +730,21 @@ declare class HelloRouter {
             }>;
             _meta: object;
             _ctx_out: {
+                user: ctxUserSchemaDto | undefined;
+                requestId: string;
                 req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                 res: express.Response<any, Record<string, any>>;
-                requestId: string;
                 _diagnosis: any[];
-                user: ctxUserSchemaDto | undefined;
                 tenant: ctxTenantSchemaDto | undefined;
             };
             _input_in: {
-                schemaName: string;
                 id: number;
+                schemaName: string;
                 updatedValue?: any;
             };
             _input_out: {
-                schemaName: string;
                 id: number;
+                schemaName: string;
                 updatedValue?: any;
             };
             _output_in: typeof _trpc_server.unsetMarker;
@@ -938,11 +955,11 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
+                    user: ctxUserSchemaDto | undefined;
+                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
-                    requestId: string;
                     _diagnosis: any[];
-                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
@@ -957,17 +974,17 @@ declare class TrpcRouter {
                 id: string;
                 name: string;
                 selected: boolean;
-                uri: {
-                    scheme: string;
-                    name: string;
-                };
+                uri: string | undefined;
+                expanded: boolean | undefined;
+                children: never[] | undefined;
             }[] | {
                 id: string;
                 name: string;
                 selected: boolean;
-                uri: string | undefined;
-                expanded: boolean | undefined;
-                children: never[] | undefined;
+                uri: {
+                    scheme: string;
+                    name: string;
+                };
             }[] | undefined>;
             getResourceSchema: _trpc_server.BuildProcedure<"query", {
                 _config: _trpc_server.RootConfig<{
@@ -994,11 +1011,11 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
+                    user: ctxUserSchemaDto | undefined;
+                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
-                    requestId: string;
                     _diagnosis: any[];
-                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
@@ -1011,9 +1028,9 @@ declare class TrpcRouter {
                 _output_out: typeof _trpc_server.unsetMarker;
             }, {
                 display_name: string;
+                visible: boolean;
                 slug: string;
                 primary_key: string | null;
-                visible: boolean;
                 class_name: string;
                 display_primary_key: string;
                 name: string;
@@ -1022,6 +1039,8 @@ declare class TrpcRouter {
                 columns: {
                     column_type: string;
                     display_name: string;
+                    visible: boolean;
+                    access_type: "read_only" | "read_write";
                     name: string;
                     validators: unknown[];
                     description?: string | undefined;
@@ -1031,8 +1050,23 @@ declare class TrpcRouter {
                         model_name: string;
                         foreign_key: string;
                         primary_key: string;
-                        reference_type: "belongs_to" | "has_one";
+                        reference_type: "belongs_to";
+                    } | {
+                        display_name: string;
+                        visible: boolean;
+                        model_name: string;
+                        foreign_key: string;
+                        primary_key: string;
+                        reference_type: "has_one";
                     } | undefined;
+                }[];
+                associations: {
+                    display_name: string;
+                    visible: boolean;
+                    slug: string;
+                    model_name: string;
+                    foreign_key: string;
+                    primary_key: string;
                 }[];
                 display_column?: string | undefined;
                 searchable_columns?: string | undefined;
@@ -1062,11 +1096,11 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
+                    user: ctxUserSchemaDto | undefined;
+                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
-                    requestId: string;
                     _diagnosis: any[];
-                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
@@ -1147,21 +1181,21 @@ declare class TrpcRouter {
                 }>;
                 _meta: object;
                 _ctx_out: {
+                    user: ctxUserSchemaDto | undefined;
+                    requestId: string;
                     req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
                     res: express.Response<any, Record<string, any>>;
-                    requestId: string;
                     _diagnosis: any[];
-                    user: ctxUserSchemaDto | undefined;
                     tenant: ctxTenantSchemaDto | undefined;
                 };
                 _input_in: {
-                    schemaName: string;
                     id: number;
+                    schemaName: string;
                     updatedValue?: any;
                 };
                 _input_out: {
-                    schemaName: string;
                     id: number;
+                    schemaName: string;
                     updatedValue?: any;
                 };
                 _output_in: typeof _trpc_server.unsetMarker;

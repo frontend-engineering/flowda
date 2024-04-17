@@ -1,3 +1,5 @@
+// bindService
+export const ServiceSymbol = Symbol('Service')
 
 export const TreeGridModelSymbol = Symbol.for('TreeGridModel')
 export const GridModelSymbol = Symbol.for('GridModel')

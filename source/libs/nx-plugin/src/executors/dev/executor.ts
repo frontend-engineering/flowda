@@ -106,10 +106,17 @@ src/**/__fixtures__/**/*
 src/**/__tests__/**/*
 `)
       }
-      execSync(`yalc publish --push --changed`, {
-        cwd: options.outputPath,
-        stdio: 'inherit',
-      })
+      if (options.watch) {
+        execSync(`yalc publish --push --changed`, {
+          cwd: options.outputPath,
+          stdio: 'inherit',
+        })
+      } else {
+        execSync(`yalc publish --push`, {
+          cwd: options.outputPath,
+          stdio: 'inherit',
+        })
+      }
       consola.success('yalc publish done.')
     }
   }
