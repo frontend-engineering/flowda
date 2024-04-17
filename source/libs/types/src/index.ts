@@ -1,5 +1,6 @@
 export * from './utils/general-types'
 export * from './symbols'
+export * from './legacy-symbols'
 export * from './schemas/index'
 export * from './types/index'
 export * from './interfaces/index'

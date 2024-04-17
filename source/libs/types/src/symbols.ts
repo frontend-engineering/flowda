@@ -1,4 +1,7 @@
-// bindService
+/**
+ * getServices 方法会将 inversify module 转换成 nestjs module，这样 nestjs controller 就可以使用了
+ * 所以，注意：如果不需要给 controller 使用，则不需要 bind
+ */
 export const ServiceSymbol = Symbol('Service')
 
 export const TreeGridModelSymbol = Symbol.for('TreeGridModel')
