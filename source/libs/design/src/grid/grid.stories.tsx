@@ -12,15 +12,18 @@ import { GridWrapper } from '../../stories/grid-wrapper'
 const container = new Container()
 container.load(designModule)
 
-container.rebind<GridModel>(GridModelSymbol).to(GridModel).inRequestScope()
+container
+  .rebind<GridModel>(GridModelSymbol)
+  .to(GridModel)
+  .inRequestScope()
   .onActivation(({ container }, gridModel) => {
-    gridModel.handlers.onContextMenu = (e) => {
+    gridModel.handlers.onContextMenu = e => {
       console.log(e)
     }
 
-    gridModel.apis.getResourceData = (input) => trpc.hello.getResourceData.query(input)
-    gridModel.apis.getResourceSchema = (input) => trpc.hello.getResourceSchema.query(input)
-    gridModel.apis.putResourceData = (input) => trpc.hello.putResourceData.mutate(input)
+    gridModel.apis.getResourceData = input => trpc.hello.getResourceData.query(input)
+    gridModel.apis.getResourceSchema = input => trpc.hello.getResourceSchema.query(input)
+    gridModel.apis.putResourceData = input => trpc.hello.putResourceData.mutate(input)
     return gridModel
   })
 
@@ -42,8 +45,7 @@ class GridStory extends React.Component<{
     return (
       <>
         <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
-        <Grid ref={ref => this.props.gridModel.setRef(ref)}
-              model={this.props.gridModel} />
+        <Grid ref={ref => this.props.gridModel.setRef(ref)} model={this.props.gridModel} />
       </>
     )
   }
@@ -53,8 +55,7 @@ const tenantGridModel = container.get<GridModel>(GridModelSymbol)
 tenantGridModel.resetRefPromise('grid://superadmin?schemaName=TenantResourceSchema')
 export const TenantResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory gridModel={tenantGridModel}
-                         schemaName={'superadmin.TenantResourceSchema'} />,
+    children: <GridStory gridModel={tenantGridModel} schemaName={'superadmin.TenantResourceSchema'} />,
   },
 }
 
@@ -62,16 +63,21 @@ const userGridModel = container.get<GridModel>(GridModelSymbol)
 userGridModel.resetRefPromise('grid://superadmin?schemaName=UserResourceSchema')
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory
-      gridModel={userGridModel}
-      schemaName={'superadmin.UserResourceSchema'} />,
+    children: <GridStory gridModel={userGridModel} schemaName={'superadmin.UserResourceSchema'} />,
   },
 }
 const menuGridModel = container.get<GridModel>(GridModelSymbol)
 menuGridModel.resetRefPromise('grid://superadmin?schemaName=MenuResourceSchema')
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory gridModel={menuGridModel}
-                         schemaName={'superadmin.MenuResourceSchema'} />,
+    children: <GridStory gridModel={menuGridModel} schemaName={'superadmin.MenuResourceSchema'} />,
+  },
+}
+
+const taskGridModel = container.get<GridModel>(GridModelSymbol)
+taskGridModel.resetRefPromise('grid://superadmin?schemaName=TaskResourceSchema')
+export const TaskResource: StoryObj<typeof GridWrapper> = {
+  args: {
+    children: <GridStory gridModel={taskGridModel} schemaName={'superadmin.TaskResourceSchema'} />,
   },
 }

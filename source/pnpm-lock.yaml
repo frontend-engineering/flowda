@@ -72,6 +72,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.36.1
   ag-grid-community: 31.1.1
   ag-grid-react: 31.1.1
+  axios: ^1.6.8
   babel-loader: 8.1.0
   code-block-writer: ^11.0.3
   comment-parser: ^1.3.1
@@ -148,6 +149,7 @@ dependencies:
   '@rollup/plugin-alias': 5.1.0_rollup@4.12.1
   ag-grid-community: 31.1.1
   ag-grid-react: 31.1.1_biqbaboplfbrettd7655fr4n2y
+  axios: 1.6.8
   code-block-writer: 11.0.3
   comment-parser: 1.4.1
   consola: 3.2.3
@@ -8607,7 +8609,6 @@ packages:
 
   /asynckit/0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
-    dev: true
 
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
@@ -8661,15 +8662,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios/1.6.7:
-    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
+  /axios/1.6.8:
+    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
     dependencies:
-      follow-redirects: 1.15.5
+      follow-redirects: 1.15.6
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
-    dev: true
 
   /axobject-query/3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
@@ -9482,7 +9482,6 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
-    dev: true
 
   /comma-separated-tokens/1.0.8:
     resolution: {integrity: sha512-GHuDRO12Sypu2cV70d1dkA2EUmXHgntrzbpvOB+Qy+49ypNfGgFQIC2fhhXbnyrJRynDCAARsT7Ou0M6hirpfw==}
@@ -10313,7 +10312,6 @@ packages:
   /delayed-stream/1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
-    dev: true
 
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
@@ -11754,6 +11752,15 @@ packages:
         optional: true
     dev: true
 
+  /follow-redirects/1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+
   /font-awesome/4.7.0:
     resolution: {integrity: sha512-U6kGnykA/6bFmg1M/oT9EkFeIYv7JlX3bozwQJWiiLz6L0w3F5vBVPxHlwyX/vtNq1ckcpRKOB9f2Qal/VtFpg==}
     engines: {node: '>=0.10.3'}
@@ -11851,7 +11858,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
-    dev: true
 
   /formik/1.5.8_react@18.2.0:
     resolution: {integrity: sha512-fNvPe+ddbh+7xiByT25vuso2p2hseG/Yvuj211fV1DbCjljUEG9OpgRpcb7g7O3kxHX/q31cbZDzMxJXPWSNwA==}
@@ -14665,14 +14671,12 @@ packages:
   /mime-db/1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
-    dev: true
 
   /mime-types/2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
-    dev: true
 
   /mime/1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
@@ -14870,7 +14874,7 @@ packages:
     resolution: {integrity: sha512-q/hKQJJH3FhkkuJ3ojbgDph2StlSXFBPNkpZBZlsvZDbuYfxKJ4VtunEeilthcZtuIplIk1zVX5o2RgKTUTO+Q==}
     engines: {node: '>=14'}
     dependencies:
-      axios: 1.6.7
+      axios: 1.6.8
       node-abort-controller: 3.1.1
       qs: 6.12.0
     transitivePeerDependencies:
@@ -15143,7 +15147,7 @@ packages:
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.46
       '@zkochan/js-yaml': 0.0.6
-      axios: 1.6.7
+      axios: 1.6.8
       chalk: 4.1.2
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
@@ -16316,7 +16320,6 @@ packages:
 
   /proxy-from-env/1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
-    dev: true
 
   /prr/1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
@@ -19511,7 +19514,7 @@ packages:
     engines: {node: '>=12.0.0'}
     hasBin: true
     dependencies:
-      axios: 1.6.7
+      axios: 1.6.8
       joi: 17.12.2
       lodash: 4.17.21
       minimist: 1.2.8

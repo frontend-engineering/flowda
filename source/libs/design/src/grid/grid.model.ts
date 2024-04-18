@@ -1,6 +1,5 @@
 import { injectable } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
-import * as _ from 'radash'
 import {
   agFilterSchema,
   cellRendererInputSchema,
@@ -10,19 +9,21 @@ import {
   getResourceDataOutputSchema,
   getResourceInputSchema,
   handleContextMenuInputSchema,
-  putResourceDataInputSchema,
-  ResourceUISchema,
   ManageableModel,
+  putResourceDataInputSchema,
+  ResourceUI,
+  ResourceUISchema,
 } from '@flowda/types'
 import { z } from 'zod'
-import { isUriAsKeyLikeEqual, isUriLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
+import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
+import axios from 'axios'
 
 @injectable()
 export class GridModel implements ManageableModel {
   columnDefs: z.infer<typeof ColumnUISchema>[] = []
   schemaName: string | null = null
-  schema: z.infer<typeof ResourceUISchema> | null = null
+  schema: ResourceUI | null = null
   isNotEmpty = false
   gridApi: GridApi | null = null
 
@@ -39,12 +40,17 @@ export class GridModel implements ManageableModel {
   handlers: Partial<{
     onRefClick: (v: { schemaName: string; name: string; id: number | string }) => void
     onMouseEnter: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
-    onContextMenu: (input: z.infer<typeof handleContextMenuInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>) => void
+    onContextMenu: (
+      input: z.infer<typeof handleContextMenuInputSchema>,
+      e: React.MouseEvent<HTMLElement, MouseEvent>,
+    ) => void
   }> = {}
 
   apis: Partial<{
     getResourceSchema: (input: z.infer<typeof getResourceInputSchema>) => Promise<z.infer<typeof ResourceUISchema>>
-    getResourceData: (input: z.infer<typeof getResourceDataInputSchema>) => Promise<z.infer<typeof getResourceDataOutputSchema>>
+    getResourceData: (
+      input: z.infer<typeof getResourceDataInputSchema>,
+    ) => Promise<z.infer<typeof getResourceDataOutputSchema>>
     putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
   }> = {}
 
@@ -75,7 +81,7 @@ export class GridModel implements ManageableModel {
   resetRefPromise(uri: string | URI) {
     this.setUri(uri)
     this.resetIsFirstGetRows()
-    this.refPromise = new Promise<boolean>((resolve) => {
+    this.refPromise = new Promise<boolean>(resolve => {
       this.refResolve = resolve
     })
   }
@@ -96,7 +102,8 @@ export class GridModel implements ManageableModel {
         this.setUri(uri)
       } else {
         // double check 下 防止 gridModel grid 未对应
-        if (!isUriAsKeyLikeEqual(uri, this._uri)) throw new Error(`setRef uri is not matched, current: ${this._uri}, input: ${uri}`)
+        if (!isUriAsKeyLikeEqual(uri, this._uri))
+          throw new Error(`setRef uri is not matched, current: ${this._uri}, input: ${uri}`)
       }
     }
 
@@ -149,19 +156,36 @@ export class GridModel implements ManageableModel {
       throw new Error('apis.getResourceData is not implemented')
     }
     this._isFirstGetRows = false
-    params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
-    this.gridApi?.setFilterModel(params.filterModel)
-    const uri = updateUriFilterModel(this.getUri(), params.filterModel)
-    this.setUri(uri)
 
-    const dataRet = await this.apis.getResourceData(params)
-    const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
-    if (parseRet.success) {
-      return parseRet.data
-    }
-    return {
-      data: [dataRet],
-      pagination: { total: 1 },
+    if (this.schema == null) throw new Error('schema is null')
+    const builtInPlugin = this.schema['x-builtin']
+    if (builtInPlugin && 'axios' in <any>builtInPlugin) {
+      // todo: 将 axios 抽出来
+      const res = await axios.request({
+        ...(<any>builtInPlugin)['axios'],
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      })
+      return {
+        data: res.data,
+        pagination: { total: res.data.length },
+      }
+    } else {
+      params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
+      this.gridApi?.setFilterModel(params.filterModel)
+      const uri = updateUriFilterModel(this.getUri(), params.filterModel)
+      this.setUri(uri)
+      const dataRet = await this.apis.getResourceData(params)
+      const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
+      if (parseRet.success) {
+        return parseRet.data
+      }
+      return {
+        data: [dataRet],
+        pagination: { total: 1 },
+      }
     }
   }
 
@@ -182,9 +206,13 @@ export class GridModel implements ManageableModel {
     }
   }
 
-  readonly onContextMenu = (cellRendererInput: z.infer<typeof cellRendererInputSchema>, e: React.MouseEvent<HTMLElement, MouseEvent>, options?: {
-    type: 'reference' | 'association' | 'Json' | undefined,
-  }) => {
+  readonly onContextMenu = (
+    cellRendererInput: z.infer<typeof cellRendererInputSchema>,
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    options?: {
+      type: 'reference' | 'association' | 'Json' | undefined
+    },
+  ) => {
     if (typeof this.handlers.onContextMenu === 'function') {
       const parsedRet = cellRendererInputSchema.parse(cellRendererInput)
       if (this._uri == null) throw new Error('uri is null')
@@ -192,21 +220,26 @@ export class GridModel implements ManageableModel {
       if (options?.type === 'association') {
         const ass = this.schema.associations.find(ass => ass.model_name === parsedRet.colDef.field)
         if (!ass) throw new Error(`no association def: ${this.schemaName}, ${parsedRet.colDef.field}`)
-        this.handlers.onContextMenu({
-          uri: this.getUri(),
-          cellRendererInput: parsedRet,
-          association: ass
-        }, e)
+        this.handlers.onContextMenu(
+          {
+            uri: this.getUri(),
+            cellRendererInput: parsedRet,
+            association: ass,
+          },
+          e,
+        )
       } else {
         const column = this.schema.columns.find(col => col.name === parsedRet.colDef.field)
         if (!column) throw new Error(`no column def: ${this.schemaName}, ${parsedRet.colDef.field}`)
-        this.handlers.onContextMenu({
-          uri: this.getUri(),
-          cellRendererInput: parsedRet,
-          column
-        }, e)
+        this.handlers.onContextMenu(
+          {
+            uri: this.getUri(),
+            cellRendererInput: parsedRet,
+            column,
+          },
+          e,
+        )
       }
-
     }
   }
 
