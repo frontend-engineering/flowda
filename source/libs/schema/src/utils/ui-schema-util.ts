@@ -1,9 +1,3 @@
-const ignoredSuffix = [
-  'TransactionIsolationLevelSchema',
-  'ScalarFieldEnumSchema',
-  'SortOrderSchema',
-]
-
 /**
  * convert all tables from a zod-prisma-types generated xx.ts
  * to ui schema spec compatible (suffix ResourceSchema) constant value
@@ -13,8 +7,6 @@ const ignoredSuffix = [
 export function getAllResourceSchema(zt: Record<string, any>) {
   const exportedKeys = Object.keys(zt) as Array<string>
   const cz = exportedKeys.reduce<Record<string, any>>((acc, cur) => {
-    if (ignoredSuffix.some(x => cur.endsWith(x))) return acc
-
     if (cur.endsWith('WithRelationsSchema')) {
       const k = (cur.split('WithRelationsSchema')[0] + 'ResourceSchema')
       acc[k] = zt[cur]
@@ -30,7 +22,7 @@ export function getAllResourceSchema(zt: Record<string, any>) {
           // 如果存在 WithRelationsSchema 在 `cur.endsWith('WithRelationsSchema'` 已经处理
         }
       } else {
-        throw new Error(`Wrong branch, key:${cur}`)
+        // wrong branch ignored
       }
     }
     return acc
