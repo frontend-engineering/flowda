@@ -5,7 +5,7 @@ import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
 import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { ManageableModel, agMenuItemSchema } from '@flowda/types'
+import { agMenuItemSchema, ManageableModel } from '@flowda/types'
 import { z } from 'zod'
 
 @injectable()
@@ -101,7 +101,7 @@ export class TreeGridModel implements ManageableModel {
 
   private convertAndSaveMenuData() {
     if (!this.gridApi) throw new Error('gridApi is null')
-    const agTreeData: z.infer<typeof agMenuItemSchema>[] = [];
+    const agTreeData: z.infer<typeof agMenuItemSchema>[] = []
     this.gridApi.forEachNode(node => {
       agTreeData.push(node.data)
     })
@@ -117,9 +117,9 @@ export class TreeGridModel implements ManageableModel {
           schemaName: `${uri.authority}.${query.schemaName}`,
           id: Number(query.id),
           updatedValue: {
-            [query.field]: menuData
-          }
-        }
+            [query.field]: menuData,
+          },
+        },
       )
     } catch (e) {
       if (typeof this.handlers.message === 'function') {
@@ -144,6 +144,28 @@ export class TreeGridModel implements ManageableModel {
       add: [
         {
           hierarchy: [...findRet.hierarchy, String(newId)],
+          id: newId,
+        },
+      ],
+    })
+    this.convertAndSaveMenuData()
+  }
+
+  addPeer(id: number) {
+    if (!this.gridApi) throw new Error('gridApi is null')
+    const newId = _.uid(4)
+
+    let findRet: z.infer<typeof agMenuItemSchema> | null = null
+    this.gridApi.forEachNode(node => {
+      if (node.data.id === id) findRet = node.data
+    })
+    findRet = agMenuItemSchema.parse(findRet)
+    if (findRet == null) throw new Error(`No row found, ${id}`)
+
+    this.gridApi.applyTransaction({
+      add: [
+        {
+          hierarchy: [...findRet.hierarchy.slice(0, findRet.hierarchy.length - 1), String(newId)],
           id: newId,
         },
       ],
