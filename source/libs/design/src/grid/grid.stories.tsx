@@ -43,35 +43,35 @@ class GridStory extends React.Component<{
       <>
         <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
         <Grid ref={ref => this.props.gridModel.setRef(ref)}
-          model={this.props.gridModel} />
+              model={this.props.gridModel} />
       </>
     )
   }
 }
 
 const tenantGridModel = container.get<GridModel>(GridModelSymbol)
-tenantGridModel.resetRefPromise('grid://flowda?schemaName=TenantResourceSchema')
+tenantGridModel.resetRefPromise('grid://superadmin?schemaName=TenantResourceSchema')
 export const TenantResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory gridModel={tenantGridModel}
-      schemaName={'flowda.TenantResourceSchema'} />,
+                         schemaName={'superadmin.TenantResourceSchema'} />,
   },
 }
 
 const userGridModel = container.get<GridModel>(GridModelSymbol)
-userGridModel.resetRefPromise('grid://flowda?schemaName=UserResourceSchema')
+userGridModel.resetRefPromise('grid://superadmin?schemaName=UserResourceSchema')
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory
       gridModel={userGridModel}
-      schemaName={'flowda.UserResourceSchema'} />,
+      schemaName={'superadmin.UserResourceSchema'} />,
   },
 }
 const menuGridModel = container.get<GridModel>(GridModelSymbol)
-menuGridModel.resetRefPromise('grid://flowda?schemaName=MenuResourceSchema')
+menuGridModel.resetRefPromise('grid://superadmin?schemaName=MenuResourceSchema')
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
     children: <GridStory gridModel={menuGridModel}
-      schemaName={'flowda.MenuResourceSchema'} />,
+                         schemaName={'superadmin.MenuResourceSchema'} />,
   },
 }
