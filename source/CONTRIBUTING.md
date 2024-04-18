@@ -2,9 +2,9 @@
 
 - `packages`
     - `design`: SaaS components
-    - `schema`: parse prisma DSL to zod, zod to UI schema, parse UI schema to prisma query, etc.
-    - `shared`: shared utils, should not depend on node
-    - `types`: typescript type definitions, zod schema, symbols
+    - `schema`: ui schema engine, utils
+    - `types`: type definitions, zod schema, symbols, etc.
+    - `nx-plugin`: generators and executors
 
 ## Lock some dependencies' versions
 

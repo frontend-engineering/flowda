@@ -8,6 +8,7 @@ describe('grid utils', () => {
       reference_type: 'has_one',
       foreign_key: 'tenantId',
       primary_key: 'id',
+      visible: true,
     } as const
 
     const val = {

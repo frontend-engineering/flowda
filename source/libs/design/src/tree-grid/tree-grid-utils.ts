@@ -1,5 +1,6 @@
 import { agMenuItemSchema, MenuItem, menuItemSchema } from '@flowda/types'
 import { z } from 'zod'
+import { cloneDeep } from 'lodash'
 
 export function convertMenuDataToAgTreeData(menuData: z.infer<typeof menuItemSchema>[]): z.infer<typeof agMenuItemSchema>[] {
     const ret: z.infer<typeof agMenuItemSchema>[] = []
@@ -38,6 +39,8 @@ export function traverseUp(tree: z.infer<typeof menuItemSchema>, visit: (node: z
 }
 
 export function convertAgTreeDataToTreeData(input: (z.infer<typeof agMenuItemSchema> & { children?: [] })[]) {
+    input = cloneDeep(input)
+
     const rootNodes: z.infer<typeof menuItemSchema>[] = []
     const nodeMap: Record<string, (z.infer<typeof menuItemSchema>)> = {}
 

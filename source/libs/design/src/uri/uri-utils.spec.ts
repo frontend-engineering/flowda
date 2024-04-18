@@ -227,6 +227,8 @@ describe('uri utils', () => {
         column_type: 'reference',
         display_name: 'Menu',
         name: 'menu',
+        visible: true,
+        access_type: 'read_only',
         validators: [
           {
             required: true,
@@ -238,6 +240,7 @@ describe('uri utils', () => {
           reference_type: 'has_one',
           foreign_key: 'tenantId',
           primary_key: 'id',
+          visible: true,
         },
       },
     }
