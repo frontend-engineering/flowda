@@ -13,6 +13,7 @@ import {
   updateUriFilterModel,
   uriAsKey,
   uriWithoutId,
+  createTaskUri,
 } from './uri-utils'
 import { handleContextMenuInputSchema } from '@flowda/types'
 import { z } from 'zod'
@@ -30,9 +31,84 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
-  it('', () => {
-    const a = 'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=3'
-    const b = 'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=1'
+  it('create task uri', () => {
+    const input = {
+      uri: 'grid://superadmin?schemaName=TaskResourceSchema',
+      cellRendererInput: {
+        value: '创建预订单',
+        data: {
+          id: '939e8453-fd7e-11ee-907e-26fc8bb373e1',
+          name: '创建预订单',
+          assignee: 'ycdevdemo',
+          created: '2024-04-18T20:24:18.000+0800',
+          due: null,
+          followUp: null,
+          lastUpdated: null,
+          delegationState: null,
+          description: null,
+          executionId: '939dc100-fd7e-11ee-907e-26fc8bb373e1',
+          owner: null,
+          parentTaskId: null,
+          priority: 50,
+          processDefinitionId: 'Process_1iv5qkp:4:7c3be32c-fd7e-11ee-907e-26fc8bb373e1',
+          processInstanceId: '939dc100-fd7e-11ee-907e-26fc8bb373e1',
+          taskDefinitionKey: 'Activity_1rzszxz',
+          caseExecutionId: null,
+          caseInstanceId: null,
+          caseDefinitionId: null,
+          suspended: false,
+          formKey: null,
+          camundaFormRef: null,
+          tenantId: 'ycdev',
+        },
+        valueFormatted: null,
+        colDef: {
+          field: 'name',
+        },
+      },
+      column: {
+        column_type: 'String',
+        display_name: 'Name',
+        visible: true,
+        access_type: 'read_only' as const,
+        plugins: {
+          builtin: {
+            open_task: true,
+          },
+        },
+        name: 'name',
+        validators: [
+          {
+            required: true,
+          },
+        ],
+      },
+    }
+    const ret = createTaskUri(input)
+    expect(ret).toMatchInlineSnapshot(
+      `"task://superadmin?id=939e8453-fd7e-11ee-907e-26fc8bb373e1&name=创建预订单&assignee=ycdevdemo&executionId=939dc100-fd7e-11ee-907e-26fc8bb373e1&processDefinitionId=Process_1iv5qkp:4:7c3be32c-fd7e-11ee-907e-26fc8bb373e1&processInstanceId=939dc100-fd7e-11ee-907e-26fc8bb373e1&taskDefinitionKey=Activity_1rzszxz&tenantId=ycdev"`,
+    )
+    const uri_ = new URI(ret)
+    const query = qs.parse(uri_.query)
+    expect(query).toMatchInlineSnapshot(`
+      {
+        "assignee": "ycdevdemo",
+        "executionId": "939dc100-fd7e-11ee-907e-26fc8bb373e1",
+        "id": "939e8453-fd7e-11ee-907e-26fc8bb373e1",
+        "name": "创建预订单",
+        "processDefinitionId": "Process_1iv5qkp:4:7c3be32c-fd7e-11ee-907e-26fc8bb373e1",
+        "processInstanceId": "939dc100-fd7e-11ee-907e-26fc8bb373e1",
+        "taskDefinitionKey": "Activity_1rzszxz",
+        "tenantId": "ycdev",
+      }
+    `)
+  })
+
+  it('isUriAsKeyLikeEqual', () => {
+    const a =
+      'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=3'
+    const b =
+      'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=1'
     const ret = isUriAsKeyLikeEqual(a, b)
     expect(ret).toBe(true)
   })
@@ -228,7 +304,7 @@ describe('uri utils', () => {
         display_name: 'Menu',
         name: 'menu',
         visible: true,
-        access_type: 'read_only',
+        access_type: 'read_only' as const,
         validators: [
           {
             required: true,
