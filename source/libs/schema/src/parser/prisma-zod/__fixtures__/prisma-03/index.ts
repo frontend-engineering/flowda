@@ -8,8 +8,6 @@ const legacyPluginSchema = z.object({
 declare module '@flowda/types' {
   interface PluginType {
     legacy: z.infer<typeof legacyPluginSchema>
-
-    [x: string]: unknown // 兼容其他插件未 import 类型不错
   }
 }
 

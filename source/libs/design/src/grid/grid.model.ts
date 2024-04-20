@@ -146,6 +146,18 @@ export class GridModel implements ManageableModel {
     this.ref['setColDefs']()
   }
 
+  isOpenTask(colName: string) {
+    if (this.schema == null) throw new Error('schema is null')
+    const col = this.schema.columns.find(col => col.name === colName)
+    if (col == null) throw new Error(`not found column, ${colName}`)
+    const builtInParseRet = builtinPluginSchema.safeParse(col.plugins?.['builtin'])
+    if (builtInParseRet.success) {
+      return builtInParseRet.data.open_task
+    } else {
+      return false
+    }
+  }
+
   async getData(params: {
     schemaName: string
     current: number
@@ -211,7 +223,7 @@ export class GridModel implements ManageableModel {
     cellRendererInput: z.infer<typeof cellRendererInputSchema>,
     e: React.MouseEvent<HTMLElement, MouseEvent>,
     options?: {
-      type: 'reference' | 'association' | 'Json' | undefined
+      type: 'association' | undefined
     },
   ) => {
     if (typeof this.handlers.onContextMenu === 'function') {

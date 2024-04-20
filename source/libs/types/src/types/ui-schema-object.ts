@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export interface PluginType {
-  //
+  [x: string]: unknown
 }
 
 export type ColumnKey = {
@@ -11,7 +11,7 @@ export type ColumnKey = {
   example?: string
   visible: boolean,
   access_type?: 'read_only' | 'read_write',
-  plugins?: PluginType
+  plugins?: Partial<PluginType>
 }
 export const ColumnKeySchema = z.object({
   column_type: z.string(),
@@ -84,7 +84,7 @@ export type ResourceKey = {
   slug: string
   table_name: string
   visible: boolean
-  plugins?: PluginType
+  plugins?: Partial<PluginType>
 
   // openapi3-ts
   properties?: Record<string, ColumnKey | AssociationKey | ReferenceKey>

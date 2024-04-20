@@ -46,9 +46,9 @@ export class Grid extends React.Component<GridProps> {
           sort: params.sortModel,
           filterModel: this.props.model.isFirstGetRows
             ? {
-                ...params.filterModel,
-                ...getUriFilterModel(this.props.model.getUri()),
-              }
+              ...params.filterModel,
+              ...getUriFilterModel(this.props.model.getUri()),
+            }
             : params.filterModel,
         })
 
@@ -138,9 +138,7 @@ export class Grid extends React.Component<GridProps> {
                 return (
                   <div
                     onContextMenu={e => {
-                      this.props.model.onContextMenu(param, e, {
-                        type: 'reference',
-                      })
+                      this.props.model.onContextMenu(param, e)
                     }}
                   >
                     {getReferenceDisplay(item.reference!, param.value)}
@@ -212,13 +210,28 @@ export class Grid extends React.Component<GridProps> {
           case 'string':
           case 'String':
           case 'textarea':
+            let cellRenderer: undefined | ((param: z.infer<typeof cellRendererInputSchema>) => any) = undefined
+            if (this.props.model.isOpenTask(item.name)) {
+              cellRenderer = (param: z.infer<typeof cellRendererInputSchema>) => (
+                <div
+                  onContextMenu={e => {
+                    this.props.model.onContextMenu(param, e)
+                  }}
+                >
+                  {param.value}
+                </div>
+              )
+            }
             return {
-              editable: true,
-              field: item.name,
-              headerName: item.display_name,
-              cellDataType: 'text',
-              filter: true,
-              floatingFilter: true,
+              ...{
+                editable: true,
+                field: item.name,
+                headerName: item.display_name,
+                cellDataType: 'text',
+                filter: true,
+                floatingFilter: true,
+              },
+              cellRenderer,
             }
           case 'Json':
             return {
@@ -229,9 +242,7 @@ export class Grid extends React.Component<GridProps> {
                 return (
                   <div
                     onContextMenu={e => {
-                      this.props.model.onContextMenu(param, e, {
-                        type: 'Json',
-                      })
+                      this.props.model.onContextMenu(param, e)
                     }}
                   >
                     {param.valueFormatted}
