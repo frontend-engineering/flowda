@@ -2,6 +2,7 @@ import { injectable } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import {
   agFilterSchema,
+  builtinPluginSchema,
   cellRendererInputSchema,
   ColumnUISchema,
   getResourceDataInputSchema,
@@ -158,11 +159,11 @@ export class GridModel implements ManageableModel {
     this._isFirstGetRows = false
 
     if (this.schema == null) throw new Error('schema is null')
-    const builtInPlugin = this.schema.plugins?.['builtin']
-    if (builtInPlugin && 'axios' in <any>builtInPlugin) {
-      // todo: 将 axios 抽出来
+    const builtInParseRet = builtinPluginSchema.safeParse(this.schema.plugins?.['builtin'])
+    if (builtInParseRet.success && builtInParseRet.data.axios) {
+      // todo: 将处理 builtin logic 抽到 plugin 里
       const res = await axios.request({
-        ...(<any>builtInPlugin)['axios'],
+        ...builtInParseRet.data.axios,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
