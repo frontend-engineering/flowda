@@ -3,7 +3,6 @@ import {
   AssociationKeySchema,
   ColumnUISchema,
   ColumUI,
-  PluginKeySchema,
   ReferenceKeySchema,
   ResourceKey,
 } from '@flowda/types'
@@ -94,7 +93,6 @@ export function processJsonschema(jsonschema: ResourceKey) {
     if (!colParseRet.success)
       throw new Error(`column parse error, k:${cur}, prop: ${JSON.stringify(prop)}, error: ${colParseRet.error.message}`)
 
-    const colPlugin = PluginKeySchema.parse(prop)
     const col = colParseRet.data
     if (jsonschema.required && jsonschema.required.indexOf(cur) > -1) {
       if (!col.validators) col.validators = []
@@ -102,10 +100,7 @@ export function processJsonschema(jsonschema: ResourceKey) {
         required: true,
       })
     }
-    acc.columns.push({
-      ...col,
-      ...colPlugin,
-    })
+    acc.columns.push(col)
     return acc
   }, {
     columns: [],

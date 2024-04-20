@@ -255,7 +255,8 @@ function writeOpenApi(openapi) {
     if (plugin === '')
         return openapiRet;
     return {
-        [`x-${plugin}`]: openapiRet,
+        plugin: plugin,
+        openapi: openapiRet,
     };
 }
 function visible(openapi) {
@@ -3440,10 +3441,23 @@ function writeFieldOpenApi(field) {
         return {};
     const openapi = Object.entries(___namespace.group(field.openapi, (f) => f.type)).reduce((acc, cur) => {
         const [key, value] = cur;
-        acc = {
-            ...acc,
-            ...writeOpenApi([key, value]),
-        };
+        const openapi = writeOpenApi([key, value]);
+        if (openapi.plugin) {
+            acc = {
+                ...acc,
+                plugins: {
+                    ...acc['plugins'],
+                    [openapi.plugin]: openapi.openapi,
+                },
+            };
+        }
+        else {
+            const openapi = writeOpenApi([key, value]);
+            acc = {
+                ...acc,
+                ...openapi,
+            };
+        }
         return acc;
     }, {});
     if (field.relationName) {
@@ -4017,10 +4031,23 @@ function writeModelOpenApi(model) {
         return {};
     const openapi = Object.entries(___namespace.group(model.openapi, (f) => f.type)).reduce((acc, cur) => {
         const [key, value] = cur;
-        acc = {
-            ...acc,
-            ...writeOpenApi([key, value]),
-        };
+        const openapi = writeOpenApi([key, value]);
+        if (openapi.plugin) {
+            acc = {
+                ...acc,
+                plugins: {
+                    ...acc['plugins'],
+                    [openapi.plugin]: openapi.openapi,
+                },
+            };
+        }
+        else {
+            const openapi = writeOpenApi([key, value]);
+            acc = {
+                ...acc,
+                ...openapi,
+            };
+        }
         return acc;
     }, {});
     return _.omitBy({

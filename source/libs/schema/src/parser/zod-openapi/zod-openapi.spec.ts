@@ -42,8 +42,10 @@ describe('zod openapi', () => {
         from: z.string(),
       })
       .resource({
-        'x-legacy': {
-          prisma: 'false',
+        plugins: {
+          legacy: {
+            prsima: false,
+          },
         },
       })
     const output = zodToOpenAPI(schema2)
@@ -53,6 +55,11 @@ describe('zod openapi', () => {
         "display_name": "员工",
         "display_primary_key": "false",
         "name": "User",
+        "plugins": {
+          "legacy": {
+            "prsima": false,
+          },
+        },
         "primary_key": "id",
         "properties": {
           "from": {
@@ -70,9 +77,6 @@ describe('zod openapi', () => {
         "table_name": "User",
         "type": "object",
         "visible": true,
-        "x-legacy": {
-          "prisma": "false",
-        },
       }
     `)
   })
