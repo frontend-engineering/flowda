@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+export interface PluginType {
+  //
+}
+
 export type ColumnKey = {
   column_type: string
   display_name: string
@@ -7,7 +11,7 @@ export type ColumnKey = {
   example?: string
   visible: boolean,
   access_type?: 'read_only' | 'read_write',
-  plugins?: Record<string, unknown>
+  plugins?: PluginType
 }
 export const ColumnKeySchema = z.object({
   column_type: z.string(),
@@ -16,7 +20,7 @@ export const ColumnKeySchema = z.object({
   example: z.string().optional(),
   visible: z.boolean(),
   access_type: z.union([z.literal('read_only'), z.literal('read_write')]).default('read_write'),
-  plugins: z.record(z.string(), z.unknown()).optional(),
+  plugins: z.any().optional(),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
@@ -80,7 +84,7 @@ export type ResourceKey = {
   slug: string
   table_name: string
   visible: boolean
-  plugins?: Record<string, unknown>
+  plugins?: PluginType
 
   // openapi3-ts
   properties?: Record<string, ColumnKey | AssociationKey | ReferenceKey>
@@ -98,7 +102,7 @@ export const ResourceKeySchema = z.object({
   display_column: z.string().optional(),
   searchable_columns: z.string().optional(),
 
-  plugins: z.record(z.string(), z.unknown()).optional(),
+  plugins: z.any().optional(),
 
   // openapi3-ts
   properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema]))

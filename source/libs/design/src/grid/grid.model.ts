@@ -158,7 +158,7 @@ export class GridModel implements ManageableModel {
     this._isFirstGetRows = false
 
     if (this.schema == null) throw new Error('schema is null')
-    const builtInPlugin = this.schema['x-builtin']
+    const builtInPlugin = this.schema.plugins?.['builtin']
     if (builtInPlugin && 'axios' in <any>builtInPlugin) {
       // todo: 将 axios 抽出来
       const res = await axios.request({
