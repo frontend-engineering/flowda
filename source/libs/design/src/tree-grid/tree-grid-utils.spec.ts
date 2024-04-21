@@ -4,7 +4,7 @@ import { convertMenuDataToAgTreeData, convertAgTreeDataToTreeData, stringifyMenu
 describe('tree grid utils', () => {
   it('convert tree data to ag-grid tree data', () => {
     const ret = convertMenuDataToAgTreeData(treeDataInput)
-    console.log(ret)
+    // console.log(ret)
     expect(ret).toMatchInlineSnapshot(`
       [
         {
