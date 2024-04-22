@@ -6,7 +6,6 @@ import {
   PreviewModelSymbol,
   ThemeModelSymbol,
   TreeGridModelSymbol, TaskFormModelSymbol,
-  ApiServiceSymbol,
 } from '@flowda/types'
 
 import { PreviewModel } from './preview/preview.model'
@@ -14,7 +13,6 @@ import { GridModel } from './grid/grid.model'
 import { ThemeModel } from './theme/theme.model'
 import { TreeGridModel } from './tree-grid/tree-grid.model'
 import { TaskFormModel } from './task-form/task-form.model'
-import { ApiService } from './api.service'
 
 export const designModule = new ContainerModule(bind => {
   bindDesignModule(bind)

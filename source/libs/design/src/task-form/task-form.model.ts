@@ -1,7 +1,6 @@
 import { ApiServiceSymbol, ThemeModelSymbol } from '@flowda/types'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
-import { makeObservable, observable } from 'mobx'
 import { ThemeModel } from '../theme/theme.model'
 import { CustomerOrderResourceSchema, wfCfg } from './__stories__/data'
 import axios from 'axios'
@@ -15,18 +14,19 @@ export class TaskFormModel {
   formikProps: FormikProps<unknown> | undefined
   wfCfg = wfCfg.find(cfg => cfg.taskDefinitionKey === 'Activity_1rzszxz')!
 
-  columns = this.wfCfg.resource.columns.map(c1 => {
-    const col = CustomerOrderResourceSchema.columns.find(c2 => c2.name === c1.name)!
+  columns = this.wfCfg.resource.columns.map(wfCol => {
+    const resColRet = CustomerOrderResourceSchema.columns.find(resCol => resCol.name === wfCol.name)!
     return {
-      ...col,
-      ...c1,
+      ...resColRet,
+      ...wfCol,
     }
   })
 
   // supress warning: uncontrolled input to be controlled
-  defaultInitalValues = _.objectify(this.wfCfg.resource.columns,
+  defaultInitalValues = _.objectify(
+    this.wfCfg.resource.columns,
     i => i.name,
-    i => ''
+    i => '',
   )
 
   // save intial backend responsed data, to computed changed value
@@ -35,9 +35,7 @@ export class TaskFormModel {
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
-  ) {
-    makeObservable(this)
-  }
+  ) {}
 
   // wfCfg resource input map, map global vars to resource select, then load data
   async loadTask(taskId: string) {
@@ -53,9 +51,10 @@ export class TaskFormModel {
     const input = _.mapValues(this.wfCfg.resource.inputMap, (v, k) => {
       return vars[v].value
     })
-    if (typeof this.apiService.apis.getResourceData !== 'function') throw new Error('apis.getResourceData is not implemented')
+    if (typeof this.apiService.apis.getResourceData !== 'function')
+      throw new Error('apis.getResourceData is not implemented')
     const ret: any = await this.apiService.apis.getResourceData({
-      schemaName: 'ycdev.CustomerOrderResourceSchema',
+      schemaName: this.wfCfg.resource.schemaName,
       current: 0,
       pageSize: 1,
       sort: [],
@@ -63,14 +62,14 @@ export class TaskFormModel {
         number: {
           filterType: 'text',
           type: 'equals',
-          filter: input.number
-        }
-      }
+          filter: input.number,
+        },
+      },
     })
     const values = ret.data[0]
     if (!this.formikProps) throw new Error(`formikProps is null`)
     this.initialBackendValues = values
-    this.formikProps.setValues(_.mapValues(values, v => v == null ? '' : v))
+    this.formikProps.setValues(_.mapValues(values, v => (v == null ? '' : v)))
   }
 
   async submit(values: any) {
@@ -82,9 +81,10 @@ export class TaskFormModel {
 
     if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
-    if (typeof this.apiService.apis.putResourceData !== 'function') throw new Error('apis.putResourceData is not implemented')
+    if (typeof this.apiService.apis.putResourceData !== 'function')
+      throw new Error('apis.putResourceData is not implemented')
     await this.apiService.apis.putResourceData({
-      schemaName: 'ycdev.CustomerOrderResourceSchema',
+      schemaName: this.wfCfg.resource.schemaName,
       id: values.id,
       updatedValue: changedValues,
     })
