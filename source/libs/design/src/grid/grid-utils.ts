@@ -1,6 +1,6 @@
 import { ReferenceKeySchema } from "@flowda/types";
 import { z } from "zod";
-import dayjs from 'dayjs'
+import * as dayjs from 'dayjs'
 
 export function getReferenceDisplay(refCol: z.infer<typeof ReferenceKeySchema>, val: any) {
     return `${refCol.reference_type} ${refCol.display_name}#${val[refCol.primary_key]}`
