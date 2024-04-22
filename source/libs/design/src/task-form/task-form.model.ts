@@ -11,7 +11,7 @@ import { getChangedValues } from './task-form-utils'
 
 @injectable()
 export class TaskFormModel {
-  // todo 临时
+  // todo -> mv to plugin
   formikProps: FormikProps<unknown> | undefined
   wfCfg = wfCfg.find(cfg => cfg.taskDefinitionKey === 'Activity_1rzszxz')!
 
@@ -24,12 +24,12 @@ export class TaskFormModel {
   })
 
   // supress warning: uncontrolled input to be controlled
-  defaultInitalValues = _.objectify(
-    wfCfg.find(cfg => cfg.taskDefinitionKey === 'Activity_1rzszxz')!.resource.columns,
+  defaultInitalValues = _.objectify(this.wfCfg.resource.columns,
     i => i.name,
     i => ''
   )
 
+  // save intial backend responsed data, to computed changed value
   initialBackendValues = {}
 
   constructor(
@@ -39,8 +39,7 @@ export class TaskFormModel {
     makeObservable(this)
   }
 
-  // 0. 调用 data.service 加载 wfCfg resource(input map global vars -> input)
-  //      - 在 form 中先 load global vars 在调用 map 再 load data
+  // wfCfg resource input map, map global vars to resource select, then load data
   async loadTask(taskId: string) {
     const res = await axios.request({
       method: 'get',
@@ -76,12 +75,14 @@ export class TaskFormModel {
 
   async submit(values: any) {
     const changedValues = getChangedValues(values, this.initialBackendValues)
-    if (_.isEmpty(changedValues)) return
+    if (_.isEmpty(changedValues)) {
+      // todo message
+      return
+    }
 
     if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
     if (typeof this.apiService.apis.putResourceData !== 'function') throw new Error('apis.putResourceData is not implemented')
-    // 1. 调用 data.service 写 wfCfg 中的 read_write 字段
     await this.apiService.apis.putResourceData({
       schemaName: 'ycdev.CustomerOrderResourceSchema',
       id: values.id,

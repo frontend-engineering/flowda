@@ -35,6 +35,7 @@ export class GridModel implements ManageableModel {
    */
   private refPromise?: Promise<boolean>
 
+  // todo: extract to a interface
   handlers: Partial<{
     onRefClick: (v: { schemaName: string; name: string; id: number | string }) => void
     onMouseEnter: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
