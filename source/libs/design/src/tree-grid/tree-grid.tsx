@@ -27,7 +27,6 @@ export class TreeGrid extends Component<TreeGridProps> {
   todo 后续看下 group cell 的 onContextMenu 接出来
    */
   private readonly getContextMenuItems = (params: GetContextMenuItemsParams<any, any>) => {
-
     if (!params.node) throw new Error(`Add child to ${params.value} but node is null`)
     const name = params.node.data.name || params.node.key
     const id = params.node.data.id

@@ -1,12 +1,12 @@
-import { injectable } from 'inversify'
+import { inject, injectable } from 'inversify'
 import type { CellValueChangedEvent, ColDef, GridApi, IRowNode } from 'ag-grid-community'
 import * as _ from 'radash'
-import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
 import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { agMenuItemSchema, ManageableModel } from '@flowda/types'
+import { agMenuItemSchema, ApiServiceSymbol, ManageableModel } from '@flowda/types'
 import { z } from 'zod'
+import { ApiService } from '../api.service'
 
 @injectable()
 export class TreeGridModel implements ManageableModel {
@@ -19,12 +19,13 @@ export class TreeGridModel implements ManageableModel {
   ]
 
   private uri?: string
-  private gridModel?: GridModel
   /**
    * 等待 onGridReady 对 gridApi 赋值
    */
   private gridReadyPromise?: Promise<boolean>
   private gridReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
+
+  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) { }
 
   handlers: Partial<{
     message: (title: string) => void
@@ -66,13 +67,12 @@ export class TreeGridModel implements ManageableModel {
   }
 
   async loadData() {
-    if (!this.gridModel) throw new Error(`this.gridModel is null, call setGridModel() first`)
     if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
-    if (typeof this.gridModel.apis.getResourceData !== 'function') throw new Error('handlers.getResourceData is not implemented')
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     // todo: any
-    const ret: any = await this.gridModel.apis.getResourceData({
+    if (typeof this.apiService.apis.getResourceData !== 'function') throw new Error('apis.getResourceData is not implemented')
+    const ret: any = await this.apiService.apis.getResourceData({
       schemaName: `${uri.authority}.${query.schemaName}`,
       id: Number(query.id),
     })
@@ -85,10 +85,6 @@ export class TreeGridModel implements ManageableModel {
     await this.gridReadyPromise
     if (!this.gridApi) throw new Error('gridApi is null')
     this.gridApi.setGridOption('rowData', treeData)
-  }
-
-  setGridModel(gridModel: GridModel) {
-    this.gridModel = gridModel
   }
 
   getDataPath(data: unknown): string[] {
@@ -106,13 +102,12 @@ export class TreeGridModel implements ManageableModel {
       agTreeData.push(node.data)
     })
     const menuData = convertAgTreeDataToTreeData(agTreeData)
-    if (!this.gridModel) throw new Error(`this.gridModel is null, call setGridModel() first`)
-    if (typeof this.gridModel.apis.putResourceData !== 'function') throw new Error('handlers.putResourceData is not implemented')
+    if (typeof this.apiService.apis.putResourceData !== 'function') throw new Error('apis.putResourceData is not implemented')
     if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     try {
-      this.gridModel.apis.putResourceData(
+      this.apiService.apis.putResourceData(
         {
           schemaName: `${uri.authority}.${query.schemaName}`,
           id: Number(query.id),

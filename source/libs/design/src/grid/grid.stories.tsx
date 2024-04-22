@@ -2,29 +2,23 @@ import 'reflect-metadata'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Grid } from './grid'
 import { Container } from 'inversify'
-import { GridModelSymbol } from '@flowda/types'
+import { ApiServiceSymbol, GridModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { GridModel } from './grid.model'
 import React from 'react'
 import { trpc } from '../../stories/trpc/trpc-client'
 import { GridWrapper } from '../../stories/grid-wrapper'
+import { ApiService } from '../api.service'
 
 const container = new Container()
 container.load(designModule)
 
-container
-  .rebind<GridModel>(GridModelSymbol)
-  .to(GridModel)
-  .inRequestScope()
-  .onActivation(({ container }, gridModel) => {
-    gridModel.handlers.onContextMenu = e => {
-      console.log(e)
-    }
-
-    gridModel.apis.getResourceData = input => trpc.hello.getResourceData.query(input)
-    gridModel.apis.getResourceSchema = input => trpc.hello.getResourceSchema.query(input)
-    gridModel.apis.putResourceData = input => trpc.hello.putResourceData.mutate(input)
-    return gridModel
+container.bind<ApiService>(ApiServiceSymbol).to(ApiService).inSingletonScope()
+  .onActivation(({ container }, apiService) => {
+    apiService.apis.getResourceData = input => trpc.hello.getResourceData.query(input)
+    apiService.apis.getResourceSchema = input => trpc.hello.getResourceSchema.query(input)
+    apiService.apis.putResourceData = input => trpc.hello.putResourceData.mutate(input)
+    return apiService
   })
 
 const meta: Meta<typeof GridWrapper> = {

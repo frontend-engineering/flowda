@@ -32,7 +32,7 @@ export class LoginModel {
   }
 
   async login(accept?: () => Promise<void>) {
-    if (!this.formikProps) throw new Error()
+    if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
     try {
       if (typeof this.handlers.validate !== 'function') {

@@ -48,7 +48,6 @@ function makeConfig(useRspack = false) {
   }
 }
 
-// todo: storybook-react-rspack 突然不能解析 css
 module.exports = makeConfig(true)
 // To customize your webpack configuration you can use the webpackFinal field.
 // Check https://storybook.js.org/docs/react/builders/webpack#extending-storybooks-webpack-config

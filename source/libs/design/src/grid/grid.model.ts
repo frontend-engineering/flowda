@@ -1,24 +1,21 @@
-import { injectable } from 'inversify'
+import { inject, injectable } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import {
   agFilterSchema,
+  ApiServiceSymbol,
   builtinPluginSchema,
   cellRendererInputSchema,
   ColumnUISchema,
-  getResourceDataInputSchema,
   getResourceDataOutputInnerSchema,
-  getResourceDataOutputSchema,
-  getResourceInputSchema,
   handleContextMenuInputSchema,
   ManageableModel,
-  putResourceDataInputSchema,
   ResourceUI,
-  ResourceUISchema,
 } from '@flowda/types'
 import { z } from 'zod'
 import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
+import { ApiService } from '../api.service'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -47,19 +44,13 @@ export class GridModel implements ManageableModel {
     ) => void
   }> = {}
 
-  apis: Partial<{
-    getResourceSchema: (input: z.infer<typeof getResourceInputSchema>) => Promise<z.infer<typeof ResourceUISchema>>
-    getResourceData: (
-      input: z.infer<typeof getResourceDataInputSchema>,
-    ) => Promise<z.infer<typeof getResourceDataOutputSchema>>
-    putResourceData: (input: z.infer<typeof putResourceDataInputSchema>) => Promise<unknown>
-  }> = {}
-
   // private filterModel: z.infer<typeof agFilterSchema> | null = null
   private ref: unknown
   private _uri?: URI
   private refResolve?: (value: boolean | PromiseLike<boolean>) => void
   private _isFirstGetRows = true
+
+  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) { }
 
   getUri() {
     if (!this._uri) throw new Error('uri is null')
@@ -117,7 +108,7 @@ export class GridModel implements ManageableModel {
 
   async getCol(schemaName: string) {
     this.setSchemaName(schemaName)
-    if (typeof this.apis.getResourceSchema !== 'function') {
+    if (typeof this.apiService.apis.getResourceSchema !== 'function') {
       throw new Error('handlers.getResourceSchema is not implemented')
     }
     if (this.schemaName == null) {
@@ -127,7 +118,7 @@ export class GridModel implements ManageableModel {
       console.warn(`columns is not empty, only refresh data, ${schemaName}`)
       this.refresh()
     } else {
-      const schemaRes = await this.apis.getResourceSchema({
+      const schemaRes = await this.apiService.apis.getResourceSchema({
         schemaName: this.schemaName,
       })
       if (schemaRes.columns.length > 0) {
@@ -165,7 +156,7 @@ export class GridModel implements ManageableModel {
     sort: SortModelItem[]
     filterModel: z.infer<typeof agFilterSchema>
   }) {
-    if (typeof this.apis.getResourceData !== 'function') {
+    if (typeof this.apiService.apis.getResourceData !== 'function') {
       throw new Error('apis.getResourceData is not implemented')
     }
     this._isFirstGetRows = false
@@ -190,7 +181,7 @@ export class GridModel implements ManageableModel {
       this.gridApi?.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
       this.setUri(uri)
-      const dataRet = await this.apis.getResourceData(params)
+      const dataRet = await this.apiService.apis.getResourceData(params)
       const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
       if (parseRet.success) {
         return parseRet.data
@@ -203,10 +194,10 @@ export class GridModel implements ManageableModel {
   }
 
   async putData(id: number, updatedValue: unknown) {
-    if (typeof this.apis.putResourceData != 'function') {
+    if (typeof this.apiService.apis.putResourceData != 'function') {
       throw new Error('handlers.putResourceData is not implemented')
     }
-    await this.apis.putResourceData({
+    await this.apiService.apis.putResourceData({
       schemaName: this.schemaName!,
       id: id,
       updatedValue: updatedValue,
