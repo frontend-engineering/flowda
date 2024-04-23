@@ -1,33 +1,76 @@
-import { ApiServiceSymbol, ThemeModelSymbol } from '@flowda/types'
+import { ApiServiceSymbol, ResourceUI, ThemeModelSymbol, WorkflowConfigModelSymbol, getResourceDataOutputSchema, taskUriSchema } from '@flowda/types'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
 import { ThemeModel } from '../theme/theme.model'
-import { CustomerOrderResourceSchema, wfCfg } from './__stories__/data'
 import axios from 'axios'
 import * as _ from 'radash'
 import { ApiService } from '../api.service'
 import { getChangedValues } from './task-form-utils'
+import { WorkflowConfigModel } from './workflow-config.model'
+import { computed, observable, runInAction } from 'mobx'
+import { URI } from '@theia/core'
+import * as qs from 'qs'
 
 @injectable()
 export class TaskFormModel {
   // todo -> mv to plugin
   formikProps: FormikProps<unknown> | undefined
-  wfCfg = wfCfg.find(cfg => cfg.taskDefinitionKey === 'Activity_1rzszxz')!
+  private _taskDefinitionKey: string | undefined
+  private _taskId: string | undefined
+  // todo: 等支持更多 resource 再 refactor
+  @observable schema: ResourceUI | undefined
 
-  columns = this.wfCfg.resource.columns.map(wfCol => {
-    const resColRet = CustomerOrderResourceSchema.columns.find(resCol => resCol.name === wfCol.name)!
-    return {
-      ...resColRet,
-      ...wfCol,
+  get taskId() {
+    if (!this._taskId) throw new Error(`Not set taskId`)
+    return this._taskId
+  }
+
+  get taskDefinitionKey() {
+    if (!this._taskDefinitionKey) throw new Error(`Not set taskDefinitionKey`)
+    return this._taskDefinitionKey
+  }
+
+  setTaskDefinitionKey(taskDefinitionKey: string) {
+    this._taskDefinitionKey = taskDefinitionKey
+  }
+
+  get wfCfg() {
+    return this.wfCfgModel.getWfCfg(this.taskDefinitionKey)
+  }
+
+  async getSchema() {
+    if (this.wfCfg.resource.schemaName == null) throw new Error(`schemaName is null`)
+    if (typeof this.apiService.apis.getResourceSchema !== 'function') {
+      throw new Error('handlers.getResourceSchema is not implemented')
     }
-  })
+    const res = await this.apiService.apis.getResourceSchema({
+      schemaName: this.wfCfg.resource.schemaName
+    })
+    return res
+  }
+
+  @computed
+  get columns() {
+    if (this.schema == null) return []
+    const wfCfg = this.wfCfg
+    return wfCfg.resource.columns.map(wfCol => {
+      const resColRet = this.schema!.columns.find(resCol => resCol.name === wfCol.name)
+      if (!resColRet) throw new Error(`not found workflow column, ${wfCol.name}`)
+      return {
+        ...resColRet,
+        ...wfCol,
+      }
+    })
+  }
 
   // supress warning: uncontrolled input to be controlled
-  defaultInitalValues = _.objectify(
-    this.wfCfg.resource.columns,
-    i => i.name,
-    i => '',
-  )
+  get defaultInitalValues() {
+    return _.objectify(
+      this.wfCfg.resource.columns,
+      i => i.name,
+      i => '',
+    )
+  }
 
   // save intial backend responsed data, to computed changed value
   initialBackendValues = {}
@@ -35,24 +78,40 @@ export class TaskFormModel {
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
-  ) {}
+    @inject(WorkflowConfigModelSymbol) public wfCfgModel: WorkflowConfigModel,
+  ) { }
 
   // wfCfg resource input map, map global vars to resource select, then load data
-  async loadTask(taskId: string) {
-    const res = await axios.request({
-      method: 'get',
-      url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${taskId}/form-variables`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
+  async loadTask(uri: string | URI) {
+    if (typeof uri === 'string') {
+      uri = new URI(uri)
+    }
+    const query = taskUriSchema.parse(qs.parse(uri.query))
+    this._taskId = query.id
+
+    const [schemaRes, formVarRes] = await Promise.all([
+      this.getSchema(),
+      axios.request({
+        method: 'get',
+        url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${query.id}/form-variables`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      }),
+    ])
+
+    runInAction(() => {
+      this.schema = schemaRes
     })
-    const vars = res.data
+
+    const vars: any = formVarRes.data
     const input = _.mapValues(this.wfCfg.resource.inputMap, (v, k) => {
       return vars[v].value
     })
-    if (typeof this.apiService.apis.getResourceData !== 'function')
-      throw new Error('apis.getResourceData is not implemented')
+
+    if (typeof this.apiService.apis.getResourceData !== 'function') throw new Error('apis.getResourceData is not implemented')
+    // todo: type infer 没有 work
     const ret: any = await this.apiService.apis.getResourceData({
       schemaName: this.wfCfg.resource.schemaName,
       current: 0,
@@ -89,16 +148,14 @@ export class TaskFormModel {
       updatedValue: changedValues,
     })
     // 2. 调用 workflow rest finish task
-    const taskId = 'eaf0dccd-ffae-11ee-907e-26fc8bb373e1'
     const res = await axios.request({
       method: 'post',
-      url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${taskId}/complete`,
+      url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${this.taskId}/complete`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
     })
-
     // todo: 如果失败手动回滚
     this.formikProps.setSubmitting(false)
   }

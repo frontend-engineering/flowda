@@ -2,7 +2,9 @@ import { Component } from 'react'
 import { TaskFormModel } from './task-form.model'
 import { Formik, FormikProps } from 'formik'
 import { EuiFlexGroup, EuiFlexItem, EuiFieldText, EuiForm, EuiFormRow, EuiThemeProvider, EuiButton } from '@elastic/eui'
+import { observer } from 'mobx-react'
 
+@observer
 export class TaskForm extends Component<{
   model: TaskFormModel
 }> {

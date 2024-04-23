@@ -2,15 +2,15 @@ import 'reflect-metadata'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TaskForm } from './task-form'
 import { Container } from 'inversify'
-import { ApiServiceSymbol, TaskFormModelSymbol } from '@flowda/types'
+import { ApiServiceSymbol, TaskFormModelSymbol, WorkflowConfigModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { TaskFormModel } from './task-form.model'
 import '@elastic/eui/dist/eui_theme_light.css'
 import '../reset.css'
-import { URI } from '@theia/core'
-import * as qs from 'qs'
 import { ApiService } from '../api.service'
 import { trpc } from '../../stories/trpc/trpc-client'
+import { WorkflowConfigModel } from './workflow-config.model'
+import { wfCfgs, taskId, taskDefinitionKey, taskName } from './__stories__/data'
 
 const container = new Container()
 container.load(designModule)
@@ -23,13 +23,13 @@ container.bind<ApiService>(ApiServiceSymbol).to(ApiService).inSingletonScope()
     return apiService
   })
 
-
+const wfCfgModel = container.get<WorkflowConfigModel>(WorkflowConfigModelSymbol)
+wfCfgModel.setWfCfgs(wfCfgs)
 const model = container.get<TaskFormModel>(TaskFormModelSymbol)
 
-const uri = "task://superadmin?id=eaf0dccd-ffae-11ee-907e-26fc8bb373e1&name=填写成本计算表"
-const uri_ = new URI(uri)
-const query = qs.parse(uri_.query)
-model.loadTask(query.id as string)
+const uri = `task://superadmin?id=${taskId}&taskDefinitionKey=${taskDefinitionKey}&name=${taskName}`
+model.setTaskDefinitionKey(taskDefinitionKey)
+model.loadTask(uri)
 
 const meta: Meta<typeof TaskForm> = {
   component: TaskForm,
