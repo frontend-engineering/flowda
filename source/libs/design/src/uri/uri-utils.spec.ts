@@ -86,20 +86,15 @@ describe('uri utils', () => {
     }
     const ret = createTaskUri(input)
     expect(ret).toMatchInlineSnapshot(
-      `"task://superadmin?id=939e8453-fd7e-11ee-907e-26fc8bb373e1&name=创建预订单&assignee=ycdevdemo&executionId=939dc100-fd7e-11ee-907e-26fc8bb373e1&processDefinitionId=Process_1iv5qkp:4:7c3be32c-fd7e-11ee-907e-26fc8bb373e1&processInstanceId=939dc100-fd7e-11ee-907e-26fc8bb373e1&taskDefinitionKey=Activity_1rzszxz&tenantId=ycdev"`,
+      `"task://superadmin?id=939e8453-fd7e-11ee-907e-26fc8bb373e1&name=创建预订单&taskDefinitionKey=Activity_1rzszxz"`,
     )
     const uri_ = new URI(ret)
     const query = qs.parse(uri_.query)
     expect(query).toMatchInlineSnapshot(`
       {
-        "assignee": "ycdevdemo",
-        "executionId": "939dc100-fd7e-11ee-907e-26fc8bb373e1",
         "id": "939e8453-fd7e-11ee-907e-26fc8bb373e1",
         "name": "创建预订单",
-        "processDefinitionId": "Process_1iv5qkp:4:7c3be32c-fd7e-11ee-907e-26fc8bb373e1",
-        "processInstanceId": "939dc100-fd7e-11ee-907e-26fc8bb373e1",
         "taskDefinitionKey": "Activity_1rzszxz",
-        "tenantId": "ycdev",
       }
     `)
   })

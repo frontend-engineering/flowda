@@ -1,4 +1,4 @@
-import { agFilterSchema, handleContextMenuInputSchema, taskSchema, treeGridUriQuerySchema } from '@flowda/types'
+import { agFilterSchema, handleContextMenuInputSchema, taskSchema, taskUriSchema, treeGridUriQuerySchema } from '@flowda/types'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
 import { z } from 'zod'
@@ -158,7 +158,7 @@ export function createAssociationUri(input: z.infer<typeof handleContextMenuInpu
 
 export function createTaskUri(input: z.infer<typeof handleContextMenuInputSchema>) {
     const uri = new URI(input.uri)
-    const data = taskSchema.parse(input.cellRendererInput.data)
+    const data = taskUriSchema.parse(input.cellRendererInput.data)
     const ret = `task://${uri.authority}?${qs.stringify(data, { encode: false })}`
     return ret
 }
