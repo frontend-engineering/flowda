@@ -2,26 +2,18 @@ import 'reflect-metadata'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TaskForm } from './task-form'
 import { Container } from 'inversify'
-import { ApiServiceSymbol, TaskFormModelSymbol, WorkflowConfigModelSymbol } from '@flowda/types'
+import { ApiService, ApiServiceSymbol, TaskFormModelSymbol, WorkflowConfigModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { TaskFormModel } from './task-form.model'
 import '@elastic/eui/dist/eui_theme_light.css'
 import '../reset.css'
-import { ApiService } from '../api.service'
-import { trpc } from '../../stories/trpc/trpc-client'
 import { WorkflowConfigModel } from './workflow-config.model'
 import { wfCfgs, taskId, taskDefinitionKey, taskName } from './__stories__/data'
+import { StoryApiService } from '../../stories/story-api-service'
 
 const container = new Container()
 container.load(designModule)
-
-container.bind<ApiService>(ApiServiceSymbol).to(ApiService).inSingletonScope()
-  .onActivation(({ container }, apiService) => {
-    apiService.apis.getResourceData = input => trpc.hello.getResourceData.query(input)
-    apiService.apis.getResourceSchema = input => trpc.hello.getResourceSchema.query(input)
-    apiService.apis.putResourceData = input => trpc.hello.putResourceData.mutate(input)
-    return apiService
-  })
+container.rebind<ApiService>(ApiServiceSymbol).to(StoryApiService).inSingletonScope()
 
 const wfCfgModel = container.get<WorkflowConfigModel>(WorkflowConfigModelSymbol)
 wfCfgModel.setWfCfgs(wfCfgs)

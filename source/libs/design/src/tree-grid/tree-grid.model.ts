@@ -4,9 +4,8 @@ import * as _ from 'radash'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
 import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { agMenuItemSchema, ApiServiceSymbol, ManageableModel } from '@flowda/types'
+import { agMenuItemSchema, ApiService, ApiServiceSymbol, ManageableModel } from '@flowda/types'
 import { z } from 'zod'
-import { ApiService } from '../api.service'
 
 @injectable()
 export class TreeGridModel implements ManageableModel {
@@ -71,8 +70,7 @@ export class TreeGridModel implements ManageableModel {
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     // todo: any
-    if (typeof this.apiService.apis.getResourceData !== 'function') throw new Error('apis.getResourceData is not implemented')
-    const ret: any = await this.apiService.apis.getResourceData({
+    const ret: any = await this.apiService.getResourceData({
       schemaName: `${uri.authority}.${query.schemaName}`,
       id: Number(query.id),
     })
@@ -102,12 +100,11 @@ export class TreeGridModel implements ManageableModel {
       agTreeData.push(node.data)
     })
     const menuData = convertAgTreeDataToTreeData(agTreeData)
-    if (typeof this.apiService.apis.putResourceData !== 'function') throw new Error('apis.putResourceData is not implemented')
     if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     try {
-      this.apiService.apis.putResourceData(
+      this.apiService.putResourceData(
         {
           schemaName: `${uri.authority}.${query.schemaName}`,
           id: Number(query.id),

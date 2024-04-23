@@ -1,10 +1,9 @@
-import { ApiServiceSymbol, ResourceUI, ThemeModelSymbol, WorkflowConfigModelSymbol, getResourceDataOutputSchema, taskUriSchema } from '@flowda/types'
+import { ApiService, ApiServiceSymbol, ResourceUI, ThemeModelSymbol, WorkflowConfigModelSymbol, getResourceDataOutputSchema, taskUriSchema } from '@flowda/types'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
 import { ThemeModel } from '../theme/theme.model'
 import axios from 'axios'
 import * as _ from 'radash'
-import { ApiService } from '../api.service'
 import { getChangedValues } from './task-form-utils'
 import { WorkflowConfigModel } from './workflow-config.model'
 import { computed, observable, runInAction } from 'mobx'
@@ -21,12 +20,12 @@ export class TaskFormModel {
   @observable schema: ResourceUI | undefined
 
   get taskId() {
-    if (!this._taskId) throw new Error(`Not set taskId`)
+    if (!this._taskId) throw new Error(`Not found taskId, call loadTask first`)
     return this._taskId
   }
 
   get taskDefinitionKey() {
-    if (!this._taskDefinitionKey) throw new Error(`Not set taskDefinitionKey`)
+    if (!this._taskDefinitionKey) throw new Error(`Not set taskDefinitionKey, call setTaskDefinitionKey first`)
     return this._taskDefinitionKey
   }
 
@@ -39,11 +38,8 @@ export class TaskFormModel {
   }
 
   async getSchema() {
-    if (this.wfCfg.resource.schemaName == null) throw new Error(`schemaName is null`)
-    if (typeof this.apiService.apis.getResourceSchema !== 'function') {
-      throw new Error('handlers.getResourceSchema is not implemented')
-    }
-    const res = await this.apiService.apis.getResourceSchema({
+    if (this.wfCfg.resource.schemaName == null) throw new Error(`wfCfg.resource.schemaName is null`)
+    const res = await this.apiService.getResourceSchema({
       schemaName: this.wfCfg.resource.schemaName
     })
     return res
@@ -110,9 +106,8 @@ export class TaskFormModel {
       return vars[v].value
     })
 
-    if (typeof this.apiService.apis.getResourceData !== 'function') throw new Error('apis.getResourceData is not implemented')
     // todo: type infer 没有 work
-    const ret: any = await this.apiService.apis.getResourceData({
+    const ret: any = await this.apiService.getResourceData({
       schemaName: this.wfCfg.resource.schemaName,
       current: 0,
       pageSize: 1,
@@ -140,14 +135,12 @@ export class TaskFormModel {
 
     if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
-    if (typeof this.apiService.apis.putResourceData !== 'function')
-      throw new Error('apis.putResourceData is not implemented')
-    await this.apiService.apis.putResourceData({
+    await this.apiService.putResourceData({
       schemaName: this.wfCfg.resource.schemaName,
       id: values.id,
       updatedValue: changedValues,
     })
-    // 2. 调用 workflow rest finish task
+    // 2. invoke workflow rest api finish task
     const res = await axios.request({
       method: 'post',
       url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${this.taskId}/complete`,

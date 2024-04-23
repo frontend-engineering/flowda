@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import {
   agFilterSchema,
+  ApiService,
   ApiServiceSymbol,
   builtinPluginSchema,
   cellRendererInputSchema,
@@ -15,7 +16,6 @@ import { z } from 'zod'
 import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
-import { ApiService } from '../api.service'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -109,9 +109,6 @@ export class GridModel implements ManageableModel {
 
   async getCol(schemaName: string) {
     this.setSchemaName(schemaName)
-    if (typeof this.apiService.apis.getResourceSchema !== 'function') {
-      throw new Error('handlers.getResourceSchema is not implemented')
-    }
     if (this.schemaName == null) {
       throw new Error('schemaName is null')
     }
@@ -119,7 +116,7 @@ export class GridModel implements ManageableModel {
       console.warn(`columns is not empty, only refresh data, ${schemaName}`)
       this.refresh()
     } else {
-      const schemaRes = await this.apiService.apis.getResourceSchema({
+      const schemaRes = await this.apiService.getResourceSchema({
         schemaName: this.schemaName,
       })
       if (schemaRes.columns.length > 0) {
@@ -157,9 +154,6 @@ export class GridModel implements ManageableModel {
     sort: SortModelItem[]
     filterModel: z.infer<typeof agFilterSchema>
   }) {
-    if (typeof this.apiService.apis.getResourceData !== 'function') {
-      throw new Error('apis.getResourceData is not implemented')
-    }
     this._isFirstGetRows = false
 
     if (this.schema == null) throw new Error('schema is null')
@@ -182,7 +176,7 @@ export class GridModel implements ManageableModel {
       this.gridApi?.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
       this.setUri(uri)
-      const dataRet = await this.apiService.apis.getResourceData(params)
+      const dataRet = await this.apiService.getResourceData(params)
       const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
       if (parseRet.success) {
         return parseRet.data
@@ -195,10 +189,10 @@ export class GridModel implements ManageableModel {
   }
 
   async putData(id: number, updatedValue: unknown) {
-    if (typeof this.apiService.apis.putResourceData != 'function') {
+    if (typeof this.apiService.putResourceData != 'function') {
       throw new Error('handlers.putResourceData is not implemented')
     }
-    await this.apiService.apis.putResourceData({
+    await this.apiService.putResourceData({
       schemaName: this.schemaName!,
       id: id,
       updatedValue: updatedValue,

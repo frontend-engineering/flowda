@@ -2,24 +2,16 @@ import 'reflect-metadata'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Grid } from './grid'
 import { Container } from 'inversify'
-import { ApiServiceSymbol, GridModelSymbol } from '@flowda/types'
+import { ApiService, ApiServiceSymbol, GridModelSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { GridModel } from './grid.model'
 import React from 'react'
-import { trpc } from '../../stories/trpc/trpc-client'
 import { GridWrapper } from '../../stories/grid-wrapper'
-import { ApiService } from '../api.service'
+import { StoryApiService } from '../../stories/story-api-service'
 
 const container = new Container()
 container.load(designModule)
-
-container.bind<ApiService>(ApiServiceSymbol).to(ApiService).inSingletonScope()
-  .onActivation(({ container }, apiService) => {
-    apiService.apis.getResourceData = input => trpc.hello.getResourceData.query(input)
-    apiService.apis.getResourceSchema = input => trpc.hello.getResourceSchema.query(input)
-    apiService.apis.putResourceData = input => trpc.hello.putResourceData.mutate(input)
-    return apiService
-  })
+container.rebind<ApiService>(ApiServiceSymbol).to(StoryApiService).inSingletonScope()
 
 const meta: Meta<typeof GridWrapper> = {
   component: GridWrapper,
