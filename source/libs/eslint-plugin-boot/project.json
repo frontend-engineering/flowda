@@ -1,0 +1,47 @@
+{
+  "name": "eslint-plugin-boot",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/eslint-plugin-boot/src",
+  "projectType": "library",
+  "targets": {
+    "dev": {
+      "executor": "@flowda/nx-plugin:dev",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/eslint-plugin-boot"
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/eslint-plugin-boot",
+        "main": "libs/eslint-plugin-boot/src/index.ts",
+        "tsConfig": "libs/eslint-plugin-boot/tsconfig.lib.json",
+        "assets": ["libs/eslint-plugin-boot/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/eslint-plugin-boot/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/eslint-plugin-boot/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
