@@ -85,8 +85,7 @@ export class TreeGridModel implements ManageableModel {
     this.gridApi.setGridOption('rowData', treeData)
   }
 
-  getDataPath(data: unknown): string[] {
-    // @ts-expect-error
+  getDataPath(data: Record<string, unknown>): string[] {
     if (!('hierarchy' in data) || !Array.isArray(data.hierarchy)) {
       throw new Error('Must provide hierarchy field.')
     }

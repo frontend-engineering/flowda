@@ -147,7 +147,7 @@ export function createAssociationUri(input: z.infer<typeof handleContextMenuInpu
             [input.association.foreign_key]: {
                 filterType: 'number',
                 type: 'equals',
-                // @ts-expect-error
+                // @ts-expect-error ag-grid
                 filter: input.cellRendererInput.data?.[input.association.primary_key],
             },
         },

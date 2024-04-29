@@ -2,7 +2,7 @@
   "name": "@flowda/eslint-plugin-boot",
   "version": "0.0.1",
   "type": "commonjs",
-  "peerDependencies": {
-    "@anatine/zod-openapi": "*"
+  "scripts": {
+    "test": "ts-node --project tsconfig.lib.json ./src/test/rules/index"
   }
 }

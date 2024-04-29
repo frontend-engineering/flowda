@@ -9,6 +9,7 @@ export const builtinPluginSchema = z.object({
   open_task: z.boolean().optional()
 })
 
+// @ts-ignore ignore test error
 declare module '@flowda/types' {
   interface PluginType {
     builtin: z.infer<typeof builtinPluginSchema>

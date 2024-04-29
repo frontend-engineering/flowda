@@ -209,7 +209,7 @@ export class Grid extends React.Component<GridProps> {
             }
           case 'string':
           case 'String':
-          case 'textarea':
+          case 'textarea': {
             let cellRenderer: undefined | ((param: z.infer<typeof cellRendererInputSchema>) => any) = undefined
             if (this.props.model.isOpenTask(item.name)) {
               cellRenderer = (param: z.infer<typeof cellRendererInputSchema>) => (
@@ -233,6 +233,7 @@ export class Grid extends React.Component<GridProps> {
               },
               cellRenderer,
             }
+          }
           case 'Json':
             return {
               editable: false,

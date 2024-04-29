@@ -127,11 +127,11 @@ export class GridModel implements ManageableModel {
 
     if (this.refPromise == null) throw new Error('refPromise is null, call resetRefPromise in getOrCreateGridModel()')
     await this.refPromise
-    // @ts-expect-error
+    // @ts-expect-error invoke react ref
     if (this.ref == null || typeof this.ref['setColDefs'] !== 'function') {
       throw new Error('ref is null')
     }
-    // @ts-expect-error
+    // @ts-expect-error invoke react ref
     this.ref['setColDefs']()
   }
 
