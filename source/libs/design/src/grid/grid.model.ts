@@ -189,9 +189,6 @@ export class GridModel implements ManageableModel {
   }
 
   async putData(id: number, updatedValue: unknown) {
-    if (typeof this.apiService.putResourceData != 'function') {
-      throw new Error('handlers.putResourceData is not implemented')
-    }
     await this.apiService.putResourceData({
       schemaName: this.schemaName!,
       id: id,

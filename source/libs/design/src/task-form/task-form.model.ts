@@ -1,4 +1,4 @@
-import { ApiService, ApiServiceSymbol, ResourceUI, ThemeModelSymbol, WorkflowConfigModelSymbol, getResourceDataOutputSchema, taskUriSchema } from '@flowda/types'
+import { ApiService, ApiServiceSymbol, ManageableModel, ResourceUI, ThemeModelSymbol, WorkflowConfigModelSymbol, taskUriOutputSchema } from '@flowda/types'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
 import { ThemeModel } from '../theme/theme.model'
@@ -13,9 +13,9 @@ import * as qs from 'qs'
 export type DefaultFormValueType = Record<string, string | number | undefined>
 
 @injectable()
-export class TaskFormModel {
+export class TaskFormModel implements ManageableModel {
   // todo -> mv to plugin
-  formikProps: FormikProps<unknown> | undefined
+  formikProps: FormikProps<DefaultFormValueType> | undefined
   private _taskDefinitionKey: string | undefined
   private _taskId: string | undefined
   // todo: 等支持更多 resource 再 refactor
@@ -27,12 +27,8 @@ export class TaskFormModel {
   }
 
   get taskDefinitionKey() {
-    if (!this._taskDefinitionKey) throw new Error(`Not set taskDefinitionKey, call setTaskDefinitionKey first`)
+    if (!this._taskDefinitionKey) throw new Error(`Not set taskDefinitionKey, call loadTask first`)
     return this._taskDefinitionKey
-  }
-
-  setTaskDefinitionKey(taskDefinitionKey: string) {
-    this._taskDefinitionKey = taskDefinitionKey
   }
 
   get wfCfg() {
@@ -73,25 +69,47 @@ export class TaskFormModel {
   // save intial backend responsed data, to computed changed value
   initialBackendValues = {}
 
+  private uri?: string
+
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
     @inject(WorkflowConfigModelSymbol) public wfCfgModel: WorkflowConfigModel,
   ) { }
 
+  getUri() {
+    if (!this.uri) throw new Error('uri is null')
+    return this.uri
+  }
+
+  setUri(uri: string | URI) {
+    if (typeof uri !== 'string') uri = uri.toString(true)
+    if (uri != null) {
+      if (this.uri == null) {
+        this.uri = uri
+      } else {
+        // double check 下 防止 gridModel grid 未对应
+        if (uri !== this.uri) throw new Error(`setRef uri is not matched, current: ${this.uri}, input: ${uri}`)
+      }
+    }
+  }
+
   // wfCfg resource input map, map global vars to resource select, then load data
   async loadTask(uri: string | URI) {
+    this.setUri(uri)
+
     if (typeof uri === 'string') {
       uri = new URI(uri)
     }
-    const query = taskUriSchema.parse(qs.parse(uri.query))
-    this._taskId = query.id
+    const query = taskUriOutputSchema.parse(qs.parse(uri.query))
+    this._taskId = query.taskId
+    this._taskDefinitionKey = query.taskDefinitionKey
 
     const [schemaRes, formVarRes] = await Promise.all([
       this.getSchema(),
       axios.request({
         method: 'get',
-        url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${query.id}/form-variables`,
+        url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${query.taskId}/form-variables`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,

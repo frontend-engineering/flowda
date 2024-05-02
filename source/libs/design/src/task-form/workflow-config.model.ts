@@ -1,6 +1,7 @@
 import { wfCfgSchema } from "@flowda/types";
 import { injectable } from "inversify";
 import { z } from "zod";
+import { wfCfgs } from "./__stories__/data";
 
 @injectable()
 export class WorkflowConfigModel {
@@ -11,7 +12,10 @@ export class WorkflowConfigModel {
     }
 
     get wfCfgs() {
-        if (!this._wfCfgs) throw new Error(`wfCfgs is undef, set first`)
+        if (!this._wfCfgs) {
+            // throw new Error(`wfCfgs is undef, set first`)
+            this._wfCfgs = wfCfgs
+        }
         return this._wfCfgs
     }
 

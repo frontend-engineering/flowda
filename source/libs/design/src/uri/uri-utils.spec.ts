@@ -85,16 +85,15 @@ describe('uri utils', () => {
       },
     }
     const ret = createTaskUri(input)
-    expect(ret).toMatchInlineSnapshot(
-      `"task://superadmin?id=939e8453-fd7e-11ee-907e-26fc8bb373e1&name=创建预订单&taskDefinitionKey=Activity_1rzszxz"`,
+    expect(ret.toString(true)).toMatchInlineSnapshot(
+      `"task://superadmin?taskDefinitionKey=Activity_1rzszxz&taskId=939e8453-fd7e-11ee-907e-26fc8bb373e1&displayName=创建预订单"`,
     )
-    const uri_ = new URI(ret)
-    const query = qs.parse(uri_.query)
+    const query = qs.parse(ret.query)
     expect(query).toMatchInlineSnapshot(`
       {
-        "id": "939e8453-fd7e-11ee-907e-26fc8bb373e1",
-        "name": "创建预订单",
+        "displayName": "创建预订单",
         "taskDefinitionKey": "Activity_1rzszxz",
+        "taskId": "939e8453-fd7e-11ee-907e-26fc8bb373e1",
       }
     `)
   })

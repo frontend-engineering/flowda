@@ -12,10 +12,17 @@ export const taskSchema = z.object({
 })
 
 // 可能后续再增加 或者先请求一次后端
-export const taskUriSchema = taskSchema.pick({
+export const taskUriInputSchema = taskSchema.pick({
     id: true,
     name: true,
     taskDefinitionKey: true
+})
+
+// displayName 是为了兼容 getUriDisplayName()
+export const taskUriOutputSchema = z.object({
+    taskId: z.string(),
+    displayName: z.string(),
+    taskDefinitionKey: z.string()
 })
 
 // 逐步增强，现在仅支持单个 resource 
