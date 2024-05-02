@@ -6,9 +6,11 @@ import axios from 'axios'
 import * as _ from 'radash'
 import { getChangedValues } from './task-form-utils'
 import { WorkflowConfigModel } from './workflow-config.model'
-import { computed, observable, runInAction } from 'mobx'
+import { computed, observable, runInAction, trace } from 'mobx'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
+
+export type DefaultFormValueType = Record<string, string | number | undefined>
 
 @injectable()
 export class TaskFormModel {
@@ -101,13 +103,13 @@ export class TaskFormModel {
       this.schema = schemaRes
     })
 
-    const vars: any = formVarRes.data
+    const vars = formVarRes.data
     const input = _.mapValues(this.wfCfg.resource.inputMap, (v, k) => {
       return vars[v].value
     })
 
     // todo: type infer 没有 work
-    const ret: any = await this.apiService.getResourceData({
+    const ret = await this.apiService.getResourceData({
       schemaName: this.wfCfg.resource.schemaName,
       current: 0,
       pageSize: 1,
@@ -119,14 +121,18 @@ export class TaskFormModel {
           filter: input.number,
         },
       },
-    })
+    }) as { data: DefaultFormValueType[] }
+
     const values = ret.data[0]
     if (!this.formikProps) throw new Error(`formikProps is null`)
     this.initialBackendValues = values
-    this.formikProps.setValues(_.mapValues(values, v => (v == null ? '' : v)))
+    this.formikProps.setValues(
+      values == null
+        ? {}
+        : _.mapValues(values, v => (v == null ? '' : v)))
   }
 
-  async submit(values: any) {
+  async submit(values: DefaultFormValueType) {
     const changedValues = getChangedValues(values, this.initialBackendValues)
     if (_.isEmpty(changedValues)) {
       // todo message
@@ -135,9 +141,10 @@ export class TaskFormModel {
 
     if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
+    if (values.id == null) throw new Error('values.id is null')
     await this.apiService.putResourceData({
       schemaName: this.wfCfg.resource.schemaName,
-      id: values.id,
+      id: values.id as number,
       updatedValue: changedValues,
     })
     // 2. invoke workflow rest api finish task

@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { TaskFormModel } from './task-form.model'
+import { DefaultFormValueType, TaskFormModel } from './task-form.model'
 import { Formik, FormikProps } from 'formik'
 import { EuiFlexGroup, EuiFlexItem, EuiFieldText, EuiForm, EuiFormRow, EuiThemeProvider, EuiButton } from '@elastic/eui'
 import { observer } from 'mobx-react'
@@ -10,13 +10,13 @@ export class TaskForm extends Component<{
 }> {
   override render() {
     return (
-      <Formik<any>
+      <Formik<DefaultFormValueType>
         onSubmit={values => {
           this.props.model.submit(values)
         }}
         initialValues={this.props.model.defaultInitalValues}
       >
-        {(formikProps: FormikProps<any>) => {
+        {(formikProps: FormikProps<DefaultFormValueType>) => {
           this.props.model.formikProps = formikProps
           const {
             values,
@@ -28,11 +28,12 @@ export class TaskForm extends Component<{
             isSubmitting,
             /* and other goodies */
           } = formikProps
+          const cols = this.props.model.columns
           return (
             <EuiThemeProvider colorMode={this.props.model.theme.colorMode}>
               <EuiForm isInvalid={false} error={[]} component="form">
                 <EuiFlexGroup style={{ maxWidth: 600 }}>
-                  {this.props.model.columns.map(col => {
+                  {cols.map(col => {
                     return (
                       <EuiFlexItem key={col.name}>
                         <EuiFormRow
