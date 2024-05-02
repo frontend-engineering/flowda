@@ -129,7 +129,7 @@ describe('uri utils', () => {
       },
     } as const
     const ret = createAssociationUri(input)
-    console.log(ret)
+    // console.log(ret)
     expect(ret).toMatchInlineSnapshot(`
       URI {
         "codeUri": {
@@ -205,7 +205,7 @@ describe('uri utils', () => {
     const uri_ = new URI(uri)
     const ret = updateUriFilterModel(uri_, filterModel)
     const uriRet = ret.toString(true)
-    console.log(uriRet)
+    // console.log(uriRet)
     const uriRet_ = new URI(uriRet)
     expect(qs.parse(uriRet_.query)['filterModel']).toMatchInlineSnapshot(`
       {
@@ -331,7 +331,7 @@ describe('uri utils', () => {
     // const uri = 'resource.flowda.MenuResourceSchema:///菜单'
     const uri = 'urn:example:animal:ferret:nose'
     const output = Uri.parse(uri)
-    console.log(output)
+    // console.log(output)
     expect(output).toMatchInlineSnapshot(`
       {
         "$mid": 1,
@@ -341,7 +341,7 @@ describe('uri utils', () => {
     `)
     const uri2 = 'foo://example.com:8042/over/there?name=ferret#nose'
     const output2 = Uri.parse(uri2)
-    console.log(output2)
+    // console.log(output2)
     expect(output2).toMatchInlineSnapshot(`
       {
         "$mid": 1,
@@ -371,11 +371,11 @@ describe('uri utils', () => {
         },
       }
     `)
-    console.log(uri)
+    // console.log(uri)
     // todo: 换成 LabelProvider.getName 试试看
-    console.log(uri.displayName)
+    // console.log(uri.displayName)
     // 用不到
-    console.log(uri.parent)
+    // console.log(uri.parent)
     expect(uri.parent).toMatchInlineSnapshot(`
       URI {
         "codeUri": {
@@ -406,7 +406,7 @@ describe('uri utils', () => {
     // resource.flowda.MenuResourceSchema:///菜单
     const rawUri = 'grid://flowda?schema=MenuResourceSchema'
     const output = Uri.parse(rawUri)
-    console.log(output)
+    // console.log(output)
     expect(output).toMatchInlineSnapshot(`
       {
         "$mid": 1,
@@ -417,13 +417,13 @@ describe('uri utils', () => {
     `)
 
     const uri = new URI(rawUri)
-    console.log(uri)
+    // console.log(uri)
   })
 
   it('tree grid uri', () => {
     const uri = 'grid://flowda?schemaName=MenuResourceSchema&displayName=菜单'
     const output = createTreeGridUri(new URI(uri), '1', 'menuData')
-    console.log(output)
+    // console.log(output)
     expect(output.toString(true)).toMatchInlineSnapshot(
       `"tree-grid://flowda?schemaName=MenuResourceSchema&displayName=菜单%231:menuData&id=1&field=menuData"`,
     )
@@ -463,7 +463,7 @@ describe('uri utils', () => {
     const treeGridUri =
       'tree-grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%233%3AtreeData%26id%3D3%26field%3DtreeData'
     const gridUri = convertTreeGridUriToGridUri(treeGridUri)
-    console.log(gridUri)
+    // console.log(gridUri)
     expect(gridUri).toMatchInlineSnapshot(`"grid://flowda?schemaName=MenuResourceSchema&displayName=菜单"`)
   })
 })

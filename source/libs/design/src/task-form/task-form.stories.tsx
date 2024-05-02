@@ -2,25 +2,23 @@ import 'reflect-metadata'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TaskForm } from './task-form'
 import { Container } from 'inversify'
-import { ApiService, ApiServiceSymbol, TaskFormModelSymbol, WorkflowConfigModelSymbol } from '@flowda/types'
+import { ApiService, ApiServiceSymbol, TaskFormModelSymbol, WorkflowConfigSymbol } from '@flowda/types'
 import { designModule } from '../designModule'
 import { TaskFormModel } from './task-form.model'
 // import '@elastic/eui/dist/eui_theme_light.css'
 import '@elastic/eui/dist/eui_theme_dark.css'
 import '../reset.css'
-import { WorkflowConfigModel } from './workflow-config.model'
-import { wfCfgs, taskId, taskDefinitionKey, taskName } from './__stories__/data'
+import { taskDefinitionKey, taskId, taskName, wfCfgs } from './__stories__/data'
 import { StoryApiService } from '../../stories/story-api-service'
 
 const container = new Container()
 container.load(designModule)
 container.rebind<ApiService>(ApiServiceSymbol).to(StoryApiService).inSingletonScope()
+container.bind(WorkflowConfigSymbol).toConstantValue(wfCfgs)
 
-const wfCfgModel = container.get<WorkflowConfigModel>(WorkflowConfigModelSymbol)
-wfCfgModel.setWfCfgs(wfCfgs)
 const model = container.get<TaskFormModel>(TaskFormModelSymbol)
 
-const uri = `task://superadmin?id=${taskId}&taskDefinitionKey=${taskDefinitionKey}&name=${taskName}`
+const uri = `task://superadmin?taskId=${taskId}&taskDefinitionKey=${taskDefinitionKey}&displayName=${taskName}`
 model.loadTask(uri)
 
 const meta: Meta<typeof TaskForm> = {
@@ -32,6 +30,6 @@ export default meta
 
 export const Primary: StoryObj<typeof TaskForm> = {
   args: {
-    model
+    model,
   },
 }

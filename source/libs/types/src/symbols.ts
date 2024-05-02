@@ -4,7 +4,6 @@
  */
 export const ServiceSymbol = Symbol('Service')
 export const ApiServiceSymbol = Symbol('ApiService')
-
 export const TreeGridModelSymbol = Symbol.for('TreeGridModel')
 export const GridModelSymbol = Symbol.for('GridModel')
 export const PreviewModelSymbol = Symbol.for('PreviewModel')
@@ -12,3 +11,4 @@ export const WorkflowConfigModelSymbol = Symbol.for('WorkflowConfigModel')
 export const LoginModelSymbol = Symbol.for('LoginModel')
 export const ThemeModelSymbol = Symbol.for('ThemeModel')
 export const TaskFormModelSymbol = Symbol.for('TaskFormModel')
+export const WorkflowConfigSymbol = Symbol.for('WorkflowConfig')

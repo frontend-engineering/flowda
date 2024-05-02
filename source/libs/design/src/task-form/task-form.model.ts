@@ -1,14 +1,23 @@
-import { ApiService, ApiServiceSymbol, ManageableModel, ResourceUI, ThemeModelSymbol, WorkflowConfigModelSymbol, taskUriOutputSchema } from '@flowda/types'
+import {
+  ApiService,
+  ApiServiceSymbol,
+  ManageableModel,
+  ResourceUI,
+  taskUriOutputSchema,
+  ThemeModelSymbol,
+  wfCfgSchema,
+  WorkflowConfigSymbol,
+} from '@flowda/types'
 import { FormikProps } from 'formik'
-import { inject, injectable } from 'inversify'
+import { inject, injectable, multiInject } from 'inversify'
 import { ThemeModel } from '../theme/theme.model'
 import axios from 'axios'
 import * as _ from 'radash'
 import { getChangedValues } from './task-form-utils'
-import { WorkflowConfigModel } from './workflow-config.model'
-import { computed, observable, runInAction, trace } from 'mobx'
+import { computed, observable, runInAction } from 'mobx'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
+import { z } from 'zod'
 
 export type DefaultFormValueType = Record<string, string | number | undefined>
 
@@ -32,13 +41,16 @@ export class TaskFormModel implements ManageableModel {
   }
 
   get wfCfg() {
-    return this.wfCfgModel.getWfCfg(this.taskDefinitionKey)
+    const wfCfgs = this.wfCfgs.reduce((acc, cur) => acc.concat(cur))
+    const ret = wfCfgs.find(cfg => cfg.taskDefinitionKey === this.taskDefinitionKey)
+    if (!ret) throw new Error(`not found workflow config, taskDefinitionKey:${this.taskDefinitionKey}`)
+    return ret
   }
 
   async getSchema() {
     if (this.wfCfg.resource.schemaName == null) throw new Error(`wfCfg.resource.schemaName is null`)
     const res = await this.apiService.getResourceSchema({
-      schemaName: this.wfCfg.resource.schemaName
+      schemaName: this.wfCfg.resource.schemaName,
     })
     return res
   }
@@ -57,8 +69,10 @@ export class TaskFormModel implements ManageableModel {
     })
   }
 
-  // supress warning: uncontrolled input to be controlled
-  get defaultInitalValues() {
+  // suppress warning: uncontrolled input to be controlled
+  get defaultInitialValues() {
+    if (this._taskDefinitionKey == null) return {}
+
     return _.objectify(
       this.wfCfg.resource.columns,
       i => i.name,
@@ -74,7 +88,7 @@ export class TaskFormModel implements ManageableModel {
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
-    @inject(WorkflowConfigModelSymbol) public wfCfgModel: WorkflowConfigModel,
+    @multiInject(WorkflowConfigSymbol) public wfCfgs: z.infer<typeof wfCfgSchema>[],
   ) { }
 
   getUri() {

@@ -14,7 +14,7 @@ export class TaskForm extends Component<{
         onSubmit={values => {
           this.props.model.submit(values)
         }}
-        initialValues={this.props.model.defaultInitalValues}
+        initialValues={this.props.model.defaultInitialValues}
       >
         {(formikProps: FormikProps<DefaultFormValueType>) => {
           this.props.model.formikProps = formikProps
