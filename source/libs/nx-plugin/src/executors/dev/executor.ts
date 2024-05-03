@@ -148,6 +148,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         fs.writeFileSync(
           path.join(options.outputPath, '.yalcignore'),
           `src/**/*
+testing/**/*
 `,
         )
       } else {
@@ -157,6 +158,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
 src/**/*.d.ts
 src/**/__fixtures__/**/*
 src/**/__tests__/**/*
+testing/**/*
 `,
         )
       }

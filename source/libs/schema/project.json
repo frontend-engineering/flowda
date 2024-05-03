@@ -10,6 +10,7 @@
         "{options.outputPath}"
       ],
       "options": {
+        "bundleJs": true,
         "outputPath": "dist/libs/schema"
       }
     },
