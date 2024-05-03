@@ -40,23 +40,25 @@ export class Grid extends React.Component<GridProps> {
         <EuiThemeProvider colorMode={this.props.model.theme.colorMode}>
           <GridToolbar {...this.props} />
         </EuiThemeProvider>
-        <AgGridReact
-          modules={[InfiniteRowModelModule]}
-          ref={ref => {
-            this.gridRef = ref
-          }}
-          defaultColDef={{
-            maxWidth: 400,
-          }}
-          rowHeight={42}
-          pagination={true}
-          paginationPageSize={20}
-          cacheBlockSize={20}
-          rowModelType={'infinite'}
-          getRowId={(params: GetRowIdParams) => params.data.id}
-          onGridReady={this.onGridReady}
-          onCellValueChanged={this.onCellValueChanged}
-        />
+        <div style={{ height: 'calc(100% - 40px)' }}>
+          <AgGridReact
+            modules={[InfiniteRowModelModule]}
+            ref={ref => {
+              this.gridRef = ref
+            }}
+            defaultColDef={{
+              maxWidth: 400,
+            }}
+            rowHeight={36}
+            pagination={true}
+            paginationPageSize={20}
+            cacheBlockSize={20}
+            rowModelType={'infinite'}
+            getRowId={(params: GetRowIdParams) => params.data.id}
+            onGridReady={this.onGridReady}
+            onCellValueChanged={this.onCellValueChanged}
+          />
+        </div>
       </div>
     )
   }
@@ -229,7 +231,7 @@ export class Grid extends React.Component<GridProps> {
               field: item.name,
               // headerName: item.display_name,
               headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="calendar"
-                                                                           size="s" /> {item.display_name}
+                                                                          size="s" /> {item.display_name}
               </Flex>,
               // cellDataType: 'date', // todo: 需要后端支持
               valueFormatter: params => {
@@ -283,7 +285,7 @@ export class Grid extends React.Component<GridProps> {
               field: item.name,
               // headerName: item.display_name,
               headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="visVega"
-                                                                            size="s" /> {item.display_name}</Flex>,
+                                                                          size="s" /> {item.display_name}</Flex>,
               cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
                 return (
                   <div

@@ -1,4 +1,4 @@
-import { EuiButton, EuiButtonEmpty } from '@elastic/eui'
+import { EuiButtonEmpty } from '@elastic/eui'
 import { Box, Flex } from '@rebass/grid/emotion'
 import { observer } from 'mobx-react'
 import * as React from 'react'
@@ -14,7 +14,7 @@ const FEuiButtonEmpty = styled(EuiButtonEmpty)<{ 'x-color': string }>`
 export class GridToolbar extends React.Component<GridProps> {
   override render() {
     return (
-      <Flex my={2} mx={-1}>
+      <Flex py={2} mx={-1} style={{ height: 40 }}>
         <Box mx={1}>
           <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}

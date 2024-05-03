@@ -31,7 +31,7 @@ class GridStory extends React.Component<{
   render() {
     return (
       <>
-        <EuiButtonEmpty onClick={() => this.props.gridModel.refresh()}>Refresh</EuiButtonEmpty>
+        {/*<EuiButtonEmpty onClick={() => this.props.gridModel.refresh()}>Refresh</EuiButtonEmpty>*/}
         <Grid ref={ref => this.props.gridModel.setRef(ref)} model={this.props.gridModel} />
       </>
     )
