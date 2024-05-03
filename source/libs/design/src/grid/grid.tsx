@@ -9,13 +9,13 @@ import type {
   IDatasource,
   IGetRowsParams,
 } from 'ag-grid-community'
-import { shortenDatetime } from './grid-utils'
+import { getReferenceDisplay, shortenDatetime } from './grid-utils'
 import { cellRendererInputSchema } from '@flowda/types'
 import { z } from 'zod'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
-import { getReferenceDisplay } from './grid-utils'
 import { getUriFilterModel } from '../uri/uri-utils'
+import { Box, Flex } from '@rebass/grid/emotion'
 
 export type GridProps = {
   uri?: string
@@ -24,6 +24,30 @@ export type GridProps = {
 
 export class Grid extends React.Component<GridProps> {
   private gridRef: AgGridReact | null = null
+
+  override render() {
+    return (
+      <div style={{ height: '100%' }}>
+        <AgGridReact
+          modules={[InfiniteRowModelModule]}
+          ref={ref => {
+            this.gridRef = ref
+          }}
+          defaultColDef={{
+            maxWidth: 400,
+          }}
+          rowHeight={42}
+          pagination={true}
+          paginationPageSize={20}
+          cacheBlockSize={20}
+          rowModelType={'infinite'}
+          getRowId={(params: GetRowIdParams) => params.data.id}
+          onGridReady={this.onGridReady}
+          onCellValueChanged={this.onCellValueChanged}
+        />
+      </div>
+    )
+  }
 
   private readonly onGridReady = async (evt: GridReadyEvent) => {
     this.props.model.gridApi = evt.api
@@ -308,25 +332,4 @@ export class Grid extends React.Component<GridProps> {
     this.gridRef!.api.autoSizeColumns(allColumnIds, false)
   }
 
-  override render() {
-    return (
-      <AgGridReact
-        modules={[InfiniteRowModelModule]}
-        ref={ref => {
-          this.gridRef = ref
-        }}
-        defaultColDef={{
-          maxWidth: 400,
-        }}
-        rowHeight={42}
-        pagination={true}
-        paginationPageSize={20}
-        cacheBlockSize={20}
-        rowModelType={'infinite'}
-        getRowId={(params: GetRowIdParams) => params.data.id}
-        onGridReady={this.onGridReady}
-        onCellValueChanged={this.onCellValueChanged}
-      />
-    )
-  }
 }

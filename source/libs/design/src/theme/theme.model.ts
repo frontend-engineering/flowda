@@ -3,7 +3,7 @@ import { makeObservable, observable } from 'mobx'
 
 @injectable()
 export class ThemeModel {
-  @observable colorMode: 'light' | 'dark' = 'dark'
+  @observable colorMode: 'light' | 'dark' = 'light'
 
   constructor() {
     makeObservable(this)

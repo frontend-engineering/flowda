@@ -1,8 +1,4 @@
 import 'reflect-metadata'
-
-import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-quartz.css'
-
 import type { Meta, StoryObj } from '@storybook/react'
 import { TreeGrid } from './tree-grid'
 import { Container } from 'inversify'

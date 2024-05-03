@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { DefaultFormValueType, TaskFormModel } from './task-form.model'
 import { Formik, FormikProps } from 'formik'
-import { EuiFlexGroup, EuiFlexItem, EuiFieldText, EuiForm, EuiFormRow, EuiThemeProvider, EuiButton } from '@elastic/eui'
+import { EuiButton, EuiFieldText, EuiFlexGroup, EuiFlexItem, EuiForm, EuiFormRow, EuiThemeProvider } from '@elastic/eui'
 import { observer } from 'mobx-react'
 
 @observer
@@ -55,16 +55,17 @@ export class TaskForm extends Component<{
                     )
                   })}
                 </EuiFlexGroup>
-                <button
+                <EuiButton
                   type="submit"
-                  onClick={e => {
+                  size="s"
+                  onClick={(e: any) => {
                     e.preventDefault()
                     e.stopPropagation()
                     handleSubmit()
                   }}
                 >
                   Save form
-                </button>
+                </EuiButton>
               </EuiForm>
             </EuiThemeProvider>
           )

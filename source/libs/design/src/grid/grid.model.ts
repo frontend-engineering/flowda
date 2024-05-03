@@ -11,11 +11,13 @@ import {
   handleContextMenuInputSchema,
   ManageableModel,
   ResourceUI,
+  ThemeModelSymbol,
 } from '@flowda/types'
 import { z } from 'zod'
 import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
+import { ThemeModel } from '../theme/theme.model'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -51,7 +53,9 @@ export class GridModel implements ManageableModel {
   private refResolve?: (value: boolean | PromiseLike<boolean>) => void
   private _isFirstGetRows = true
 
-  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) { }
+  constructor(
+    @inject(ThemeModelSymbol) public theme: ThemeModel,
+    @inject(ApiServiceSymbol) public apiService: ApiService) { }
 
   getUri() {
     if (!this._uri) throw new Error('uri is null')
