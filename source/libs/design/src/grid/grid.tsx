@@ -20,7 +20,7 @@ import { GridToolbar } from './grid-toolbar'
 import { Flex } from '@rebass/grid/emotion'
 import styled from '@emotion/styled'
 
-let HiEuiIcon = styled(EuiIcon)<{ top?: number }>`
+const FEuiIcon = styled(EuiIcon)<{ top?: number }>`
     position: relative;
     top: ${props => props.top || 1}px;
     margin-right: 8px;
@@ -143,7 +143,7 @@ export class Grid extends React.Component<GridProps> {
             pinned: 'left',
             filter: true,
             floatingFilter: true,
-            headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="key" size="s" />{item.display_name}
+            headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="key" size="s" />{item.display_name}
             </Flex>,
           }
         }
@@ -153,7 +153,7 @@ export class Grid extends React.Component<GridProps> {
               editable: false,
               field: item.name,
               // headerName: item.display_name,
-              headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="link" size="s" /> {item.display_name}
+              headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="link" size="s" /> {item.display_name}
               </Flex>,
               filter: true,
               floatingFilter: true,
@@ -228,7 +228,7 @@ export class Grid extends React.Component<GridProps> {
             return {
               field: item.name,
               // headerName: item.display_name,
-              headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="calendar"
+              headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="calendar"
                                                                            size="s" /> {item.display_name}
               </Flex>,
               // cellDataType: 'date', // todo: 需要后端支持
@@ -282,7 +282,7 @@ export class Grid extends React.Component<GridProps> {
               editable: false,
               field: item.name,
               // headerName: item.display_name,
-              headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="visVega"
+              headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="visVega"
                                                                             size="s" /> {item.display_name}</Flex>,
               cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
                 return (
@@ -317,7 +317,7 @@ export class Grid extends React.Component<GridProps> {
             editable: false,
             field: ass.model_name,
             // headerName: ass.display_name,
-            headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="index" size="s" />{ass.display_name}
+            headerComponent: () => <Flex alignItems="center"> <FEuiIcon type="index" size="s" />{ass.display_name}
             </Flex>,
             cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               return (

@@ -6,7 +6,7 @@ import { GridProps } from './grid'
 import styled from '@emotion/styled'
 import { EUI_DARK_COLORS, EUI_LIGHT_COLORS } from '../theme/theme.model'
 
-let HiEuiButtonEmpty = styled(EuiButtonEmpty)<{ 'x-color': string }>`
+const FEuiButtonEmpty = styled(EuiButtonEmpty)<{ 'x-color': string }>`
     color: ${props => props['x-color']};
 `
 
@@ -16,39 +16,39 @@ export class GridToolbar extends React.Component<GridProps> {
     return (
       <Flex my={2} mx={-1}>
         <Box mx={1}>
-          <HiEuiButtonEmpty
+          <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
             onClick={() => {}} iconType="plus" size="xs" color="text">
             New
-          </HiEuiButtonEmpty>
+          </FEuiButtonEmpty>
         </Box>
         <Box mx={1}>
-          <HiEuiButtonEmpty
+          <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
             onClick={() => {}} iconType="filter" size="xs" color="text">
             Filter
-          </HiEuiButtonEmpty>
+          </FEuiButtonEmpty>
         </Box>
         <Box mx={1}>
-          <HiEuiButtonEmpty
+          <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
             onClick={() => {}} iconType="sortable" size="xs" color="text">
             Sort
-          </HiEuiButtonEmpty>
+          </FEuiButtonEmpty>
         </Box>
         <Box mx={1}>
-          <HiEuiButtonEmpty
+          <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
             onClick={() => {}} iconType="trash" size="xs" color="text">
             Delete
-          </HiEuiButtonEmpty>
+          </FEuiButtonEmpty>
         </Box>
         <Box mx={1}>
-          <HiEuiButtonEmpty
+          <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
             onClick={() => {}} iconType="gradient" size="xs" color="text">
             Column
-          </HiEuiButtonEmpty>
+          </FEuiButtonEmpty>
         </Box>
 
       </Flex>
