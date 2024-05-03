@@ -8,6 +8,7 @@ import { GridModel } from './grid.model'
 import React from 'react'
 import { GridWrapper } from '../../stories/grid-wrapper'
 import { StoryApiService } from '../../stories/story-api-service'
+import { EuiButtonEmpty } from '@elastic/eui'
 
 const container = new Container()
 container.load(designModule)
@@ -30,7 +31,7 @@ class GridStory extends React.Component<{
   render() {
     return (
       <>
-        <button onClick={() => this.props.gridModel.refresh()}>Refresh</button>
+        <EuiButtonEmpty onClick={() => this.props.gridModel.refresh()}>Refresh</EuiButtonEmpty>
         <Grid ref={ref => this.props.gridModel.setRef(ref)} model={this.props.gridModel} />
       </>
     )

@@ -15,7 +15,7 @@ specifiers:
   '@babel/core': 7.12.13
   '@babel/preset-react': ^7.14.5
   '@babel/preset-typescript': 7.12.13
-  '@elastic/eui': ^93.2.0
+  '@elastic/eui': ^94.2.1
   '@emotion/babel-plugin': ^11.11.0
   '@emotion/react': ^11.11.4
   '@emotion/styled': ^11.11.0
@@ -143,7 +143,7 @@ dependencies:
   '@ag-grid-enterprise/menu': 31.1.1
   '@ag-grid-enterprise/row-grouping': 31.1.1
   '@anatine/zod-openapi': file:.yalc/@anatine/zod-openapi_tl2iubihev2mfo2chbkuob3dme
-  '@elastic/eui': 93.2.0_z32nx65s764vzpqexokaly4lhi
+  '@elastic/eui': 94.2.1_crs2p7cer4xxivvnqunjcawroa
   '@emotion/react': 11.11.4_pmekkgnqduwlme35zpnqhenc34
   '@emotion/styled': 11.11.0_idvpitqx43vmck5h6avouzrlhu
   '@nestjs/common': 10.3.3_rcbhqa4so6dtcde4mhxkgzk6je
@@ -2052,6 +2052,13 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.1
 
+  /@babel/runtime/7.24.5:
+    resolution: {integrity: sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
+
   /@babel/template/7.24.0:
     resolution: {integrity: sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA==}
     engines: {node: '>=6.9.0'}
@@ -2182,8 +2189,8 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@elastic/eui/93.2.0_z32nx65s764vzpqexokaly4lhi:
-    resolution: {integrity: sha512-YPJM+hs1Ouv7Fc04JZiEOT5nCNBMFKsQwKmmGqzEwpMDsXpx6NKT0s0AlRO43JabTWBHL9yIRE4aORhAzH6pBQ==}
+  /@elastic/eui/94.2.1_crs2p7cer4xxivvnqunjcawroa:
+    resolution: {integrity: sha512-IAAlBVQamIu3tKBHZIYHqoQyDvNz4Tj+cGt8HqznsSn57Vr+Etsbp7nrwGplE3gumRBapauTl61dj6uEeUcxxQ==}
     engines: {node: 16.x || 18.x || >=20.x}
     peerDependencies:
       '@elastic/datemath': ^5.0.2
@@ -2192,7 +2199,6 @@ packages:
       '@types/react': ^16.9 || ^17.0 || ^18.0
       '@types/react-dom': ^16.9 || ^17.0 || ^18.0
       moment: ^2.13.0
-      prop-types: ^15.5.0
       react: ^16.12 || ^17.0 || ^18.0
       react-dom: ^16.12 || ^17.0 || ^18.0
       typescript: ~4.5.3
@@ -2200,14 +2206,13 @@ packages:
       '@elastic/datemath': 5.0.3_moment@2.30.1
       '@emotion/css': 11.11.2
       '@emotion/react': 11.11.4_pmekkgnqduwlme35zpnqhenc34
-      '@hello-pangea/dnd': 16.5.0_3xleytyzprlgycb2ded54tx72i
+      '@hello-pangea/dnd': 16.6.0_3xleytyzprlgycb2ded54tx72i
       '@types/lodash': 4.17.0
       '@types/numeral': 2.0.5
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       '@types/react-window': 1.8.8
       '@types/refractor': 3.4.1
-      '@types/resize-observer-browser': 0.1.11
       chroma-js: 2.4.2
       classnames: 2.5.1
       lodash: 4.17.21
@@ -3040,13 +3045,13 @@ packages:
       '@hapi/hoek': 9.3.0
     dev: true
 
-  /@hello-pangea/dnd/16.5.0_3xleytyzprlgycb2ded54tx72i:
-    resolution: {integrity: sha512-n+am6O32jo/CFXciCysz83lPM3I3F58FJw4uS44TceieymcyxQSfzK5OhzPAKrVBZktmuOI6Zim9WABTMtXv4A==}
+  /@hello-pangea/dnd/16.6.0_3xleytyzprlgycb2ded54tx72i:
+    resolution: {integrity: sha512-vfZ4GydqbtUPXSLfAvKvXQ6xwRzIjUSjVU0Sx+70VOhc2xx6CdmJXJ8YhH70RpbTUGjxctslQTHul9sIOxCfFQ==}
     peerDependencies:
       react: ^16.8.5 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.5 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.5
       css-box-model: 1.2.1
       memoize-one: 6.0.0
       raf-schd: 4.0.3
@@ -7827,10 +7832,6 @@ packages:
     resolution: {integrity: sha512-wYuorIiCTSuvRT9srwt+taF6mH/ww+SyN2psM0sjef2qW+sS8GmshgDGTEDgWB1sTVGgYVE6EK7dBA2MxQxibg==}
     dependencies:
       '@types/prismjs': 1.26.3
-    dev: false
-
-  /@types/resize-observer-browser/0.1.11:
-    resolution: {integrity: sha512-cNw5iH8JkMkb3QkCoe7DaZiawbDQEUX8t7iuQaRTyLOyQCR2h+ibBD4GJt7p5yhUHrlOeL7ZtbxNHeipqNsBzQ==}
     dev: false
 
   /@types/resolve/1.17.1:
@@ -16824,7 +16825,7 @@ packages:
       redux:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.5
       '@types/hoist-non-react-statics': 3.3.5
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
@@ -16850,6 +16851,7 @@ packages:
   /react-remove-scroll-bar/2.3.5_pmekkgnqduwlme35zpnqhenc34:
     resolution: {integrity: sha512-3cqjOqg6s0XbOjWvmasmqHch+RLxIEk2r/70rzGXuz3iIGQsQheEQyqYCBb5EECoD01Vo2SIbDqW4paLeLTASw==}
     engines: {node: '>=10'}
+    deprecated: please update to the following version as this contains a bug (https://github.com/theKashey/react-remove-scroll-bar/issues/57)
     peerDependencies:
       '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -17067,7 +17069,7 @@ packages:
   /redux/4.2.1:
     resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.5
     dev: false
 
   /reflect-metadata/0.1.14:

@@ -15,7 +15,16 @@ import { z } from 'zod'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
 import { getUriFilterModel } from '../uri/uri-utils'
-import { Box, Flex } from '@rebass/grid/emotion'
+import { EuiIcon, EuiThemeProvider } from '@elastic/eui'
+import { GridToolbar } from './grid-toolbar'
+import { Flex } from '@rebass/grid/emotion'
+import styled from '@emotion/styled'
+
+let HiEuiIcon = styled(EuiIcon)<{ top?: number }>`
+    position: relative;
+    top: ${props => props.top || 1}px;
+    margin-right: 8px;
+`
 
 export type GridProps = {
   uri?: string
@@ -28,6 +37,9 @@ export class Grid extends React.Component<GridProps> {
   override render() {
     return (
       <div style={{ height: '100%' }}>
+        <EuiThemeProvider colorMode={this.props.model.theme.colorMode}>
+          <GridToolbar {...this.props} />
+        </EuiThemeProvider>
         <AgGridReact
           modules={[InfiniteRowModelModule]}
           ref={ref => {
@@ -126,11 +138,13 @@ export class Grid extends React.Component<GridProps> {
           return {
             minWidth: 110,
             field: item.name,
-            headerName: item.display_name,
+            // headerName: item.display_name,
             cellDataType: item.column_type === 'String' ? 'string' : 'number',
             pinned: 'left',
             filter: true,
             floatingFilter: true,
+            headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="key" size="s" />{item.display_name}
+            </Flex>,
           }
         }
         switch (item.column_type) {
@@ -138,7 +152,9 @@ export class Grid extends React.Component<GridProps> {
             return {
               editable: false,
               field: item.name,
-              headerName: item.display_name,
+              // headerName: item.display_name,
+              headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="link" size="s" /> {item.display_name}
+              </Flex>,
               filter: true,
               floatingFilter: true,
               cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
@@ -211,7 +227,10 @@ export class Grid extends React.Component<GridProps> {
           case 'datetime':
             return {
               field: item.name,
-              headerName: item.display_name,
+              // headerName: item.display_name,
+              headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="calendar"
+                                                                           size="s" /> {item.display_name}
+              </Flex>,
               // cellDataType: 'date', // todo: 需要后端支持
               valueFormatter: params => {
                 if (params.value) {
@@ -262,7 +281,9 @@ export class Grid extends React.Component<GridProps> {
             return {
               editable: false,
               field: item.name,
-              headerName: item.display_name,
+              // headerName: item.display_name,
+              headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="visVega"
+                                                                            size="s" /> {item.display_name}</Flex>,
               cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
                 return (
                   <div
@@ -295,7 +316,9 @@ export class Grid extends React.Component<GridProps> {
           return {
             editable: false,
             field: ass.model_name,
-            headerName: ass.display_name,
+            // headerName: ass.display_name,
+            headerComponent: () => <Flex alignItems="center"> <HiEuiIcon type="index" size="s" />{ass.display_name}
+            </Flex>,
             cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
               return (
                 <div
@@ -333,3 +356,4 @@ export class Grid extends React.Component<GridProps> {
   }
 
 }
+

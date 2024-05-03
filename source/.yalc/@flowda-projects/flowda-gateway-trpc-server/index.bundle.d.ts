@@ -8,6 +8,7 @@ import * as qs from 'qs';
 import * as express_serve_static_core from 'express-serve-static-core';
 import { LoggerService, INestApplication } from '@nestjs/common';
 import * as trpcExpress from '@trpc/server/adapters/express';
+import { AxiosInstance } from 'axios';
 import * as znv_dist_util from 'znv/dist/util';
 
 declare const flowdaGatewayTrpcServerModule: ContainerModule;
@@ -298,7 +299,7 @@ type Service = {
      */
     id: string;
     name: string;
-    trpc: any;
+    trpcEndpoint: string;
 };
 declare class GatewayRegister {
     private readonly logger;
@@ -311,9 +312,10 @@ declare class GatewayRegister {
 }
 declare class HelloRouter {
     private trpc;
+    private axios;
     private gatewayRegister;
     private readonly logger;
-    constructor(trpc: TrpcService, gatewayRegister: GatewayRegister, loggerFactory: (name: string) => LoggerService);
+    constructor(trpc: TrpcService, axios: AxiosInstance, gatewayRegister: GatewayRegister, loggerFactory: (name: string) => LoggerService);
     helloRouter: _trpc_server.CreateRouterInner<_trpc_server.RootConfig<{
         ctx: {
             req: express.Request<express_serve_static_core.ParamsDictionary, any, any, qs.ParsedQs, Record<string, any>>;
