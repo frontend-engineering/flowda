@@ -10,27 +10,56 @@ import consola from 'consola'
 import * as fs from 'fs-extra'
 import alias from '@rollup/plugin-alias'
 import * as _ from 'radash'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 
-export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSchema>): rollup.RollupOptions {
-  return {
-    onwarn: (warning, next) => {
-      if (input.bundleSuppressWarnCodes.indexOf(warning.code) > -1) return
-      next(warning)
-    },
-    input: input.bundleInput,
-    output: [
-      {
-        file: input.bundleFile,
-        format: 'es',
+export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSchema>): rollup.RollupOptions[] {
+  const packageJson = fs.readJSONSync(input.packageJsonPath)
+  const cfgs = [
+    {
+      onwarn: (warning, next) => {
+        if (input.bundleSuppressWarnCodes.indexOf(warning.code) > -1) return
+        next(warning)
       },
-    ],
-    plugins: [
-      dts({}),
-      alias({
-        entries: input.bundleAlias,
-      }),
-    ],
+      input: input.dtsBundleInput,
+      output: [
+        {
+          file: input.dtsBundleFile,
+          format: 'es',
+        },
+      ],
+      plugins: [
+        dts({}),
+        alias({
+          entries: input.bundleAlias,
+        }),
+      ],
+    },
+  ] as rollup.RollupOptions[]
+
+  if (input.bundleJs) {
+    cfgs.push({
+      onwarn: (warning, next) => {
+        if (input.bundleSuppressWarnCodes.indexOf(warning.code) > -1) return
+        next(warning)
+      },
+      input: input.bundleInput,
+      output: [
+        {
+          file: input.bundleFile,
+          format: 'cjs',
+          interop: 'auto',
+        },
+      ],
+      external: [
+        ...Object.keys(packageJson.peerDependencies),
+        ...Object.keys(packageJson.dependencies),
+        ...input.externals,
+      ],
+      plugins: [nodeResolve()],
+    })
   }
+
+  return cfgs
 }
 
 export default async function* devExecutor(_options: z.infer<typeof devExecutorSchema>, context?: ExecutorContext) {
@@ -58,17 +87,26 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
   for await (const output of tscGenerator) {
     yield output
     if (options.bundleDts) {
-      const rollupOptions = buildRollupConfig(buildRollupConfigInputSchema.parse({
-        bundleInput: path.join(options.outputPath, `src/index.d.ts`),
-        bundleFile: path.join(options.outputPath, `index.bundle.d.ts`),
-        bundleAlias: _.mapValues(options.bundleAlias, value => path.join(context.root, value)),
-        bundleSuppressWarnCodes: options.bundleSuppressWarnCodes,
-      }))
+      const rollupOptions = buildRollupConfig(
+        buildRollupConfigInputSchema.parse({
+          dtsBundleInput: path.join(options.outputPath, `src/index.d.ts`),
+          dtsBundleFile: path.join(options.outputPath, `index.bundle.d.ts`),
+          packageJsonPath: path.join(options.outputPath, `package.json`),
+          bundleInput: path.join(options.outputPath, `src/index.js`),
+          bundleFile: path.join(options.outputPath, `index.bundle.js`),
+          bundleAlias: _.mapValues(options.bundleAlias, value => path.join(context.root, value)),
+          bundleSuppressWarnCodes: options.bundleSuppressWarnCodes,
+          externals: options.externals,
+          bundleJs: options.bundleJs,
+        }),
+      )
       try {
-        consola.start(`Bundling ${context.projectName} .d.ts...`)
-        const bundle = await rollup.rollup(rollupOptions)
-        await bundle.write(rollupOptions.output[0])
-        consola.success(`Bundle done.`)
+        for (const rollupOption of rollupOptions) {
+          consola.start(`Bundling ${context.projectName} ${rollupOption.input}...`)
+          const bundle = await rollup.rollup(rollupOption)
+          await bundle.write(rollupOption.output[0])
+          consola.success(`Bundle done.`)
+        }
       } catch (e) {
         if (e instanceof Error) {
           consola.error(`Bundle error ${e.message}`)
@@ -84,10 +122,15 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       packageJson.types = './index.bundle.d.ts'
       consola.info('  to update package.json#types: ./index.bundle.d.ts')
     } else {
-      if (options.yalc) { // 如果不 bundle dts 则 yalc 不用支持 d.ts，因为 yalc 永远会 ignore src/**/*.d.ts
+      if (options.yalc) {
+        // 如果不 bundle dts 则 yalc 不用支持 d.ts，因为 yalc 永远会 ignore src/**/*.d.ts
         delete packageJson.types
         consola.info('  to delete package.json#types')
       }
+    }
+    if (options.bundleJs) {
+      packageJson.main = './index.bundle.js'
+      consola.info('  to update package.json#main: ./index.bundle.js')
     }
     if (options.onlyTypes) {
       delete packageJson.main
@@ -101,15 +144,21 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
 
     if (options.yalc) {
       consola.start(`yalc publish ${context.projectName} ...`)
-      if (options.onlyTypes) {
-        fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `src/**/*
-`)
+      if (options.onlyTypes || options.bundleJs) {
+        fs.writeFileSync(
+          path.join(options.outputPath, '.yalcignore'),
+          `src/**/*
+`,
+        )
       } else {
-        fs.writeFileSync(path.join(options.outputPath, '.yalcignore'), `*.js.map
+        fs.writeFileSync(
+          path.join(options.outputPath, '.yalcignore'),
+          `*.js.map
 src/**/*.d.ts
 src/**/__fixtures__/**/*
 src/**/__tests__/**/*
-`)
+`,
+        )
       }
       if (options.watch) {
         execSync(`yalc publish --push --changed`, {

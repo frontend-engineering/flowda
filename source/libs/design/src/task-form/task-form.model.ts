@@ -23,7 +23,6 @@ export type DefaultFormValueType = Record<string, string | number | undefined>
 
 @injectable()
 export class TaskFormModel implements ManageableModel {
-  // todo -> mv to plugin
   formikProps: FormikProps<DefaultFormValueType> | undefined
   private _taskDefinitionKey: string | undefined
   private _taskId: string | undefined
@@ -80,7 +79,7 @@ export class TaskFormModel implements ManageableModel {
     )
   }
 
-  // save intial backend responsed data, to computed changed value
+  // save initial backend response data to computed changed value
   initialBackendValues = {}
 
   private uri?: string
@@ -89,7 +88,7 @@ export class TaskFormModel implements ManageableModel {
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
     @multiInject(WorkflowConfigSymbol) public wfCfgs: z.infer<typeof wfCfgSchema>[],
-  ) { }
+  ) {}
 
   getUri() {
     if (!this.uri) throw new Error('uri is null')
@@ -141,7 +140,7 @@ export class TaskFormModel implements ManageableModel {
     })
 
     // todo: type infer 没有 work
-    const ret = await this.apiService.getResourceData({
+    const ret = (await this.apiService.getResourceData({
       schemaName: this.wfCfg.resource.schemaName,
       current: 0,
       pageSize: 1,
@@ -153,15 +152,12 @@ export class TaskFormModel implements ManageableModel {
           filter: input.number,
         },
       },
-    }) as { data: DefaultFormValueType[] }
+    })) as { data: DefaultFormValueType[] }
 
     const values = ret.data[0]
     if (!this.formikProps) throw new Error(`formikProps is null`)
     this.initialBackendValues = values
-    this.formikProps.setValues(
-      values == null
-        ? {}
-        : _.mapValues(values, v => (v == null ? '' : v)))
+    this.formikProps.setValues(values == null ? {} : _.mapValues(values, v => (v == null ? '' : v)))
   }
 
   async submit(values: DefaultFormValueType) {

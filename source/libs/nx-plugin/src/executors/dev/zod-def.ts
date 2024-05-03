@@ -3,11 +3,16 @@ import { z } from 'zod'
 export const rollupTransparentSchema = z.object({
   bundleAlias: z.record(z.string(), z.string()).default({}),
   bundleSuppressWarnCodes: z.array(z.string()).default([]),
+  bundleJs: z.boolean().default(false),
+  externals: z.array(z.string()).default([]),
 })
 
 export const buildRollupConfigInputSchema = rollupTransparentSchema.extend({
+  dtsBundleInput: z.string(),
+  dtsBundleFile: z.string(),
   bundleInput: z.string(),
   bundleFile: z.string(),
+  packageJsonPath: z.string(),
 })
 
 export const devExecutorSchema = rollupTransparentSchema.extend({
