@@ -68,14 +68,12 @@ export class Grid extends React.Component<GridProps> {
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {
+        // todo: 搞清楚为什么会出现这两个 warning
         if (this.props.model.schemaName == null) {
           console.warn('schemaName is null, ignored')
           return
         }
-        if (this.props.model.columnDefs.length === 0) {
-          console.warn('columnDefs is empty, ignored')
-          return
-        }
+        await this.props.model.schemaReadyPromise
         const ret = await this.props.model.getData({
           schemaName: this.props.model.schemaName,
           // todo: 分页参数逻辑 后续重构可以下沉到 node 端，即服务端直接接收 startRow endRow
@@ -113,6 +111,15 @@ export class Grid extends React.Component<GridProps> {
     const colDefs = this.props.model.columnDefs
       .filter(item => item.visible)
       .map<ColDef>(item => {
+        const customCellRenderer = this.props.model.getCustomCellRenderer(item.name)
+        if (customCellRenderer != null) {
+          return {
+            field: item.name,
+            headerName: item.display_name,
+            cellRenderer: customCellRenderer,
+          }
+        }
+
         // todo: 图片需要搞一个 modal 并且上传修改
         // if (item.name === 'image') { // todo: 这里用 plugin model 实现
         //   return {
@@ -147,7 +154,6 @@ export class Grid extends React.Component<GridProps> {
             floatingFilter: true,
             headerComponent: () => (
               <Flex alignItems="center">
-                {' '}
                 <FEuiIcon type="key" size="s" />
                 {item.display_name}
               </Flex>
@@ -162,7 +168,6 @@ export class Grid extends React.Component<GridProps> {
               // headerName: item.display_name,
               headerComponent: () => (
                 <Flex alignItems="center">
-                  {' '}
                   <FEuiIcon type="link" size="s" /> {item.display_name}
                 </Flex>
               ),
@@ -241,7 +246,6 @@ export class Grid extends React.Component<GridProps> {
               // headerName: item.display_name,
               headerComponent: () => (
                 <Flex alignItems="center">
-                  {' '}
                   <FEuiIcon type="calendar" size="s" /> {item.display_name}
                 </Flex>
               ),
@@ -280,14 +284,12 @@ export class Grid extends React.Component<GridProps> {
               )
             }
             return {
-              ...{
-                editable: true,
-                field: item.name,
-                headerName: item.display_name,
-                cellDataType: 'text',
-                filter: true,
-                floatingFilter: true,
-              },
+              editable: true,
+              field: item.name,
+              headerName: item.display_name,
+              cellDataType: 'text',
+              filter: true,
+              floatingFilter: true,
               cellRenderer,
             }
           }
@@ -298,7 +300,6 @@ export class Grid extends React.Component<GridProps> {
               // headerName: item.display_name,
               headerComponent: () => (
                 <Flex alignItems="center">
-                  {' '}
                   <FEuiIcon type="visVega" size="s" /> {item.display_name}
                 </Flex>
               ),
@@ -337,7 +338,6 @@ export class Grid extends React.Component<GridProps> {
             // headerName: ass.display_name,
             headerComponent: () => (
               <Flex alignItems="center">
-                {' '}
                 <FEuiIcon type="index" size="s" />
                 {ass.display_name}
               </Flex>

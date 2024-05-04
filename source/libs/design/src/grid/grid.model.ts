@@ -20,6 +20,7 @@ import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '
 import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
+import { type ReactNode } from 'react'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -38,6 +39,12 @@ export class GridModel implements ManageableModel {
    * 原因是 setColDefs 有 React（cellRenderer）不能放在 grid.model 里
    */
   private refPromise?: Promise<boolean>
+  private refResolve?: (value: boolean | PromiseLike<boolean>) => void
+
+  private schemaReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
+  public schemaReadyPromise?: Promise<boolean> = new Promise<boolean>(resolve => {
+    this.schemaReadyResolve = resolve
+  })
 
   // todo: extract to a interface
   handlers: Partial<{
@@ -52,7 +59,6 @@ export class GridModel implements ManageableModel {
   // private filterModel: z.infer<typeof agFilterSchema> | null = null
   private ref: unknown
   private _uri?: URI
-  private refResolve?: (value: boolean | PromiseLike<boolean>) => void
   private _isFirstGetRows = true
 
   constructor(
@@ -122,6 +128,15 @@ export class GridModel implements ManageableModel {
     return (this.customResources || []).find(i => i.schemaName === this.schemaName)
   }
 
+  getCustomCellRenderer(colName: string): ReactNode {
+    if (this.schemaName == null) {
+      throw new Error('schemaName is null')
+    }
+    const customResource = (this.customResources || []).find(i => i.schemaName === this.schemaName)
+    if (customResource == null) return null
+    return customResource.getCellRenderer(colName)
+  }
+
   async getCol(schemaName: string) {
     this.setSchemaName(schemaName)
     if (this.schemaName == null) {
@@ -134,6 +149,7 @@ export class GridModel implements ManageableModel {
       const schemaRes = await this.apiService.getResourceSchema({
         schemaName: this.schemaName,
       })
+      this.schemaReadyResolve!(true)
       if (schemaRes.columns.length > 0) {
         this.columnDefs = schemaRes.columns
       }
