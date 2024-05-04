@@ -1,4 +1,4 @@
-import { inject, injectable, multiInject } from 'inversify'
+import { inject, injectable, multiInject, optional } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import {
   agFilterSchema,
@@ -58,7 +58,7 @@ export class GridModel implements ManageableModel {
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
-    @multiInject(CustomResourceSymbol) private customResources: ICustomResource[],
+    @optional() @multiInject(CustomResourceSymbol) private customResources: ICustomResource[],
   ) {}
 
   getUri() {
