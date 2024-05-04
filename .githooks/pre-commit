@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cat << EOF
+================================
+format './source' code to prevent merge conflicts:
+1. nx format:write --uncommitted
+2. git add -A (working and staging all commited at once)
+--------------------------------
+EOF
+
+RESET='\033[0m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BOLD='\033[1m'
+
+echo "${YELLOW}run pre-commit${RESET}\n"
+cd source && ./node_modules/.bin/nx format:write --uncommitted && git add -A
+echo "${GREEN}done.${RESET}\n"

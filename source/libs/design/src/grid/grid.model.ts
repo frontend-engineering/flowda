@@ -1,16 +1,18 @@
-import { inject, injectable } from 'inversify'
+import { inject, injectable, multiInject } from 'inversify'
 import type { GridApi, SortModelItem } from 'ag-grid-community'
 import {
   agFilterSchema,
-  ApiService,
+  type ApiService,
   ApiServiceSymbol,
   builtinPluginSchema,
   cellRendererInputSchema,
   ColumnUISchema,
+  CustomResourceSymbol,
   getResourceDataOutputInnerSchema,
   handleContextMenuInputSchema,
-  ManageableModel,
-  ResourceUI,
+  type ICustomResource,
+  type ManageableModel,
+  type ResourceUI,
   ThemeModelSymbol,
 } from '@flowda/types'
 import { z } from 'zod'
@@ -55,7 +57,9 @@ export class GridModel implements ManageableModel {
 
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
-    @inject(ApiServiceSymbol) public apiService: ApiService) { }
+    @inject(ApiServiceSymbol) public apiService: ApiService,
+    @multiInject(CustomResourceSymbol) private customResources: ICustomResource[],
+  ) {}
 
   getUri() {
     if (!this._uri) throw new Error('uri is null')
@@ -109,6 +113,13 @@ export class GridModel implements ManageableModel {
 
   setSchemaName(schemaName: string) {
     this.schemaName = schemaName
+  }
+
+  getCustomResource() {
+    if (this.schemaName == null) {
+      throw new Error('schemaName is null')
+    }
+    return (this.customResources || []).find(i => i.schemaName === this.schemaName)
   }
 
   async getCol(schemaName: string) {
