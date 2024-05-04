@@ -1,18 +1,36 @@
 import 'reflect-metadata'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Grid } from './grid'
-import { Container } from 'inversify'
-import { ApiService, ApiServiceSymbol, GridModelSymbol } from '@flowda/types'
+import { Container, injectable } from 'inversify'
+import {
+  type ApiService,
+  ApiServiceSymbol,
+  type CellRendererInput,
+  CustomResource,
+  CustomResourceSymbol,
+  GridModelSymbol,
+} from '@flowda/types'
 import { designModule } from '../designModule'
 import { GridModel } from './grid.model'
 import React from 'react'
 import { GridWrapper } from '../../stories/grid-wrapper'
 import { StoryApiService } from '../../stories/story-api-service'
-import { EuiButtonEmpty } from '@elastic/eui'
 
 const container = new Container()
 container.load(designModule)
 container.rebind<ApiService>(ApiServiceSymbol).to(StoryApiService).inSingletonScope()
+
+@injectable()
+export class TenantCustomResource extends CustomResource('superadmin.TenantResourceSchema') {
+  constructor() {
+    super()
+    this.registerCellRenderer('name', (param: CellRendererInput) => {
+      return <span>hi {param.value}</span>
+    })
+  }
+}
+
+container.bind(CustomResourceSymbol).to(TenantCustomResource).inSingletonScope()
 
 const meta: Meta<typeof GridWrapper> = {
   component: GridWrapper,

@@ -1,24 +1,29 @@
+/// <reference types="@types/react" />
+
 import { injectable } from 'inversify'
-import { type ReactNode } from 'react'
+import { CellRendererInput } from '../schemas'
+
+export type CellRenderer = (param: CellRendererInput) => JSX.Element
 
 export interface ICustomResource {
   schemaName: string
 
-  getCellRenderer(colName: string): ReactNode
+  getCellRenderer(colName: string): undefined | CellRenderer
 }
 
 export function CustomResource(schemaName: string) {
-  const _customRender: Map<string, ReactNode> = new Map()
+  const _customRender: Map<string, CellRenderer> = new Map()
+
   @injectable()
   abstract class AbstractCustomResource implements ICustomResource {
     schemaName = schemaName
 
     getCellRenderer(colName: string) {
-      if (!_customRender.has(colName)) return null
+      if (!_customRender.has(colName)) return
       return _customRender.get(colName)
     }
 
-    registerCellRenderer(colName: string, reactNode: ReactNode) {
+    registerCellRenderer(colName: string, reactNode: CellRenderer) {
       if (_customRender.has(colName)) {
         console.warn(`ignore already registered schema field, schema: ${this.schemaName}, field: ${colName}`)
         return

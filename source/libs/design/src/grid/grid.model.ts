@@ -5,6 +5,8 @@ import {
   type ApiService,
   ApiServiceSymbol,
   builtinPluginSchema,
+  type CellRenderer,
+  type CellRendererInput,
   cellRendererInputSchema,
   ColumnUISchema,
   CustomResourceSymbol,
@@ -20,7 +22,6 @@ import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '
 import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
-import { type ReactNode } from 'react'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -128,12 +129,12 @@ export class GridModel implements ManageableModel {
     return (this.customResources || []).find(i => i.schemaName === this.schemaName)
   }
 
-  getCustomCellRenderer(colName: string): ReactNode {
+  getCustomCellRenderer(colName: string): undefined | CellRenderer {
     if (this.schemaName == null) {
       throw new Error('schemaName is null')
     }
     const customResource = (this.customResources || []).find(i => i.schemaName === this.schemaName)
-    if (customResource == null) return null
+    if (customResource == null) return
     return customResource.getCellRenderer(colName)
   }
 
@@ -234,7 +235,7 @@ export class GridModel implements ManageableModel {
   }
 
   readonly onContextMenu = (
-    cellRendererInput: z.infer<typeof cellRendererInputSchema>,
+    cellRendererInput: CellRendererInput,
     e: React.MouseEvent<HTMLElement, MouseEvent>,
     options?: {
       type: 'association' | undefined

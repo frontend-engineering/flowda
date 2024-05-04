@@ -10,8 +10,7 @@ import type {
   IGetRowsParams,
 } from 'ag-grid-community'
 import { getReferenceDisplay, shortenDatetime } from './grid-utils'
-import { cellRendererInputSchema } from '@flowda/types'
-import { z } from 'zod'
+import { CellRendererInput } from '@flowda/types'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
 import { getUriFilterModel } from '../uri/uri-utils'
@@ -173,7 +172,7 @@ export class Grid extends React.Component<GridProps> {
               ),
               filter: true,
               floatingFilter: true,
-              cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              cellRenderer: (param: CellRendererInput) => {
                 if (!param.value) {
                   return <span>.</span>
                 }
@@ -271,9 +270,9 @@ export class Grid extends React.Component<GridProps> {
           case 'string':
           case 'String':
           case 'textarea': {
-            let cellRenderer: undefined | ((param: z.infer<typeof cellRendererInputSchema>) => any) = undefined
+            let cellRenderer: undefined | ((param: CellRendererInput) => any) = undefined
             if (this.props.model.isOpenTask(item.name)) {
-              cellRenderer = (param: z.infer<typeof cellRendererInputSchema>) => (
+              cellRenderer = (param: CellRendererInput) => (
                 <div
                   onContextMenu={e => {
                     this.props.model.onContextMenu(param, e)
@@ -303,7 +302,7 @@ export class Grid extends React.Component<GridProps> {
                   <FEuiIcon type="visVega" size="s" /> {item.display_name}
                 </Flex>
               ),
-              cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              cellRenderer: (param: CellRendererInput) => {
                 return (
                   <div
                     onContextMenu={e => {
@@ -342,7 +341,7 @@ export class Grid extends React.Component<GridProps> {
                 {ass.display_name}
               </Flex>
             ),
-            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+            cellRenderer: (param: CellRendererInput) => {
               return (
                 <div
                   onContextMenu={e => {
@@ -371,10 +370,14 @@ export class Grid extends React.Component<GridProps> {
    todo 第一次调用之后 如果用户有调整过 则存储到 localStorage 优先用户本地存储
    */
   autoResizeAll() {
+    if (this.gridRef == null) {
+      console.warn(`gridRef is null, e.g. HMR`)
+      return
+    }
     const allColumnIds: string[] = []
-    this.gridRef!.api.getColumns()!.forEach(column => {
+    this.gridRef.api.getColumns()!.forEach(column => {
       allColumnIds.push(column.getId())
     })
-    this.gridRef!.api.autoSizeColumns(allColumnIds, false)
+    this.gridRef.api.autoSizeColumns(allColumnIds, false)
   }
 }
