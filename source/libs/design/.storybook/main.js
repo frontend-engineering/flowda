@@ -29,7 +29,9 @@ function makeConfig(useRspack = false) {
     framework: {
       name: framework,
       options: {
-        fastRefresh: true,
+        // todo formikProps 在 react 组件中赋值，需要对接 HMR API
+        // 这块不熟 先禁用 HMR
+        fastRefresh: false,
       },
     },
 
@@ -45,7 +47,7 @@ function makeConfig(useRspack = false) {
   }
 }
 
-module.exports = makeConfig(false)
+module.exports = makeConfig(true)
 // To customize your webpack configuration you can use the webpackFinal field.
 // Check https://storybook.js.org/docs/react/builders/webpack#extending-storybooks-webpack-config
 // and https://nx.dev/packages/storybook/documents/custom-builder-configs

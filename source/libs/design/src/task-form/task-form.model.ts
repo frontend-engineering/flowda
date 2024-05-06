@@ -14,7 +14,7 @@ import { ThemeModel } from '../theme/theme.model'
 import axios from 'axios'
 import * as _ from 'radash'
 import { getChangedValues } from './task-form-utils'
-import { computed, observable, runInAction } from 'mobx'
+import { computed, makeObservable, observable, runInAction } from 'mobx'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
 import { z } from 'zod'
@@ -88,7 +88,9 @@ export class TaskFormModel implements ManageableModel {
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
     @multiInject(WorkflowConfigSymbol) public wfCfgs: z.infer<typeof wfCfgSchema>[],
-  ) {}
+  ) {
+    makeObservable(this)
+  }
 
   getUri() {
     if (!this.uri) throw new Error('uri is null')
