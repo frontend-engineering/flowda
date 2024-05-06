@@ -1,13 +1,30 @@
 import { Component } from 'react'
 import { DefaultFormValueType, TaskFormModel } from './task-form.model'
 import { Formik, FormikProps } from 'formik'
-import { EuiButton, EuiFieldText, EuiFlexGroup, EuiFlexItem, EuiForm, EuiFormRow, EuiThemeProvider } from '@elastic/eui'
+import {
+  EuiFieldText,
+  EuiFlexGroup,
+  EuiFlexItem,
+  EuiForm,
+  EuiFormRow,
+  EuiHorizontalRule,
+  EuiThemeProvider,
+} from '@elastic/eui'
 import { observer } from 'mobx-react'
+import { TaskFormToolbar } from './task-form-toolbar'
+import styled from '@emotion/styled'
+import { Box } from '@rebass/grid/emotion'
+
+export type TaskFormProps = {
+  model: TaskFormModel
+}
+
+const FEuiHorizontalRule = styled(EuiHorizontalRule)`
+  margin-top: 0px;
+`
 
 @observer
-export class TaskForm extends Component<{
-  model: TaskFormModel
-}> {
+export class TaskForm extends Component<TaskFormProps> {
   override render() {
     return (
       <Formik<DefaultFormValueType>
@@ -31,42 +48,47 @@ export class TaskForm extends Component<{
           const cols = this.props.model.columns
           return (
             <EuiThemeProvider colorMode={this.props.model.theme.colorMode}>
-              <EuiForm isInvalid={false} error={[]} component="form">
-                <EuiFlexGroup style={{ maxWidth: 600 }}>
-                  {cols.map(col => {
-                    return (
-                      <EuiFlexItem key={col.name}>
-                        <EuiFormRow
-                          label={col.display_name}
-                          isInvalid={!!(touched[col.name] && errors[col.name])}
-                          error={errors[col.name] as string}
-                        >
-                          <EuiFieldText
-                            readOnly={col.access_type === 'read_only' ? true : false}
-                            name={col.name}
+              <TaskFormToolbar model={this.props.model} />
+              <FEuiHorizontalRule />
+              <Box mx={3}>
+                <EuiForm isInvalid={false} error={[]} component="form">
+                  <EuiFlexGroup style={{ maxWidth: 600 }}>
+                    {cols.map(col => {
+                      return (
+                        <EuiFlexItem key={col.name}>
+                          <EuiFormRow
+                            label={col.display_name}
                             isInvalid={!!(touched[col.name] && errors[col.name])}
-                            compressed={true}
-                            value={values[col.name] == null ? undefined : values[col.name]}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                        </EuiFormRow>
-                      </EuiFlexItem>
-                    )
-                  })}
-                </EuiFlexGroup>
-                <EuiButton
+                            error={errors[col.name] as string}
+                          >
+                            <EuiFieldText
+                              readOnly={col.access_type === 'read_only' ? true : false}
+                              name={col.name}
+                              isInvalid={!!(touched[col.name] && errors[col.name])}
+                              compressed={true}
+                              value={values[col.name] == null ? undefined : values[col.name]}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          </EuiFormRow>
+                        </EuiFlexItem>
+                      )
+                    })}
+                  </EuiFlexGroup>
+                  {/* 迁移到 task-form toolbar */}
+                  {/* <EuiButton
                   type="submit"
                   size="s"
-                  onClick={(e: any) => {
+                  onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
                     e.preventDefault()
                     e.stopPropagation()
                     handleSubmit()
                   }}
                 >
                   Save form
-                </EuiButton>
-              </EuiForm>
+                </EuiButton> */}
+                </EuiForm>
+              </Box>
             </EuiThemeProvider>
           )
         }}
