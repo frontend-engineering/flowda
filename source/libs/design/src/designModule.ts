@@ -5,7 +5,8 @@ import {
   LoginModelSymbol,
   PreviewModelSymbol,
   ThemeModelSymbol,
-  TreeGridModelSymbol, TaskFormModelSymbol,
+  TreeGridModelSymbol,
+  TaskFormModelSymbol,
   WorkflowConfigModelSymbol,
   ApiService,
   getResourceInputSchema,
@@ -36,7 +37,6 @@ export class NotImplementedApiService implements ApiService {
     input: z.infer<typeof getResourceDataInputSchema>,
   ): Promise<z.infer<typeof getResourceDataOutputSchema>> {
     throw new Error('handlers.getResourceSchema is not implemented')
-
   }
   putResourceData(input: z.infer<typeof putResourceDataInputSchema>): Promise<unknown> {
     throw new Error('handlers.getResourceSchema is not implemented')

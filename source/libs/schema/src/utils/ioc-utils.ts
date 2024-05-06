@@ -1,10 +1,7 @@
 import { ServiceSymbol } from '@flowda/types'
 import { interfaces } from 'inversify'
 
-export function bindService<T>(
-  bind: interfaces.Bind,
-  constructor: new (...args: never[]) => T,
-) {
+export function bindService<T>(bind: interfaces.Bind, constructor: new (...args: never[]) => T) {
   bind<T>(constructor).toSelf().inSingletonScope()
   bind<T>(ServiceSymbol).toFactory<T>((context: interfaces.Context) => {
     return context.container.get<T>(constructor) as interfaces.SimpleFactory<T>

@@ -55,11 +55,7 @@ export class TreeGrid extends Component<TreeGridProps> {
   override render() {
     return (
       <AgGridReact
-        modules={[
-          ClientSideRowModelModule,
-          RowGroupingModule,
-          MenuModule,
-        ]}
+        modules={[ClientSideRowModelModule, RowGroupingModule, MenuModule]}
         ref={ref => (this.gridRef = ref)}
         columnDefs={this.props.model.columnDefs}
         defaultColDef={{

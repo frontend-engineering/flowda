@@ -24,7 +24,7 @@ export function getAllResourceSchema(zt: Record<string, any>) {
     if (ignoredSuffix.some(x => cur.indexOf(x) > -1)) return acc
 
     if (cur.endsWith('WithRelationsSchema')) {
-      const k = (cur.split('WithRelationsSchema')[0] + 'ResourceSchema')
+      const k = cur.split('WithRelationsSchema')[0] + 'ResourceSchema'
       acc[k] = zt[cur]
       return acc
     } else {

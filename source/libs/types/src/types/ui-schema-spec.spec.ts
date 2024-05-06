@@ -1,6 +1,6 @@
 import { ColumnUISchema } from './ui-schema-spec'
 
-describe('ui schema spec', function() {
+describe('ui schema spec', function () {
   it('ColumnUISchema has_one visibile', () => {
     const input = {
       nullable: true,
@@ -40,5 +40,4 @@ describe('ui schema spec', function() {
       }
     `)
   })
-
 })

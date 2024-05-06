@@ -6,9 +6,7 @@
   "targets": {
     "dev": {
       "executor": "@flowda/nx-plugin:dev",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "bundleJs": true,
         "outputPath": "dist/libs/schema"
@@ -16,50 +14,34 @@
     },
     "build": {
       "executor": "@nrwl/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/schema",
         "main": "libs/schema/src/index.ts",
         "tsConfig": "libs/schema/tsconfig.lib.json",
-        "assets": [
-          "libs/schema/*.md"
-        ]
+        "assets": ["libs/schema/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "libs/schema/**/*.ts"
-        ]
+        "lintFilePatterns": ["libs/schema/**/*.ts"]
       }
     },
     "generate-fixtures": {
       "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/src/parser/prisma-zod/__fixtures__/**/prisma/schema.prisma"
-      ],
-      "outputs": [
-        "{projectRoot}/src/parser/prisma-zod/__fixtures__/generated/**/*.ts"
-      ],
+      "inputs": ["{projectRoot}/src/parser/prisma-zod/__fixtures__/**/prisma/schema.prisma"],
+      "outputs": ["{projectRoot}/src/parser/prisma-zod/__fixtures__/generated/**/*.ts"],
       "options": {
         "command": "../../node_modules/.bin/tsx ./scripts/fixtures-prisma-generate.ts",
         "cwd": "libs/schema"
       }
     },
     "test": {
-      "dependsOn": [
-        "generate-fixtures"
-      ],
+      "dependsOn": ["generate-fixtures"],
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/schema/jest.config.ts",
         "passWithNoTests": true,

@@ -7,7 +7,7 @@ export default {
     fixable: 'code' as const,
     schema: [],
     messages: {
-      'requires': 'Add `describe()` at the end',
+      requires: 'Add `describe()` at the end',
     },
   },
   defaultOptions: [],
@@ -17,14 +17,14 @@ export default {
         if (!isZodType(node)) {
           return
         }
-        if (node.callee.property.name !== 'array'
-          && node.callee.property.name !== 'object'
-          && (
-            node.parent.type === 'ExpressionStatement' // z.string()
-            || node.parent.type === 'VariableDeclarator' // const a = z.string()
-            || node.parent?.parent.type === 'ObjectExpression' // z.object({ hi: z.string() })
-          )
-          && node.callee.property.name !== 'describe') {
+        if (
+          node.callee.property.name !== 'array' &&
+          node.callee.property.name !== 'object' &&
+          (node.parent.type === 'ExpressionStatement' || // z.string()
+            node.parent.type === 'VariableDeclarator' || // const a = z.string()
+            node.parent?.parent.type === 'ObjectExpression') && // z.object({ hi: z.string() })
+          node.callee.property.name !== 'describe'
+        ) {
           context.report({
             messageId: 'requires',
             node,

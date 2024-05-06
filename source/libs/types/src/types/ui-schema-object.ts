@@ -9,8 +9,8 @@ export type ColumnKey = {
   display_name: string
   description?: string
   example?: string
-  visible: boolean,
-  access_type?: 'read_only' | 'read_write',
+  visible: boolean
+  access_type?: 'read_only' | 'read_write'
   plugins?: Partial<PluginType>
 }
 export const ColumnKeySchema = z.object({
@@ -40,20 +40,22 @@ export const AssociationKeySchema = z.object({
   visible: z.boolean(),
 }) satisfies z.ZodType<AssociationKey>
 
-export type ReferenceKey = {
-  display_name: string
-  model_name: string
-  reference_type: 'belongs_to'
-  foreign_key: string
-  primary_key: string
-} | {
-  display_name: string
-  model_name: string
-  reference_type: 'has_one'
-  foreign_key: string
-  primary_key: string
-  visible: boolean
-}
+export type ReferenceKey =
+  | {
+      display_name: string
+      model_name: string
+      reference_type: 'belongs_to'
+      foreign_key: string
+      primary_key: string
+    }
+  | {
+      display_name: string
+      model_name: string
+      reference_type: 'has_one'
+      foreign_key: string
+      primary_key: string
+      visible: boolean
+    }
 
 export const ReferenceKeySchema = z.union([
   z.object({
@@ -105,7 +107,6 @@ export const ResourceKeySchema = z.object({
   plugins: z.any().optional(),
 
   // openapi3-ts
-  properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema]))
-    .optional(),
+  properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema])).optional(),
   required: z.array(z.string()).optional(),
 }) satisfies z.ZodType<ResourceKey>

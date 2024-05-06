@@ -24,7 +24,7 @@ export class TreeGridModel implements ManageableModel {
   private gridReadyPromise?: Promise<boolean>
   private gridReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
 
-  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) { }
+  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) {}
 
   handlers: Partial<{
     message: (title: string) => void
@@ -38,7 +38,7 @@ export class TreeGridModel implements ManageableModel {
   resetGridReadyPromise(uri: string | URI) {
     if (typeof uri === 'string') uri = new URI(uri)
     this.setUri(uri)
-    this.gridReadyPromise = new Promise<boolean>((resolve) => {
+    this.gridReadyPromise = new Promise<boolean>(resolve => {
       this.gridReadyResolve = resolve
     })
   }
@@ -103,15 +103,13 @@ export class TreeGridModel implements ManageableModel {
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     try {
-      this.apiService.putResourceData(
-        {
-          schemaName: `${uri.authority}.${query.schemaName}`,
-          id: Number(query.id),
-          updatedValue: {
-            [query.field]: menuData,
-          },
+      this.apiService.putResourceData({
+        schemaName: `${uri.authority}.${query.schemaName}`,
+        id: Number(query.id),
+        updatedValue: {
+          [query.field]: menuData,
         },
-      )
+      })
     } catch (e) {
       if (typeof this.handlers.message === 'function') {
         this.handlers.message(`Update failed, try to reload data from backend`)
@@ -189,9 +187,7 @@ export class TreeGridModel implements ManageableModel {
     }
 
     this.gridApi.applyTransaction({
-      remove: [
-        node.data,
-      ],
+      remove: [node.data],
     })
     this.convertAndSaveMenuData()
   }

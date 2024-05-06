@@ -1,6 +1,5 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from 'eslint'
 import plugin from '../../rules/require-describe'
-
 
 const ruleTester = new RuleTester({
   parserOptions: {
@@ -27,7 +26,7 @@ ruleTester.run('require-describe', plugin, {
       ],
     },
     {
-      code: 'z.string().describe(\'test\').min(1)',
+      code: "z.string().describe('test').min(1)",
       errors: [
         {
           messageId: 'requires',
@@ -57,13 +56,13 @@ ruleTester.run('require-describe', plugin, {
       code: 'z.object()',
     },
     {
-      code: 'z.object().describe(\'test\')',
+      code: "z.object().describe('test')",
     },
     {
-      code: 'z.string().describe(\'test\')',
+      code: "z.string().describe('test')",
     },
     {
-      code: 'z.string().min(1).describe(\'test\')',
+      code: "z.string().min(1).describe('test')",
     },
     {
       code: 'z.array()',

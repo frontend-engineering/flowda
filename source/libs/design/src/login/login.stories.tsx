@@ -12,7 +12,7 @@ import { trpc } from '../../stories/trpc/trpc-client'
 const container = new Container()
 container.load(designModule)
 const loginModel = container.get<LoginModel>(LoginModelSymbol)
-loginModel.handlers.validate = (input) => trpc.hello.validate.mutate(input)
+loginModel.handlers.validate = input => trpc.hello.validate.mutate(input)
 loginModel.checkLogin()
 
 @observer
@@ -23,7 +23,7 @@ class LoginWrapper extends React.Component<{
     const model = this.props.model
     return (
       <>
-        <Login model={model}/>
+        <Login model={model} />
         {model.isLogin ? (
           <button onClick={() => model.logout()}>logout</button>
         ) : (

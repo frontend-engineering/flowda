@@ -44,7 +44,5 @@
       "default": false
     }
   },
-  "required": [
-    "outputPath"
-  ]
+  "required": ["outputPath"]
 }

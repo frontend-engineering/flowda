@@ -16,7 +16,7 @@ export const REQ_END =
 export const ERROR_END = '***************************************** ERROR END *****************************************'
 
 export function logInputSerialize(object: any) {
-  setTimeout(function() {
+  setTimeout(function () {
     consola.info('request args  :')
     console.log(object)
     console.log()
@@ -24,7 +24,7 @@ export function logInputSerialize(object: any) {
 }
 
 export function logOutputSerialize(object: any) {
-  setTimeout(function() {
+  setTimeout(function () {
     console.log()
     if (object?.code < 0) {
       consola.info('response error:')
@@ -48,7 +48,7 @@ export function logOutputSerialize(object: any) {
 }
 
 export function logContext(opts: trpcExpress.CreateExpressContextOptions) {
-  setTimeout(function() {
+  setTimeout(function () {
     const req = opts.req
     console.log('=============================================== Start ===============================================')
     consola.info('url           :', req.url.split('?')[0])
@@ -113,7 +113,7 @@ const TRPC_ERROR_CODES_BY_KEY = {
 } as const
 
 export function logErrorStart(opts: { type: ProcedureType | 'unknown'; path: string | undefined; input: unknown }) {
-  setTimeout(function() {
+  setTimeout(function () {
     consola.error('**************************************** ERROR START ****************************************')
     consola.info(`procedure    :`, `${opts.path}.${opts.type}`)
     consola.info(`input        :`)
@@ -122,7 +122,7 @@ export function logErrorStart(opts: { type: ProcedureType | 'unknown'; path: str
 }
 
 export function logErrorEnd(opts: { error: TRPCError }) {
-  setTimeout(function() {
+  setTimeout(function () {
     consola.info(`message      :`, opts.error.message)
     consola.info(`stack        :`, opts.error.stack)
     consola.error(ERROR_END)
@@ -147,7 +147,7 @@ export function transformHttpException(
   const shape = opts.shape
   const key = getStatusKeyFromStatus(json.status)
   const code = getErrorCodeFromKey(key)
-  setTimeout(function() {
+  setTimeout(function () {
     consola.info(`cause`)
     console.log(`    status     :`, json.status)
     console.log(`    message    :`, json.message)
