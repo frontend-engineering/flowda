@@ -16,10 +16,9 @@ import {
   type ManageableModel,
   type ResourceUI,
   ThemeModelSymbol,
-  type DefaultFormValueType,
 } from '@flowda/types'
 import { z } from 'zod'
-import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
+import { createNewFormUri, isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
@@ -56,7 +55,7 @@ export class GridModel implements ManageableModel {
       input: z.infer<typeof handleContextMenuInputSchema>,
       e: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void
-    onClickNew: () => void
+    onClickNew: (uri: string) => void
   }> = {}
 
   // private filterModel: z.infer<typeof agFilterSchema> | null = null
@@ -284,6 +283,13 @@ export class GridModel implements ManageableModel {
         name: ref!.reference.display_name,
         id: value,
       })
+    }
+  }
+
+  onNewForm() {
+    if (typeof this.handlers.onClickNew === 'function') {
+      const uri = createNewFormUri(this.getUri())
+      this.handlers.onClickNew(uri)
     }
   }
 }

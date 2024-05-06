@@ -14,6 +14,7 @@ import {
   uriAsKey,
   uriWithoutId,
   createTaskUri,
+  createNewFormUri,
 } from './uri-utils'
 import { handleContextMenuInputSchema } from '@flowda/types'
 import { z } from 'zod'
@@ -31,6 +32,14 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
+  it('create new task uri', () => {
+    const input = 'grid://flowda?schemaName=superadmin.TenantResourceSchema&displayName=租户'
+    const ret = createNewFormUri(input)
+    expect(ret).toMatchInlineSnapshot(
+      `"new-form://flowda?schemaName=superadmin.TenantResourceSchema&displayName=新增租户"`,
+    )
+  })
+
   it('create task uri', () => {
     const input = {
       uri: 'grid://superadmin?schemaName=TaskResourceSchema',

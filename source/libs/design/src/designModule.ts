@@ -8,6 +8,10 @@ import {
   getResourceInputSchema,
   GridModelSymbol,
   LoginModelSymbol,
+  ManageableModel,
+  ManageableModelFactorySymbol,
+  ManageableModelSymbol,
+  ManageableServiceSymbol,
   NewFormModelSymbol,
   PreviewModelSymbol,
   putResourceDataInputSchema,
@@ -24,6 +28,8 @@ import { TreeGridModel } from './tree-grid/tree-grid.model'
 import { TaskFormModel } from './task-form/task-form.model'
 import { z } from 'zod'
 import { NewFormModel } from './new-form/new-form.model'
+import { ManageableService } from './manageable/manageable.sevice'
+import { registerManageableFactory } from './ioc-utils'
 
 export const designModule = new ContainerModule(bind => {
   bindDesignModule(bind)
@@ -56,4 +62,14 @@ export const bindDesignModule = (bind: interfaces.Bind) => {
   bind<TreeGridModel>(TreeGridModelSymbol).to(TreeGridModel).inRequestScope()
   bind<TaskFormModel>(TaskFormModelSymbol).to(TaskFormModel).inRequestScope()
   bind<NewFormModel>(NewFormModelSymbol).to(NewFormModel).inRequestScope()
+
+  bind<ManageableService>(ManageableServiceSymbol).to(ManageableService).inSingletonScope()
+  bind<interfaces.AutoNamedFactory<ManageableModel>>(ManageableModelFactorySymbol).toAutoNamedFactory<ManageableModel>(
+    ManageableModelSymbol,
+  )
+  // built in
+  registerManageableFactory(bind, 'grid', GridModel)
+  registerManageableFactory(bind, 'tree-grid', TreeGridModel)
+  registerManageableFactory(bind, 'task', TaskFormModel)
+  registerManageableFactory(bind, 'new-form', NewFormModel)
 }

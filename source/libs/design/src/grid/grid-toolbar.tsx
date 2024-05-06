@@ -24,7 +24,7 @@ export class GridToolbar extends React.Component<GridProps> {
           </FEuiButtonEmpty>
           <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
-            onClick={() => {}}
+            onClick={() => this.props.model.onNewForm()}
             iconType="plus"
             size="xs"
             color="text"

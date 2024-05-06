@@ -2,7 +2,7 @@ import {
   type ApiService,
   ApiServiceSymbol,
   type ManageableModel,
-  newFormUriOutputSchema,
+  newFormUriSchema,
   type ResourceUI,
   ThemeModelSymbol,
   type DefaultFormValueType,
@@ -72,7 +72,7 @@ export class NewFormModel implements ManageableModel {
     if (typeof uri === 'string') {
       uri = new URI(uri)
     }
-    const query = newFormUriOutputSchema.parse(qs.parse(uri.query))
+    const query = newFormUriSchema.parse(qs.parse(uri.query))
     const ret = await this.apiService.getResourceSchema({
       schemaName: query.schemaName,
     })

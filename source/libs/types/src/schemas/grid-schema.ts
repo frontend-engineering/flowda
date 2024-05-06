@@ -16,7 +16,7 @@ export const treeGridUriQuerySchema = z.object({
   field: z.string(),
 })
 
-export const newFormUriOutputSchema = z.object({
+export const newFormUriSchema = z.object({
   displayName: z.string(),
   schemaName: z.string(),
 })

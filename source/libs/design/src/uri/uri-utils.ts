@@ -1,4 +1,10 @@
-import { agFilterSchema, handleContextMenuInputSchema, taskUriInputSchema, treeGridUriQuerySchema } from '@flowda/types'
+import {
+  agFilterSchema,
+  handleContextMenuInputSchema,
+  newFormUriSchema,
+  taskUriInputSchema,
+  treeGridUriQuerySchema,
+} from '@flowda/types'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
 import { z } from 'zod'
@@ -181,4 +187,20 @@ export function createTaskUri(input: z.infer<typeof handleContextMenuInputSchema
     { encode: false },
   )}`
   return new URI(ret)
+}
+
+export function createNewFormUri(uri: string | URI) {
+  if (typeof uri === 'string') {
+    uri = new URI(uri)
+  }
+  const query = newFormUriSchema.parse(qs.parse(uri.query))
+
+  const ret = `new-form://${uri.authority}?${qs.stringify(
+    {
+      schemaName: query.schemaName,
+      displayName: '新增' + query.displayName,
+    },
+    { encode: false },
+  )}`
+  return ret
 }
