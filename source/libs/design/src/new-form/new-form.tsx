@@ -1,11 +1,12 @@
 import { Component } from 'react'
-import { DefaultFormValueType, NewFormModel } from './new-form.model'
-import { Formik, FormikProps } from 'formik'
+import { type NewFormModel } from './new-form.model'
+import { Formik, type FormikProps } from 'formik'
 import { EuiFieldText, EuiFlexGrid, EuiFlexItem, EuiForm, EuiFormRow, EuiThemeProvider } from '@elastic/eui'
 import { observer } from 'mobx-react'
 import { NewFormToolbar } from './new-form-toolbar'
 import { Box } from '@rebass/grid/emotion'
 import { FEuiHorizontalRule } from '../eui'
+import { type DefaultFormValueType } from '@flowda/types'
 
 export type NewFormProps = {
   model: NewFormModel

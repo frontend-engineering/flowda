@@ -5,6 +5,7 @@ import {
   newFormUriOutputSchema,
   type ResourceUI,
   ThemeModelSymbol,
+  type DefaultFormValueType,
 } from '@flowda/types'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
@@ -13,8 +14,6 @@ import * as _ from 'radash'
 import { computed, makeObservable, observable, runInAction } from 'mobx'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
-
-export type DefaultFormValueType = Record<string, string | number | undefined>
 
 @injectable()
 export class NewFormModel implements ManageableModel {

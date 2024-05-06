@@ -1,11 +1,12 @@
 import { Component } from 'react'
-import { DefaultFormValueType, TaskFormModel } from './task-form.model'
-import { Formik, FormikProps } from 'formik'
+import { type TaskFormModel } from './task-form.model'
+import { Formik, type FormikProps } from 'formik'
 import { EuiFieldText, EuiFlexGroup, EuiFlexItem, EuiForm, EuiFormRow, EuiThemeProvider } from '@elastic/eui'
 import { observer } from 'mobx-react'
 import { TaskFormToolbar } from './task-form-toolbar'
 import { Box } from '@rebass/grid/emotion'
 import { FEuiHorizontalRule } from '../eui'
+import { type DefaultFormValueType } from '@flowda/types'
 
 export type TaskFormProps = {
   model: TaskFormModel

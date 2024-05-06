@@ -16,6 +16,7 @@ import {
   type ManageableModel,
   type ResourceUI,
   ThemeModelSymbol,
+  type DefaultFormValueType,
 } from '@flowda/types'
 import { z } from 'zod'
 import { isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
@@ -55,6 +56,7 @@ export class GridModel implements ManageableModel {
       input: z.infer<typeof handleContextMenuInputSchema>,
       e: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void
+    onClickNew: () => void
   }> = {}
 
   // private filterModel: z.infer<typeof agFilterSchema> | null = null
@@ -271,7 +273,7 @@ export class GridModel implements ManageableModel {
     }
   }
 
-  onRefClick(field: string, value: any) {
+  onRefClick(field: string, value: string | number) {
     const ref = this.schema?.columns.find(t => t.name === field)
     if (ref == null || ref.reference == null) {
       throw new Error(`field is not type reference, ${field}`)

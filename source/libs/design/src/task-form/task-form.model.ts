@@ -1,14 +1,15 @@
 import {
-  ApiService,
+  type ApiService,
   ApiServiceSymbol,
-  ManageableModel,
-  ResourceUI,
+  type DefaultFormValueType,
+  type ManageableModel,
+  type ResourceUI,
   taskUriOutputSchema,
   ThemeModelSymbol,
   wfCfgSchema,
   WorkflowConfigSymbol,
 } from '@flowda/types'
-import { FormikProps } from 'formik'
+import { type FormikProps } from 'formik'
 import { inject, injectable, multiInject } from 'inversify'
 import { ThemeModel } from '../theme/theme.model'
 import axios from 'axios'
@@ -18,8 +19,6 @@ import { computed, makeObservable, observable, runInAction } from 'mobx'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
 import { z } from 'zod'
-
-export type DefaultFormValueType = Record<string, string | number | undefined>
 
 @injectable()
 export class TaskFormModel implements ManageableModel {

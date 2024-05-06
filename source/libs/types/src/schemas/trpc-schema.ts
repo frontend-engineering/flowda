@@ -1,12 +1,11 @@
 import { z } from 'zod'
-import { createZodDto } from '../utils/zod-utils'
 
 export const ctxTenantSchema = z.object({
   id: z.number(),
   name: z.string(),
 })
 
-export class ctxTenantSchemaDto extends createZodDto(ctxTenantSchema) {}
+export type ctxTenantSchemaDto = z.infer<typeof ctxTenantSchema>
 
 export const ctxUserSchema = z.object({
   id: z.number(),
@@ -14,6 +13,7 @@ export const ctxUserSchema = z.object({
   username: z.string(),
 })
 
-export class ctxUserSchemaDto extends createZodDto(ctxUserSchema) {}
+export type ctxUserSchemaDto = z.infer<typeof ctxUserSchema>
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TCtx = { _diagnosis: any[] }
