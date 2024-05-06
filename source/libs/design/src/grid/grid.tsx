@@ -18,6 +18,7 @@ import { EuiIcon, EuiThemeProvider } from '@elastic/eui'
 import { GridToolbar } from './grid-toolbar'
 import { Flex } from '@rebass/grid/emotion'
 import styled from '@emotion/styled'
+import { FEuiHorizontalRule } from '../eui'
 
 const FEuiIcon = styled(EuiIcon)<{ top?: number }>`
   position: relative;

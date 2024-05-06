@@ -1,27 +1,15 @@
 import { Component } from 'react'
 import { DefaultFormValueType, TaskFormModel } from './task-form.model'
 import { Formik, FormikProps } from 'formik'
-import {
-  EuiFieldText,
-  EuiFlexGroup,
-  EuiFlexItem,
-  EuiForm,
-  EuiFormRow,
-  EuiHorizontalRule,
-  EuiThemeProvider,
-} from '@elastic/eui'
+import { EuiFieldText, EuiFlexGroup, EuiFlexItem, EuiForm, EuiFormRow, EuiThemeProvider } from '@elastic/eui'
 import { observer } from 'mobx-react'
 import { TaskFormToolbar } from './task-form-toolbar'
-import styled from '@emotion/styled'
 import { Box } from '@rebass/grid/emotion'
+import { FEuiHorizontalRule } from '../eui'
 
 export type TaskFormProps = {
   model: TaskFormModel
 }
-
-const FEuiHorizontalRule = styled(EuiHorizontalRule)`
-  margin-top: 0px;
-`
 
 @observer
 export class TaskForm extends Component<TaskFormProps> {

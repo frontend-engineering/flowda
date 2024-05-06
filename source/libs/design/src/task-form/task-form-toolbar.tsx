@@ -1,14 +1,9 @@
-import { EuiButtonEmpty } from '@elastic/eui'
 import { Box, Flex } from '@rebass/grid/emotion'
 import { observer } from 'mobx-react'
 import * as React from 'react'
-import styled from '@emotion/styled'
 import { EUI_DARK_COLORS, EUI_LIGHT_COLORS } from '../theme/theme.model'
 import { TaskFormProps } from './task-form'
-
-const FEuiButtonEmpty = styled(EuiButtonEmpty)<{ 'x-color': string }>`
-  color: ${props => props['x-color']};
-`
+import { FEuiButtonEmpty } from '../eui'
 
 @observer
 export class TaskFormToolbar extends React.Component<TaskFormProps> {
