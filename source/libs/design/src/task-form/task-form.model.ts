@@ -28,6 +28,10 @@ export class TaskFormModel implements ManageableModel {
   // todo: 等支持更多 resource 再 refactor
   @observable schema: ResourceUI | undefined
 
+  resetGridReadyPromise() {
+    //
+  }
+
   get taskId() {
     if (!this._taskId) throw new Error(`Not found taskId, call loadTask first`)
     return this._taskId

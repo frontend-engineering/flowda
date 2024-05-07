@@ -5,3 +5,5 @@ export interface JSONObject {
 }
 
 export type DefaultFormValueType = Record<string, string | number | undefined>
+
+export type WidgetOption<T> = { id: string; uri: string; title: string; model: T }

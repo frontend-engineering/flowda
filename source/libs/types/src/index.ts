@@ -1,6 +1,7 @@
 export * from './interfaces/index'
 export * from './schemas/index'
 export * from './types/index'
+export * from './constants'
 export * from './legacy-symbols'
 export * from './plugin-builtin'
 export * from './symbols'
