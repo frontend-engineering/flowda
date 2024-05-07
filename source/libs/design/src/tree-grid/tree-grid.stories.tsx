@@ -23,7 +23,7 @@ export default meta
 const treeGridModel = container.get<TreeGridModel>(TreeGridModelSymbol)
 const treeGridUri =
   'tree-grid://superadmin?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%231%3AtreeData%26id%3D1%26field%3DtreeData'
-treeGridModel.resetGridReadyPromise(treeGridUri)
+treeGridModel.setUri(treeGridUri)
 treeGridModel.loadData()
 export const Primary: StoryObj<typeof GridWrapper> = {
   args: {

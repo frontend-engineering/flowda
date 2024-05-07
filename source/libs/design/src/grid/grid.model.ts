@@ -79,7 +79,10 @@ export class GridModel implements ManageableModel {
   }
 
   refresh() {
-    if (this.gridApi && !this.gridApi.isDestroyed()) {
+    if (this.gridApi == null) throw new Error('gridApi is null')
+    if (this.gridApi.isDestroyed()) {
+      throw new Error(`gridApi isDestroyed: ${this._uri}`)
+    } else {
       this.gridApi.refreshInfiniteCache()
     }
   }
@@ -187,7 +190,8 @@ export class GridModel implements ManageableModel {
       }
     } else {
       params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
-      this.gridApi?.setFilterModel(params.filterModel)
+      if (this.gridApi == null) throw new Error('gridApi is null')
+      this.gridApi.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
       this.setUri(uri)
       const dataRet = await this.apiService.getResourceData(params)

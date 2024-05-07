@@ -21,10 +21,14 @@ export class TreeGridModel implements ManageableModel {
   /**
    * 等待 onGridReady 对 gridApi 赋值
    */
-  private gridReadyPromise?: Promise<boolean>
+  private gridReadyPromise: Promise<boolean>
   private gridReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
 
-  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) {}
+  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) {
+    this.gridReadyPromise = new Promise<boolean>(resolve => {
+      this.gridReadyResolve = resolve
+    })
+  }
 
   handlers: Partial<{
     message: (title: string) => void
@@ -35,18 +39,9 @@ export class TreeGridModel implements ManageableModel {
     return this.uri
   }
 
-  resetGridReadyPromise(uri: string | URI) {
-    if (typeof uri === 'string') uri = new URI(uri)
-    this.setUri(uri)
-    this.gridReadyPromise = new Promise<boolean>(resolve => {
-      this.gridReadyResolve = resolve
-    })
-  }
-
   setGridApi(gridApi: GridApi) {
     this.gridApi = gridApi
-    if (!this.gridReadyResolve) throw new Error('gridReadyResolve is null, call resetGridReadyPromise() first')
-    this.gridReadyResolve(true)
+    this.gridReadyResolve!(true)
   }
 
   setUri(uri: string | URI) {
@@ -75,7 +70,6 @@ export class TreeGridModel implements ManageableModel {
       menuData = JSON.parse(ret[query.field])
     }
     const treeData = convertMenuDataToAgTreeData(menuData)
-    if (!this.gridReadyPromise) throw new Error('gridReadyPromise is null, call resetGridReadyPromise() first')
     await this.gridReadyPromise
     if (!this.gridApi) throw new Error('gridApi is null')
     this.gridApi.setGridOption('rowData', treeData)

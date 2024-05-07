@@ -30,10 +30,6 @@ export class NewFormModel implements ManageableModel {
     })
   }
 
-  resetGridReadyPromise() {
-    //
-  }
-
   // suppress warning: uncontrolled input to be controlled
   get defaultInitialValues() {
     if (this.schema == null) return {}
