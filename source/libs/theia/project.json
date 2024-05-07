@@ -1,0 +1,34 @@
+{
+  "name": "theia",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/theia/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "dev": {
+      "executor": "@flowda/nx-plugin:dev",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/theia",
+        "assets": []
+      }
+    },
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/theia",
+        "main": "libs/theia/src/index.ts",
+        "tsConfig": "libs/theia/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/theia/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}
