@@ -18,7 +18,6 @@ import { EuiIcon, EuiThemeProvider } from '@elastic/eui'
 import { GridToolbar } from './grid-toolbar'
 import { Flex } from '@rebass/grid/emotion'
 import styled from '@emotion/styled'
-import { FEuiHorizontalRule } from '../eui'
 
 const FEuiIcon = styled(EuiIcon)<{ top?: number }>`
   position: relative;
@@ -80,12 +79,18 @@ export class Grid extends React.Component<GridProps> {
           current: params.endRow / (params.endRow - params.startRow),
           pageSize: params.endRow - params.startRow,
           sort: params.sortModel,
-          filterModel: this.props.model.isFirstGetRows
-            ? {
-                ...params.filterModel,
-                ...getUriFilterModel(this.props.model.getUri()),
-              }
-            : params.filterModel,
+          filterModel: {
+            ...params.filterModel,
+            ...getUriFilterModel(this.props.model.getUri()),
+          },
+          // todo: 增加测试 确保 filterModel 每次都合并 uri
+          // 或者保持 filterModel 和 uri 同步 只用 uri
+          // filterModel: this.props.model.isFirstGetRows
+          //   ? {
+          //       ...params.filterModel,
+          //       ...getUriFilterModel(this.props.model.getUri()),
+          //     }
+          //   : params.filterModel,
         })
 
         evt.api.hideOverlay() // 不清楚为什么，突然需要手动 hideOverlay

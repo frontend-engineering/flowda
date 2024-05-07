@@ -67,8 +67,6 @@ export class ManageableService {
   createWidget(options: { uri: string; counter: number | undefined }): ManageableWidget {
     const uri = new URI(options.uri)
     const model = this.getOrCreateGridModel(uri)
-    model.resetGridReadyPromise(options.uri)
-
     const factory = this.widgetAbstractFactory(uri.scheme)
     const widget = factory({
       id: MANAGEABLE_EDITOR_ID + ':' + uriAsKey(options.uri) + ':' + options.counter,

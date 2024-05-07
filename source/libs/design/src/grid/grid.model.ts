@@ -31,15 +31,11 @@ export class GridModel implements ManageableModel {
   isNotEmpty = false
   gridApi: GridApi | null = null
 
-  get isFirstGetRows() {
-    return this._isFirstGetRows
-  }
-
   /**
    * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
    * 原因是 setColDefs 有 React（cellRenderer）不能放在 grid.model 里
    */
-  private refPromise?: Promise<boolean>
+  private refPromise: Promise<boolean>
   private refResolve?: (value: boolean | PromiseLike<boolean>) => void
 
   private schemaReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
@@ -61,13 +57,16 @@ export class GridModel implements ManageableModel {
   // private filterModel: z.infer<typeof agFilterSchema> | null = null
   private ref: unknown
   private _uri?: URI
-  private _isFirstGetRows = true
 
   constructor(
     @inject(ThemeModelSymbol) public theme: ThemeModel,
     @inject(ApiServiceSymbol) public apiService: ApiService,
     @optional() @multiInject(CustomResourceSymbol) private customResources: ICustomResource[],
-  ) {}
+  ) {
+    this.refPromise = new Promise<boolean>(resolve => {
+      this.refResolve = resolve
+    })
+  }
 
   getUri() {
     if (!this._uri) throw new Error('uri is null')
@@ -77,22 +76,6 @@ export class GridModel implements ManageableModel {
   setUri(uri: string | URI) {
     if (typeof uri === 'string') uri = new URI(uri)
     this._uri = uri
-  }
-
-  resetIsFirstGetRows() {
-    this._isFirstGetRows = true
-  }
-
-  /**
-   * 在 ResourceWidgetFactory#createWidget 重置 promise
-   * 因为目前 grid.model 在 tab 关闭并不会销毁 todo 可以销毁 这样流程简单很多
-   */
-  resetGridReadyPromise(uri: string | URI) {
-    this.setUri(uri)
-    this.resetIsFirstGetRows()
-    this.refPromise = new Promise<boolean>(resolve => {
-      this.refResolve = resolve
-    })
   }
 
   refresh() {
@@ -187,8 +170,6 @@ export class GridModel implements ManageableModel {
     sort: SortModelItem[]
     filterModel: z.infer<typeof agFilterSchema>
   }) {
-    this._isFirstGetRows = false
-
     if (this.schema == null) throw new Error('schema is null')
     const builtInParseRet = builtinPluginSchema.safeParse(this.schema.plugins?.['builtin'])
     if (builtInParseRet.success && builtInParseRet.data.axios) {
