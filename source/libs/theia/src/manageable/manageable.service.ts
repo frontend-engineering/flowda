@@ -1,6 +1,7 @@
 import { URI } from '@theia/core'
 import { inject, injectable } from 'inversify'
 import {
+  CheckManageableFactorySymbol,
   MANAGEABLE_EDITOR_ID,
   ManageableModel,
   ManageableModelFactorySymbol,
@@ -17,10 +18,15 @@ export class ManageableService {
   private manageableModelMap = new Map<string, ManageableModel>()
 
   constructor(
+    @inject(CheckManageableFactorySymbol) private checkManageableFactory: (named: string) => boolean,
     @inject(ManageableModelFactorySymbol) private modelFactory: (named: string) => ManageableModel,
     @inject(ManageableWidgetFactorySymbol)
     private widgetAbstractFactory: (named: string) => (options: WidgetOption<ManageableModel>) => ManageableWidget,
   ) {}
+
+  isManageable(scheme: string) {
+    return this.checkManageableFactory(scheme)
+  }
 
   getOrCreateGridModel<T>(uri: URI | string): ManageableModel {
     if (typeof uri === 'string') {

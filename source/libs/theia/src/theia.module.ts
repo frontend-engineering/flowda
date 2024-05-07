@@ -1,6 +1,7 @@
 import { interfaces } from 'inversify'
 import { ManageableService } from './manageable/manageable.service'
 import {
+  CheckManageableFactorySymbol,
   ManageableModel,
   ManageableModelFactorySymbol,
   ManageableModelSymbol,
@@ -43,6 +44,11 @@ export const bindTheiaModule = (bind: interfaces.Bind) => {
       // recall theia ReactWidget#render
       widget.update()
       return widget
+    }
+  })
+  bind(CheckManageableFactorySymbol).toFactory<boolean, [string]>((ctx: interfaces.Context) => {
+    return scheme => {
+      return ctx.container.isBoundNamed(ManageableModelSymbol, scheme)
     }
   })
   // built in
