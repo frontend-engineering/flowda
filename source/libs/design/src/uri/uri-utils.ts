@@ -202,5 +202,5 @@ export function createNewFormUri(uri: string | URI) {
     },
     { encode: false },
   )}`
-  return ret
+  return new URI(ret)
 }

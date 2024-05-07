@@ -13,6 +13,8 @@ describe('wallaby util', () => {
           "!libs/nx-plugin/src/**/*.spec.ts",
           "libs/schema/src/**/*.ts",
           "!libs/schema/src/**/*.spec.ts",
+          "libs/theia/src/**/*.ts",
+          "!libs/theia/src/**/*.spec.ts",
           "libs/types/src/**/*.ts",
           "!libs/types/src/**/*.spec.ts",
         ],
@@ -20,6 +22,7 @@ describe('wallaby util', () => {
           "libs/eslint-plugin-boot/src/**/*.spec.ts",
           "libs/nx-plugin/src/**/*.spec.ts",
           "libs/schema/src/**/*.spec.ts",
+          "libs/theia/src/**/*.spec.ts",
           "libs/types/src/**/*.spec.ts",
         ],
       }

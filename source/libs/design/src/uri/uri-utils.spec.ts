@@ -35,7 +35,7 @@ describe('uri utils', () => {
   it('create new task uri', () => {
     const input = 'grid://flowda?schemaName=superadmin.TenantResourceSchema&displayName=租户'
     const ret = createNewFormUri(input)
-    expect(ret).toMatchInlineSnapshot(
+    expect(ret.toString(true)).toMatchInlineSnapshot(
       `"new-form://flowda?schemaName=superadmin.TenantResourceSchema&displayName=新增租户"`,
     )
   })
