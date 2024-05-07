@@ -56,6 +56,10 @@ export class TreeGridModel implements ManageableModel {
     }
   }
 
+  async onCurrentEditorChanged() {
+    await this.loadData()
+  }
+
   async loadData() {
     if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
     const uri = new URI(this.uri)

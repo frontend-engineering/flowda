@@ -28,6 +28,10 @@ export class TaskFormModel implements ManageableModel {
   // todo: 等支持更多 resource 再 refactor
   @observable schema: ResourceUI | undefined
 
+  async onCurrentEditorChanged() {
+    await this.loadTask(this.getUri())
+  }
+
   get taskId() {
     if (!this._taskId) throw new Error(`Not found taskId, call loadTask first`)
     return this._taskId

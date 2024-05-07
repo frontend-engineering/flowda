@@ -1,11 +1,11 @@
 import {
   type ApiService,
   ApiServiceSymbol,
+  type DefaultFormValueType,
   type ManageableModel,
   newFormUriSchema,
   type ResourceUI,
   ThemeModelSymbol,
-  type DefaultFormValueType,
 } from '@flowda/types'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
@@ -28,6 +28,10 @@ export class NewFormModel implements ManageableModel {
       if (!col.visible) return false
       return col.access_type !== 'read_only'
     })
+  }
+
+  async onCurrentEditorChanged() {
+    //
   }
 
   // suppress warning: uncontrolled input to be controlled

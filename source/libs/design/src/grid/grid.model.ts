@@ -18,7 +18,13 @@ import {
   ThemeModelSymbol,
 } from '@flowda/types'
 import { z } from 'zod'
-import { createNewFormUri, isUriAsKeyLikeEqual, mergeUriFilterModel, updateUriFilterModel } from '../uri/uri-utils'
+import {
+  createNewFormUri,
+  getUriSchemaName,
+  isUriAsKeyLikeEqual,
+  mergeUriFilterModel,
+  updateUriFilterModel,
+} from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
@@ -123,6 +129,12 @@ export class GridModel implements ManageableModel {
     const customResource = (this.customResources || []).find(i => i.schemaName === this.schemaName)
     if (customResource == null) return
     return customResource.getCellRenderer(colName)
+  }
+
+  async onCurrentEditorChanged() {
+    const uri = new URI(this.getUri())
+    const schemaName = `${uri.authority}.${getUriSchemaName(uri)}`
+    await this.getCol(schemaName)
   }
 
   async getCol(schemaName: string) {
