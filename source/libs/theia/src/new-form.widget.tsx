@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { ManageableWidget } from '../manageable/manageable.widget'
-import { NewFormModel } from './new-form.model'
-import { NewForm } from './new-form'
+import { ManageableWidget } from './manageable/manageable.widget'
 import { injectable, unmanaged } from 'inversify'
+import { NewForm, NewFormModel } from '@flowda/design'
 
 @injectable()
 export class NewFormWidget extends ManageableWidget {

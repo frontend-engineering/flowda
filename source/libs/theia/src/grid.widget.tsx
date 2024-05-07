@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { ManageableWidget } from '../manageable/manageable.widget'
-import { GridModel } from './grid.model'
-import { Grid } from './grid'
+import { ManageableWidget } from './manageable/manageable.widget'
 import { injectable, unmanaged } from 'inversify'
+import { Grid, GridModel } from '@flowda/design'
 
 @injectable()
 export class GridWidget extends ManageableWidget {

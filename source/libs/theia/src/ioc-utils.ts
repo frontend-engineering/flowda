@@ -1,10 +1,4 @@
-import {
-  ManageableModel,
-  ManageableModelSymbol,
-  ManageableWidgetFactorySymbol,
-  ManageableWidgetSymbol,
-  WidgetOption,
-} from '@flowda/types'
+import { ManageableModel, ManageableModelSymbol, ManageableWidgetSymbol } from '@flowda/types'
 import { interfaces } from 'inversify'
 import { type ManageableWidget } from './manageable/manageable.widget'
 

@@ -1,4 +1,4 @@
-import { ManageableModel, WidgetOption } from '@flowda/types'
+import { ManageableModel } from '@flowda/types'
 import { ReactWidget } from '@theia/core/lib/browser'
 import { injectable } from 'inversify'
 

@@ -8,12 +8,6 @@ import {
   getResourceInputSchema,
   GridModelSymbol,
   LoginModelSymbol,
-  ManageableModel,
-  ManageableModelFactorySymbol,
-  ManageableModelSymbol,
-  ManageableServiceSymbol,
-  ManageableWidgetFactorySymbol,
-  ManageableWidgetSymbol,
   NewFormModelSymbol,
   PreviewModelSymbol,
   putResourceDataInputSchema,
@@ -21,7 +15,6 @@ import {
   TaskFormModelSymbol,
   ThemeModelSymbol,
   TreeGridModelSymbol,
-  WidgetOption,
 } from '@flowda/types'
 
 import { LoginModel } from './login/login.model'
@@ -31,13 +24,6 @@ import { ThemeModel } from './theme/theme.model'
 import { TreeGridModel } from './tree-grid/tree-grid.model'
 import { TaskFormModel } from './task-form/task-form.model'
 import { NewFormModel } from './new-form/new-form.model'
-import { ManageableService } from './manageable/manageable.service'
-import { registerManageableFactory } from './ioc-utils'
-import { GridWidget } from './grid/grid.widget'
-import { MenuWidget } from './tree-grid/menu.widget'
-import { TaskFormWidget } from './task-form/task-form.widget'
-import { NewFormWidget } from './new-form/new-form.widget'
-import { ManageableWidget } from './manageable/manageable.widget'
 
 export const designModule = new ContainerModule(bind => {
   bindDesignModule(bind)
@@ -70,38 +56,4 @@ export const bindDesignModule = (bind: interfaces.Bind) => {
   bind<TreeGridModel>(TreeGridModelSymbol).to(TreeGridModel).inRequestScope()
   bind<TaskFormModel>(TaskFormModelSymbol).to(TaskFormModel).inRequestScope()
   bind<NewFormModel>(NewFormModelSymbol).to(NewFormModel).inRequestScope()
-
-  bind<ManageableService>(ManageableServiceSymbol).to(ManageableService).inSingletonScope()
-  bind<interfaces.AutoNamedFactory<ManageableModel>>(ManageableModelFactorySymbol).toAutoNamedFactory<ManageableModel>(
-    ManageableModelSymbol,
-  )
-
-  bind<interfaces.Factory<ManageableWidget>>(ManageableWidgetFactorySymbol).toFactory<
-    ManageableWidget,
-    [string],
-    [WidgetOption<ManageableModel>]
-  >((ctx: interfaces.Context) => {
-    return (name: string) => (options: WidgetOption<ManageableModel>) => {
-      const widget = ctx.container.getNamed<ManageableWidget>(ManageableWidgetSymbol, name)
-      // theia ReactWidget
-      widget.id = options.id
-      widget.title.caption = options.title
-      widget.title.label = options.title
-      widget.title.iconClass = 'unclosable-window-icon'
-      widget.title.closable = true
-
-      // ManageableWidget
-      widget.uri = options.uri
-      widget.model = options.model
-
-      // recall theia ReactWidget#render
-      widget.update()
-      return widget
-    }
-  })
-  // built in
-  // registerManageableFactory(bind, 'grid', GridModel, GridWidget)
-  registerManageableFactory(bind, 'tree-grid', TreeGridModel, MenuWidget)
-  registerManageableFactory(bind, 'task', TaskFormModel, TaskFormWidget)
-  registerManageableFactory(bind, 'new-form', NewFormModel, NewFormWidget)
 }

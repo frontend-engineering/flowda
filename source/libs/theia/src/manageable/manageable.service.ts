@@ -9,8 +9,8 @@ import {
   NOT_REGISTERED_SCHEME,
   WidgetOption,
 } from '@flowda/types'
-import { getUriDisplayName, uriAsKey } from '../uri/uri-utils'
 import { ManageableWidget } from './manageable.widget'
+import { getUriDisplayName, uriAsKey } from '@flowda/design'
 
 @injectable()
 export class ManageableService {

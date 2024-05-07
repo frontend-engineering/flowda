@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { ManageableWidget } from '../manageable/manageable.widget'
-import { TaskForm } from './task-form'
-import { TaskFormModel } from './task-form.model'
+import { ManageableWidget } from './manageable/manageable.widget'
 import { injectable, unmanaged } from 'inversify'
+import { TaskForm, TaskFormModel } from '@flowda/design'
 
 @injectable()
 export class TaskFormWidget extends ManageableWidget {
