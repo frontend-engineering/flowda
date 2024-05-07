@@ -100,7 +100,7 @@ export const bindDesignModule = (bind: interfaces.Bind) => {
     }
   })
   // built in
-  registerManageableFactory(bind, 'grid', GridModel, GridWidget)
+  // registerManageableFactory(bind, 'grid', GridModel, GridWidget)
   registerManageableFactory(bind, 'tree-grid', TreeGridModel, MenuWidget)
   registerManageableFactory(bind, 'task', TaskFormModel, TaskFormWidget)
   registerManageableFactory(bind, 'new-form', NewFormModel, NewFormWidget)
