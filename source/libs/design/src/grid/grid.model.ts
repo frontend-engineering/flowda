@@ -57,7 +57,7 @@ export class GridModel implements ManageableModel {
       input: z.infer<typeof handleContextMenuInputSchema>,
       e: React.MouseEvent<HTMLElement, MouseEvent>,
     ) => void
-    onClickNew: (uri: string) => void
+    onClickNew: (uri: URI) => void
   }> = {}
 
   // private filterModel: z.infer<typeof agFilterSchema> | null = null
