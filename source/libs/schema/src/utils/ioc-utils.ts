@@ -1,4 +1,4 @@
-import { ManageableModelSymbol, ServiceSymbol } from '@flowda/types'
+import { ServiceSymbol } from '@flowda/types'
 import { interfaces } from 'inversify'
 
 export function bindService<T>(bind: interfaces.Bind, constructor: new (...args: never[]) => T) {

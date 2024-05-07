@@ -9,7 +9,7 @@ import { interfaces } from 'inversify'
 import { type ManageableWidget } from './manageable/manageable.widget'
 
 export function registerManageableFactory<WIDGET extends ManageableWidget, MODEL extends ManageableModel>(
-  bind: interfaces.Bind,
+  bind: interfaces.Bind | interfaces.Rebind,
   name: string,
   Model: interfaces.Newable<MODEL>,
   Widget: interfaces.Newable<WIDGET>,
