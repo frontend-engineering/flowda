@@ -1,7 +1,5 @@
 {
   "name": "@flowda/theia",
   "version": "0.0.1",
-  "peerDependencies": {
-    "@anatine/zod-openapi": "*"
-  }
+  "peerDependencies": {}
 }

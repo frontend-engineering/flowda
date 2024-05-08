@@ -139,6 +139,15 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       packageJson.main = './index.bundle.js'
       consola.info('  to update package.json#main: ./index.bundle.js')
     }
+
+    if (options.bundleAlias) {
+      Object.keys(options.bundleAlias).forEach(k => {
+        delete packageJson.dependencies[k]
+        delete packageJson.peerDependencies[k]
+      })
+      consola.info('  to delete bundleAlias in package.json#{peerDependencies,dependencies}')
+    }
+
     if (options.onlyTypes) {
       delete packageJson.main
       delete packageJson.scripts

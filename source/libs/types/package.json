@@ -2,7 +2,5 @@
   "name": "@flowda/types",
   "version": "0.0.1",
   "type": "commonjs",
-  "peerDependencies": {
-    "@anatine/zod-openapi": "*"
-  }
+  "peerDependencies": {}
 }
