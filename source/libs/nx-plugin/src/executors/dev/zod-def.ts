@@ -5,12 +5,14 @@ export const rollupTransparentSchema = z.object({
   bundleSuppressWarnCodes: z.array(z.string()).default([]),
   bundleJs: z.boolean().default(false),
   externals: z.array(z.string()).default([]),
+  mts: z.boolean().default(false),
 })
 
 export const buildRollupConfigInputSchema = rollupTransparentSchema.extend({
   dtsBundleInput: z.string(),
   dtsBundleFile: z.string(),
   bundleInput: z.string(),
+  bundleFileCjs: z.string(),
   bundleFile: z.string(),
   packageJsonPath: z.string(),
 })

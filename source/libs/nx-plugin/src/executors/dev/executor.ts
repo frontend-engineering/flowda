@@ -45,8 +45,13 @@ export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSc
       input: input.bundleInput,
       output: [
         {
-          file: input.bundleFile,
+          file: input.bundleFileCjs,
           format: 'cjs',
+          interop: 'auto',
+        },
+        {
+          file: input.bundleFile,
+          format: 'es',
           interop: 'auto',
         },
       ],
@@ -96,11 +101,16 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
     if (options.bundleDts) {
       const rollupOptions = buildRollupConfig(
         buildRollupConfigInputSchema.parse({
-          dtsBundleInput: path.join(options.outputPath, `src/index.d.ts`),
+          dtsBundleInput: options.mts
+            ? path.join(options.outputPath, `src/index.d.mts`)
+            : path.join(options.outputPath, `src/index.d.ts`),
           dtsBundleFile: path.join(options.outputPath, `index.bundle.d.ts`),
           packageJsonPath: path.join(options.outputPath, `package.json`),
-          bundleInput: path.join(options.outputPath, `src/index.js`),
+          bundleInput: options.mts
+            ? path.join(options.outputPath, `src/index.mjs`)
+            : path.join(options.outputPath, `src/index.js`),
           bundleFile: path.join(options.outputPath, `index.bundle.js`),
+          bundleFileCjs: path.join(options.outputPath, `index.bundle.cjs`),
           bundleAlias: _.mapValues(options.bundleAlias, value => path.join(context.root, value)),
           bundleSuppressWarnCodes: options.bundleSuppressWarnCodes,
           externals: options.externals,
@@ -109,9 +119,15 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       )
       try {
         for (const rollupOption of rollupOptions) {
-          consola.start(`Bundling ${context.projectName} ${rollupOption.input}...`)
+          consola.start(`Bundling [${context.projectName}] ${rollupOption.input}...`)
           const bundle = await rollup.rollup(rollupOption)
-          await bundle.write(rollupOption.output[0])
+          if (Array.isArray(rollupOption.output)) {
+            for (let output of rollupOption.output) {
+              await bundle.write(output)
+            }
+          } else {
+            await bundle.write(rollupOption.output)
+          }
           consola.success(`Bundle done.`)
         }
       } catch (e) {
@@ -135,12 +151,18 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         consola.info('  to delete package.json#types')
       }
     }
+    if (options.mts && !options.bundleJs) {
+      packageJson.main = './src/index.mjs'
+      consola.info('  to update package.json#main: ./src/index.mjs')
+    }
     if (options.bundleJs) {
-      packageJson.main = './index.bundle.js'
-      consola.info('  to update package.json#main: ./index.bundle.js')
+      packageJson.main = './index.bundle.cjs'
+      packageJson.module = './index.bundle.js'
+      consola.info('  to update package.json#main: ./index.bundle.cjs')
+      consola.info('  to update package.json#module: ./index.bundle.js')
     }
 
-    if (options.bundleAlias) {
+    if (Object.keys(options.bundleAlias).length > 0) {
       Object.keys(options.bundleAlias).forEach(k => {
         delete packageJson.dependencies[k]
         delete packageJson.peerDependencies[k]

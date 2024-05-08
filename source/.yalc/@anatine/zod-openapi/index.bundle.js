@@ -1,6 +1,7 @@
 import merge from 'ts-deepmerge';
 import { z } from 'zod';
-export function extendApi(schema, SchemaObject = {}) {
+
+function extendApi(schema, SchemaObject = {}) {
     const openapi = Object.assign(Object.assign({}, schema._def.openapi), SchemaObject);
     const newSchema = new schema.constructor(Object.assign(Object.assign({}, schema._def), { openapi: openapi /* for zod-openapi */ }));
     return newSchema;
@@ -253,7 +254,7 @@ const workerMap = {
     ZodUnknown: catchAllParser,
     ZodVoid: catchAllParser,
 };
-export function generateSchema(zodRef, useOutput) {
+function generateSchema(zodRef, useOutput) {
     const { openapi = {} } = zodRef._def;
     const schemas = [
         zodRef.isNullable && zodRef.isNullable() ? { nullable: true } : {},
@@ -275,4 +276,5 @@ export function generateSchema(zodRef, useOutput) {
         return catchAllParser({ zodRef, schemas });
     }
 }
-//# sourceMappingURL=zod-openapi.js.map
+
+export { extendApi, generateSchema };
