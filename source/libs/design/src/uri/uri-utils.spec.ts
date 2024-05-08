@@ -13,6 +13,8 @@ import {
   updateUriFilterModel,
   uriAsKey,
   uriWithoutId,
+  createTaskUri,
+  createNewFormUri,
 } from './uri-utils'
 import { handleContextMenuInputSchema } from '@flowda/types'
 import { z } from 'zod'
@@ -30,9 +32,86 @@ scheme     authority       path        query   fragment
 
 */
 describe('uri utils', () => {
-  it('', () => {
-    const a = 'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=3'
-    const b = 'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=1'
+  it('create new task uri', () => {
+    const input = 'grid://flowda?schemaName=superadmin.TenantResourceSchema&displayName=租户'
+    const ret = createNewFormUri(input)
+    expect(ret.toString(true)).toMatchInlineSnapshot(
+      `"new-form://flowda?schemaName=superadmin.TenantResourceSchema&displayName=新增租户"`,
+    )
+  })
+
+  it('create task uri', () => {
+    const input = {
+      uri: 'grid://superadmin?schemaName=TaskResourceSchema',
+      cellRendererInput: {
+        value: '创建预订单',
+        data: {
+          id: '939e8453-fd7e-11ee-907e-26fc8bb373e1',
+          name: '创建预订单',
+          assignee: 'ycdevdemo',
+          created: '2024-04-18T20:24:18.000+0800',
+          due: null,
+          followUp: null,
+          lastUpdated: null,
+          delegationState: null,
+          description: null,
+          executionId: '939dc100-fd7e-11ee-907e-26fc8bb373e1',
+          owner: null,
+          parentTaskId: null,
+          priority: 50,
+          processDefinitionId: 'Process_1iv5qkp:4:7c3be32c-fd7e-11ee-907e-26fc8bb373e1',
+          processInstanceId: '939dc100-fd7e-11ee-907e-26fc8bb373e1',
+          taskDefinitionKey: 'Activity_1rzszxz',
+          caseExecutionId: null,
+          caseInstanceId: null,
+          caseDefinitionId: null,
+          suspended: false,
+          formKey: null,
+          camundaFormRef: null,
+          tenantId: 'ycdev',
+        },
+        valueFormatted: null,
+        colDef: {
+          field: 'name',
+        },
+      },
+      column: {
+        column_type: 'String',
+        display_name: 'Name',
+        visible: true,
+        access_type: 'read_only' as const,
+        plugins: {
+          builtin: {
+            open_task: true,
+          },
+        },
+        name: 'name',
+        validators: [
+          {
+            required: true,
+          },
+        ],
+      },
+    }
+    const ret = createTaskUri(input)
+    expect(ret.toString(true)).toMatchInlineSnapshot(
+      `"task://superadmin?taskDefinitionKey=Activity_1rzszxz&taskId=939e8453-fd7e-11ee-907e-26fc8bb373e1&displayName=创建预订单"`,
+    )
+    const query = qs.parse(ret.query)
+    expect(query).toMatchInlineSnapshot(`
+      {
+        "displayName": "创建预订单",
+        "taskDefinitionKey": "Activity_1rzszxz",
+        "taskId": "939e8453-fd7e-11ee-907e-26fc8bb373e1",
+      }
+    `)
+  })
+
+  it('isUriAsKeyLikeEqual', () => {
+    const a =
+      'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=3'
+    const b =
+      'grid://flowda?schemaName=MenuResourceSchema&displayName=Menu&filterModel[id][filterType]=number&filterModel[id][type]=equals&filterModel[id][filter]=1'
     const ret = isUriAsKeyLikeEqual(a, b)
     expect(ret).toBe(true)
   })
@@ -59,7 +138,7 @@ describe('uri utils', () => {
       },
     } as const
     const ret = createAssociationUri(input)
-    console.log(ret)
+    // console.log(ret)
     expect(ret).toMatchInlineSnapshot(`
       URI {
         "codeUri": {
@@ -135,7 +214,7 @@ describe('uri utils', () => {
     const uri_ = new URI(uri)
     const ret = updateUriFilterModel(uri_, filterModel)
     const uriRet = ret.toString(true)
-    console.log(uriRet)
+    // console.log(uriRet)
     const uriRet_ = new URI(uriRet)
     expect(qs.parse(uriRet_.query)['filterModel']).toMatchInlineSnapshot(`
       {
@@ -227,6 +306,8 @@ describe('uri utils', () => {
         column_type: 'reference',
         display_name: 'Menu',
         name: 'menu',
+        visible: true,
+        access_type: 'read_only' as const,
         validators: [
           {
             required: true,
@@ -238,6 +319,7 @@ describe('uri utils', () => {
           reference_type: 'has_one',
           foreign_key: 'tenantId',
           primary_key: 'id',
+          visible: true,
         },
       },
     }
@@ -258,7 +340,7 @@ describe('uri utils', () => {
     // const uri = 'resource.flowda.MenuResourceSchema:///菜单'
     const uri = 'urn:example:animal:ferret:nose'
     const output = Uri.parse(uri)
-    console.log(output)
+    // console.log(output)
     expect(output).toMatchInlineSnapshot(`
       {
         "$mid": 1,
@@ -268,7 +350,7 @@ describe('uri utils', () => {
     `)
     const uri2 = 'foo://example.com:8042/over/there?name=ferret#nose'
     const output2 = Uri.parse(uri2)
-    console.log(output2)
+    // console.log(output2)
     expect(output2).toMatchInlineSnapshot(`
       {
         "$mid": 1,
@@ -298,11 +380,11 @@ describe('uri utils', () => {
         },
       }
     `)
-    console.log(uri)
+    // console.log(uri)
     // todo: 换成 LabelProvider.getName 试试看
-    console.log(uri.displayName)
+    // console.log(uri.displayName)
     // 用不到
-    console.log(uri.parent)
+    // console.log(uri.parent)
     expect(uri.parent).toMatchInlineSnapshot(`
       URI {
         "codeUri": {
@@ -333,7 +415,7 @@ describe('uri utils', () => {
     // resource.flowda.MenuResourceSchema:///菜单
     const rawUri = 'grid://flowda?schema=MenuResourceSchema'
     const output = Uri.parse(rawUri)
-    console.log(output)
+    // console.log(output)
     expect(output).toMatchInlineSnapshot(`
       {
         "$mid": 1,
@@ -344,13 +426,13 @@ describe('uri utils', () => {
     `)
 
     const uri = new URI(rawUri)
-    console.log(uri)
+    // console.log(uri)
   })
 
   it('tree grid uri', () => {
     const uri = 'grid://flowda?schemaName=MenuResourceSchema&displayName=菜单'
     const output = createTreeGridUri(new URI(uri), '1', 'menuData')
-    console.log(output)
+    // console.log(output)
     expect(output.toString(true)).toMatchInlineSnapshot(
       `"tree-grid://flowda?schemaName=MenuResourceSchema&displayName=菜单%231:menuData&id=1&field=menuData"`,
     )
@@ -390,7 +472,7 @@ describe('uri utils', () => {
     const treeGridUri =
       'tree-grid://flowda?schemaName%3DMenuResourceSchema%26displayName%3D%E8%8F%9C%E5%8D%95%233%3AtreeData%26id%3D3%26field%3DtreeData'
     const gridUri = convertTreeGridUriToGridUri(treeGridUri)
-    console.log(gridUri)
+    // console.log(gridUri)
     expect(gridUri).toMatchInlineSnapshot(`"grid://flowda?schemaName=MenuResourceSchema&displayName=菜单"`)
   })
 })

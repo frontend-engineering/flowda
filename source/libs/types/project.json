@@ -8,7 +8,8 @@
       "executor": "@flowda/nx-plugin:dev",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/types"
+        "outputPath": "dist/libs/types",
+        "bundleJs": true
       }
     },
     "build": {

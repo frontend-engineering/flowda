@@ -2,3 +2,6 @@
 
 /dist
 /coverage
+pnpm-lock.yaml
+/.yalc
+/libs/schema/src/parser/prisma-zod/__fixtures__/generated

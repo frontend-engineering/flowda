@@ -4,8 +4,10 @@ describe('schema transformer', function () {
   it('case', () => {
     const output = new SchemaTransformer()
       .set(<any>{
-        'x-legacy': {
-          route_prefix: '/resources/sites',
+        plugins: {
+          legacy: {
+            route_prefix: '/resources/sites',
+          },
         },
         name: 'Site',
         properties: {
@@ -17,9 +19,11 @@ describe('schema transformer', function () {
           },
           editableUrl: {
             display_name: '可编辑链接',
-            'x-legacy': {
-              override_type: 'text',
-              prisma: 'false',
+            plugins: {
+              legacy: {
+                override_type: 'text',
+                prisma: 'false',
+              },
             },
             column_type: 'String',
             visible: true,
@@ -47,6 +51,12 @@ describe('schema transformer', function () {
             "column_type": "String",
             "display_name": "可编辑链接",
             "name": "editableUrl",
+            "plugins": {
+              "legacy": {
+                "override_type": "text",
+                "prisma": "false",
+              },
+            },
             "reference": undefined,
             "validators": [
               {
@@ -54,17 +64,15 @@ describe('schema transformer', function () {
               },
             ],
             "visible": true,
-            "x-legacy": {
-              "override_type": "text",
-              "prisma": "false",
-            },
           },
         ],
         "name": "Site",
-        "type": "object",
-        "x-legacy": {
-          "route_prefix": "/resources/sites",
+        "plugins": {
+          "legacy": {
+            "route_prefix": "/resources/sites",
+          },
         },
+        "type": "object",
       }
     `)
   })

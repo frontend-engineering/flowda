@@ -1,8 +1,7 @@
-import { generateSchema, OpenApiZodAny } from '@anatine/zod-openapi'
+import { generateSchema } from '@anatine/zod-openapi'
 import { ResourceKeySchema } from '@flowda/types'
-import { z } from 'zod'
+import { z, ZodTypeAny } from 'zod'
 
-export function zodToOpenAPI(zodRef: OpenApiZodAny,
-                             useOutput?: boolean) {
+export function zodToOpenAPI(zodRef: ZodTypeAny, useOutput?: boolean) {
   return generateSchema(zodRef, useOutput) as z.infer<typeof ResourceKeySchema>
 }

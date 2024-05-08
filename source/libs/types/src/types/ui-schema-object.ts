@@ -1,13 +1,17 @@
 import { z } from 'zod'
 
+export interface PluginType {
+  [x: string]: unknown
+}
+
 export type ColumnKey = {
   column_type: string
   display_name: string
   description?: string
   example?: string
-  visible: boolean,
-  access_type?: 'read_only' | 'read_write',
-  [p: `x-${string}`]: unknown,
+  visible: boolean
+  access_type?: 'read_only' | 'read_write'
+  plugins?: Partial<PluginType>
 }
 export const ColumnKeySchema = z.object({
   column_type: z.string(),
@@ -16,6 +20,7 @@ export const ColumnKeySchema = z.object({
   example: z.string().optional(),
   visible: z.boolean(),
   access_type: z.union([z.literal('read_only'), z.literal('read_write')]).default('read_write'),
+  plugins: z.any().optional(),
 }) satisfies z.ZodType<ColumnKey>
 
 export type AssociationKey = {
@@ -35,20 +40,22 @@ export const AssociationKeySchema = z.object({
   visible: z.boolean(),
 }) satisfies z.ZodType<AssociationKey>
 
-export type ReferenceKey = {
-  display_name: string
-  model_name: string
-  reference_type: 'belongs_to'
-  foreign_key: string
-  primary_key: string
-} | {
-  display_name: string
-  model_name: string
-  reference_type: 'has_one'
-  foreign_key: string
-  primary_key: string
-  visible: boolean
-}
+export type ReferenceKey =
+  | {
+      display_name: string
+      model_name: string
+      reference_type: 'belongs_to'
+      foreign_key: string
+      primary_key: string
+    }
+  | {
+      display_name: string
+      model_name: string
+      reference_type: 'has_one'
+      foreign_key: string
+      primary_key: string
+      visible: boolean
+    }
 
 export const ReferenceKeySchema = z.union([
   z.object({
@@ -79,7 +86,7 @@ export type ResourceKey = {
   slug: string
   table_name: string
   visible: boolean
-  [p: `x-${string}`]: unknown,
+  plugins?: Partial<PluginType>
 
   // openapi3-ts
   properties?: Record<string, ColumnKey | AssociationKey | ReferenceKey>
@@ -97,8 +104,9 @@ export const ResourceKeySchema = z.object({
   display_column: z.string().optional(),
   searchable_columns: z.string().optional(),
 
+  plugins: z.any().optional(),
+
   // openapi3-ts
-  properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema]))
-    .optional(),
+  properties: z.record(z.string(), z.union([ColumnKeySchema, AssociationKeySchema, ReferenceKeySchema])).optional(),
   required: z.array(z.string()).optional(),
 }) satisfies z.ZodType<ResourceKey>

@@ -1,11 +1,10 @@
-import { injectable } from 'inversify'
+import { inject, injectable } from 'inversify'
 import type { CellValueChangedEvent, ColDef, GridApi, IRowNode } from 'ag-grid-community'
 import * as _ from 'radash'
-import { GridModel } from '../grid/grid.model'
 import { URI } from '@theia/core'
 import { getTreeUriQuery } from '../uri/uri-utils'
 import { convertAgTreeDataToTreeData, convertMenuDataToAgTreeData } from './tree-grid-utils'
-import { ManageableModel, agMenuItemSchema } from '@flowda/types'
+import { agMenuItemSchema, ApiService, ApiServiceSymbol, ManageableModel } from '@flowda/types'
 import { z } from 'zod'
 
 @injectable()
@@ -19,12 +18,17 @@ export class TreeGridModel implements ManageableModel {
   ]
 
   private uri?: string
-  private gridModel?: GridModel
   /**
    * 等待 onGridReady 对 gridApi 赋值
    */
-  private gridReadyPromise?: Promise<boolean>
+  private gridReadyPromise: Promise<boolean>
   private gridReadyResolve?: (value: boolean | PromiseLike<boolean>) => void
+
+  constructor(@inject(ApiServiceSymbol) public apiService: ApiService) {
+    this.gridReadyPromise = new Promise<boolean>(resolve => {
+      this.gridReadyResolve = resolve
+    })
+  }
 
   handlers: Partial<{
     message: (title: string) => void
@@ -35,18 +39,9 @@ export class TreeGridModel implements ManageableModel {
     return this.uri
   }
 
-  resetGridReadyPromise(uri: string | URI) {
-    if (typeof uri === 'string') uri = new URI(uri)
-    this.setUri(uri)
-    this.gridReadyPromise = new Promise<boolean>((resolve) => {
-      this.gridReadyResolve = resolve
-    })
-  }
-
   setGridApi(gridApi: GridApi) {
     this.gridApi = gridApi
-    if (!this.gridReadyResolve) throw new Error('gridReadyResolve is null, call resetGridReadyPromise() first')
-    this.gridReadyResolve(true)
+    this.gridReadyResolve!(true)
   }
 
   setUri(uri: string | URI) {
@@ -61,18 +56,16 @@ export class TreeGridModel implements ManageableModel {
     }
   }
 
-  resetIsFirstGetRows() {
-    // noop
+  async onCurrentEditorChanged() {
+    await this.loadData()
   }
 
   async loadData() {
-    if (!this.gridModel) throw new Error(`this.gridModel is null, call setGridModel() first`)
     if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
-    if (typeof this.gridModel.apis.getResourceData !== 'function') throw new Error('handlers.getResourceData is not implemented')
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     // todo: any
-    const ret: any = await this.gridModel.apis.getResourceData({
+    const ret: any = await this.apiService.getResourceData({
       schemaName: `${uri.authority}.${query.schemaName}`,
       id: Number(query.id),
     })
@@ -81,18 +74,12 @@ export class TreeGridModel implements ManageableModel {
       menuData = JSON.parse(ret[query.field])
     }
     const treeData = convertMenuDataToAgTreeData(menuData)
-    if (!this.gridReadyPromise) throw new Error('gridReadyPromise is null, call resetGridReadyPromise() first')
     await this.gridReadyPromise
     if (!this.gridApi) throw new Error('gridApi is null')
     this.gridApi.setGridOption('rowData', treeData)
   }
 
-  setGridModel(gridModel: GridModel) {
-    this.gridModel = gridModel
-  }
-
-  getDataPath(data: unknown): string[] {
-    // @ts-expect-error
+  getDataPath(data: Record<string, unknown>): string[] {
     if (!('hierarchy' in data) || !Array.isArray(data.hierarchy)) {
       throw new Error('Must provide hierarchy field.')
     }
@@ -101,26 +88,22 @@ export class TreeGridModel implements ManageableModel {
 
   private convertAndSaveMenuData() {
     if (!this.gridApi) throw new Error('gridApi is null')
-    const agTreeData: z.infer<typeof agMenuItemSchema>[] = [];
+    const agTreeData: z.infer<typeof agMenuItemSchema>[] = []
     this.gridApi.forEachNode(node => {
       agTreeData.push(node.data)
     })
     const menuData = convertAgTreeDataToTreeData(agTreeData)
-    if (!this.gridModel) throw new Error(`this.gridModel is null, call setGridModel() first`)
-    if (typeof this.gridModel.apis.putResourceData !== 'function') throw new Error('handlers.putResourceData is not implemented')
     if (!this.uri) throw new Error(`this.uri is null, call setUri() first`)
     const uri = new URI(this.uri)
     const query = getTreeUriQuery(this.uri)
     try {
-      this.gridModel.apis.putResourceData(
-        {
-          schemaName: `${uri.authority}.${query.schemaName}`,
-          id: Number(query.id),
-          updatedValue: {
-            [query.field]: menuData
-          }
-        }
-      )
+      this.apiService.putResourceData({
+        schemaName: `${uri.authority}.${query.schemaName}`,
+        id: Number(query.id),
+        updatedValue: {
+          [query.field]: menuData,
+        },
+      })
     } catch (e) {
       if (typeof this.handlers.message === 'function') {
         this.handlers.message(`Update failed, try to reload data from backend`)
@@ -144,6 +127,28 @@ export class TreeGridModel implements ManageableModel {
       add: [
         {
           hierarchy: [...findRet.hierarchy, String(newId)],
+          id: newId,
+        },
+      ],
+    })
+    this.convertAndSaveMenuData()
+  }
+
+  addPeer(id: number) {
+    if (!this.gridApi) throw new Error('gridApi is null')
+    const newId = _.uid(4)
+
+    let findRet: z.infer<typeof agMenuItemSchema> | null = null
+    this.gridApi.forEachNode(node => {
+      if (node.data.id === id) findRet = node.data
+    })
+    findRet = agMenuItemSchema.parse(findRet)
+    if (findRet == null) throw new Error(`No row found, ${id}`)
+
+    this.gridApi.applyTransaction({
+      add: [
+        {
+          hierarchy: [...findRet.hierarchy.slice(0, findRet.hierarchy.length - 1), String(newId)],
           id: newId,
         },
       ],
@@ -176,9 +181,7 @@ export class TreeGridModel implements ManageableModel {
     }
 
     this.gridApi.applyTransaction({
-      remove: [
-        node.data,
-      ],
+      remove: [node.data],
     })
     this.convertAndSaveMenuData()
   }

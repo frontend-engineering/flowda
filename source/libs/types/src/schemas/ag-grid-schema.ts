@@ -36,3 +36,5 @@ export const cellRendererInputSchema = z.object({
     field: z.string(),
   }),
 })
+
+export type CellRendererInput = z.infer<typeof cellRendererInputSchema>

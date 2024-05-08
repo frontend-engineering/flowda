@@ -11,6 +11,7 @@ This script first \`nx reset\` then run these scripts in parallel:
 4. schema:dev
 5. nx-plugin:dev
 6. design:dev
+7. theia:dev
 
 EOF
 
@@ -54,11 +55,12 @@ then
     "./run.sh design dev --watch"
 else
     concurrently --restart-tries -1 --restart-after 10000 -c "auto" \
-    -n openapi,prisma,types,schema,nx-plugin,design \
+    -n openapi,prisma,types,schema,nx-plugin,design,theia \
     "./zod-openapi-dev.sh" \
     "./zod-prisma-types-dev.sh" \
     "./run.sh types dev --watch" \
     "./run.sh schema dev --watch" \
     "./run.sh nx-plugin dev --watch" \
-    "./run.sh design dev --watch"
+    "./run.sh design dev --watch" \
+    "./run.sh theia dev --watch"
 fi

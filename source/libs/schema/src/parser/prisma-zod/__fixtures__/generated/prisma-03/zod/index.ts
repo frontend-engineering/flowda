@@ -104,7 +104,7 @@ export const UserSchema = z.object({
     display_name: '用户名',
     column_type: 'String',
     visible: false,
-    'x-legacy': { prisma: 'false' },
+    plugins: { legacy: { prisma: 'false' } },
     access_type: 'read_write'
   }),
   extendedDescriptionData: z.any().optional().nullish().column({
@@ -124,7 +124,7 @@ export const UserSchema = z.object({
   display_primary_key: 'false',
   display_column: 'email',
   searchable_columns: 'email,name',
-  'x-legacy': { route_prefix: '/admin' }
+  plugins: { legacy: { route_prefix: '/admin' } }
 })
 
 export type User = z.infer<typeof UserSchema>

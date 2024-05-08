@@ -11,6 +11,11 @@ describe('prisma 03 generated zod to openapi', function () {
         "display_name": "员工",
         "display_primary_key": "false",
         "name": "User",
+        "plugins": {
+          "legacy": {
+            "route_prefix": "/admin",
+          },
+        },
         "primary_key": "id",
         "properties": {
           "createdAt": {
@@ -54,11 +59,13 @@ describe('prisma 03 generated zod to openapi', function () {
             "column_type": "String",
             "display_name": "用户名",
             "nullable": true,
+            "plugins": {
+              "legacy": {
+                "prisma": "false",
+              },
+            },
             "type": "string",
             "visible": false,
-            "x-legacy": {
-              "prisma": "false",
-            },
           },
           "updatedAt": {
             "access_type": "read_only",
@@ -81,9 +88,6 @@ describe('prisma 03 generated zod to openapi', function () {
         "table_name": "User",
         "type": "object",
         "visible": true,
-        "x-legacy": {
-          "route_prefix": "/admin",
-        },
       }
     `)
   })

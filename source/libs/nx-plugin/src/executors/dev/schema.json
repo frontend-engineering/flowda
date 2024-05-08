@@ -37,9 +37,12 @@
       "type": "boolean",
       "description": "only .d.ts, e.g. trpc-server lib",
       "default": false
+    },
+    "bundleJs": {
+      "type": "boolean",
+      "description": "generate ./index.bundle.js",
+      "default": false
     }
   },
-  "required": [
-    "outputPath"
-  ]
+  "required": ["outputPath"]
 }

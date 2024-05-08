@@ -15,7 +15,7 @@ export class TreeGrid extends Component<TreeGridProps> {
   private gridRef: AgGridReact<any> | null = null
 
   private readonly onCellValueChanged = async (evt: CellValueChangedEvent) => {
-    
+    //
   }
 
   private readonly onGridReady = (params: GridReadyEvent) => {
@@ -27,7 +27,6 @@ export class TreeGrid extends Component<TreeGridProps> {
   todo 后续看下 group cell 的 onContextMenu 接出来
    */
   private readonly getContextMenuItems = (params: GetContextMenuItemsParams<any, any>) => {
-
     if (!params.node) throw new Error(`Add child to ${params.value} but node is null`)
     const name = params.node.data.name || params.node.key
     const id = params.node.data.id
@@ -36,6 +35,12 @@ export class TreeGrid extends Component<TreeGridProps> {
         name: `Add child to ${name}`,
         action: () => {
           this.props.model.addChild(id)
+        },
+      },
+      {
+        name: `Add peer to ${name}`,
+        action: () => {
+          this.props.model.addPeer(id)
         },
       },
       {
@@ -50,11 +55,7 @@ export class TreeGrid extends Component<TreeGridProps> {
   override render() {
     return (
       <AgGridReact
-        modules={[
-          ClientSideRowModelModule,
-          RowGroupingModule,
-          MenuModule,
-        ]}
+        modules={[ClientSideRowModelModule, RowGroupingModule, MenuModule]}
         ref={ref => (this.gridRef = ref)}
         columnDefs={this.props.model.columnDefs}
         defaultColDef={{

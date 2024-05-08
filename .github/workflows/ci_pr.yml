@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       CYPRESS_INSTALL_BINARY: "0"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
@@ -22,8 +22,8 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: "pnpm"
           cache-dependency-path: "source/pnpm-lock.yaml"
 
-      - run: ./scripts/ci.sh
+      - run: node ./scripts/ci.js

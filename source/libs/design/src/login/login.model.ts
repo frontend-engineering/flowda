@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 import type { FormikProps } from 'formik'
 import { injectable, inject } from 'inversify'
 import { ThemeModelSymbol, loginInputSchemaDto, loginOutputSchemaDto } from '@flowda/types'
@@ -15,9 +15,7 @@ export class LoginModel {
     validate: (input: loginInputSchemaDto) => Promise<loginOutputSchemaDto>
   }> = {}
 
-  constructor(
-    @inject(ThemeModelSymbol) public theme: ThemeModel,
-  ) {
+  constructor(@inject(ThemeModelSymbol) public theme: ThemeModel) {
     makeObservable(this)
   }
 
@@ -32,7 +30,7 @@ export class LoginModel {
   }
 
   async login(accept?: () => Promise<void>) {
-    if (!this.formikProps) throw new Error()
+    if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
     try {
       if (typeof this.handlers.validate !== 'function') {

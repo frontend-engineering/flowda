@@ -9,13 +9,21 @@ import type {
   IDatasource,
   IGetRowsParams,
 } from 'ag-grid-community'
-import { shortenDatetime } from '../utils/time-utils'
-import { cellRendererInputSchema } from '@flowda/types'
-import { z } from 'zod'
+import { getReferenceDisplay, shortenDatetime } from './grid-utils'
+import { CellRendererInput } from '@flowda/types'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
-import { getReferenceDisplay } from './grid-utils'
 import { getUriFilterModel } from '../uri/uri-utils'
+import { EuiIcon, EuiThemeProvider } from '@elastic/eui'
+import { GridToolbar } from './grid-toolbar'
+import { Flex } from '@rebass/grid/emotion'
+import styled from '@emotion/styled'
+
+const FEuiIcon = styled(EuiIcon)<{ top?: number }>`
+  position: relative;
+  top: ${props => props.top || 1}px;
+  margin-right: 8px;
+`
 
 export type GridProps = {
   uri?: string
@@ -25,31 +33,64 @@ export type GridProps = {
 export class Grid extends React.Component<GridProps> {
   private gridRef: AgGridReact | null = null
 
+  override render() {
+    return (
+      <div style={{ height: '100%' }}>
+        <EuiThemeProvider colorMode={this.props.model.theme.colorMode}>
+          <GridToolbar {...this.props} />
+        </EuiThemeProvider>
+        <div style={{ height: 'calc(100% - 40px)' }}>
+          <AgGridReact
+            modules={[InfiniteRowModelModule]}
+            ref={ref => {
+              this.gridRef = ref
+            }}
+            defaultColDef={{
+              maxWidth: 400,
+            }}
+            rowHeight={42}
+            pagination={true}
+            paginationPageSize={20}
+            cacheBlockSize={20}
+            rowModelType={'infinite'}
+            getRowId={(params: GetRowIdParams) => params.data.id}
+            onGridReady={this.onGridReady}
+            onCellValueChanged={this.onCellValueChanged}
+          />
+        </div>
+      </div>
+    )
+  }
+
   private readonly onGridReady = async (evt: GridReadyEvent) => {
     this.props.model.gridApi = evt.api
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {
+        // todo: 搞清楚为什么会出现这两个 warning
         if (this.props.model.schemaName == null) {
           console.warn('schemaName is null, ignored')
           return
         }
-        if (this.props.model.columnDefs.length === 0) {
-          console.warn('columnDefs is empty, ignored')
-          return
-        }
+        await this.props.model.schemaReadyPromise
         const ret = await this.props.model.getData({
           schemaName: this.props.model.schemaName,
           // todo: 分页参数逻辑 后续重构可以下沉到 node 端，即服务端直接接收 startRow endRow
           current: params.endRow / (params.endRow - params.startRow),
           pageSize: params.endRow - params.startRow,
           sort: params.sortModel,
-          filterModel: this.props.model.isFirstGetRows
-            ? {
-                ...params.filterModel,
-                ...getUriFilterModel(this.props.model.getUri()),
-              }
-            : params.filterModel,
+          filterModel: {
+            ...params.filterModel,
+            ...getUriFilterModel(this.props.model.getUri()),
+          },
+          // todo: 增加测试 确保 filterModel 每次都合并 uri
+          // 或者保持 filterModel 和 uri 同步 只用 uri
+          // filterModel: this.props.model.isFirstGetRows
+          //   ? {
+          //       ...params.filterModel,
+          //       ...getUriFilterModel(this.props.model.getUri()),
+          //     }
+          //   : params.filterModel,
         })
 
         evt.api.hideOverlay() // 不清楚为什么，突然需要手动 hideOverlay
@@ -75,6 +116,15 @@ export class Grid extends React.Component<GridProps> {
     const colDefs = this.props.model.columnDefs
       .filter(item => item.visible)
       .map<ColDef>(item => {
+        const customCellRenderer = this.props.model.getCustomCellRenderer(item.name)
+        if (customCellRenderer != null) {
+          return {
+            field: item.name,
+            headerName: item.display_name,
+            cellRenderer: customCellRenderer,
+          }
+        }
+
         // todo: 图片需要搞一个 modal 并且上传修改
         // if (item.name === 'image') { // todo: 这里用 plugin model 实现
         //   return {
@@ -102,11 +152,17 @@ export class Grid extends React.Component<GridProps> {
           return {
             minWidth: 110,
             field: item.name,
-            headerName: item.display_name,
+            // headerName: item.display_name,
             cellDataType: item.column_type === 'String' ? 'string' : 'number',
             pinned: 'left',
             filter: true,
             floatingFilter: true,
+            headerComponent: () => (
+              <Flex alignItems="center">
+                <FEuiIcon type="key" size="s" />
+                {item.display_name}
+              </Flex>
+            ),
           }
         }
         switch (item.column_type) {
@@ -114,10 +170,15 @@ export class Grid extends React.Component<GridProps> {
             return {
               editable: false,
               field: item.name,
-              headerName: item.display_name,
+              // headerName: item.display_name,
+              headerComponent: () => (
+                <Flex alignItems="center">
+                  <FEuiIcon type="link" size="s" /> {item.display_name}
+                </Flex>
+              ),
               filter: true,
               floatingFilter: true,
-              cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              cellRenderer: (param: CellRendererInput) => {
                 if (!param.value) {
                   return <span>.</span>
                 }
@@ -138,9 +199,7 @@ export class Grid extends React.Component<GridProps> {
                 return (
                   <div
                     onContextMenu={e => {
-                      this.props.model.onContextMenu(param, e, {
-                        type: 'reference',
-                      })
+                      this.props.model.onContextMenu(param, e)
                     }}
                   >
                     {getReferenceDisplay(item.reference!, param.value)}
@@ -189,7 +248,12 @@ export class Grid extends React.Component<GridProps> {
           case 'datetime':
             return {
               field: item.name,
-              headerName: item.display_name,
+              // headerName: item.display_name,
+              headerComponent: () => (
+                <Flex alignItems="center">
+                  <FEuiIcon type="calendar" size="s" /> {item.display_name}
+                </Flex>
+              ),
               // cellDataType: 'date', // todo: 需要后端支持
               valueFormatter: params => {
                 if (params.value) {
@@ -211,7 +275,19 @@ export class Grid extends React.Component<GridProps> {
             }
           case 'string':
           case 'String':
-          case 'textarea':
+          case 'textarea': {
+            let cellRenderer: undefined | ((param: CellRendererInput) => any) = undefined
+            if (this.props.model.isOpenTask(item.name)) {
+              cellRenderer = (param: CellRendererInput) => (
+                <div
+                  onContextMenu={e => {
+                    this.props.model.onContextMenu(param, e)
+                  }}
+                >
+                  {param.value}
+                </div>
+              )
+            }
             return {
               editable: true,
               field: item.name,
@@ -219,19 +295,24 @@ export class Grid extends React.Component<GridProps> {
               cellDataType: 'text',
               filter: true,
               floatingFilter: true,
+              cellRenderer,
             }
+          }
           case 'Json':
             return {
               editable: false,
               field: item.name,
-              headerName: item.display_name,
-              cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+              // headerName: item.display_name,
+              headerComponent: () => (
+                <Flex alignItems="center">
+                  <FEuiIcon type="visVega" size="s" /> {item.display_name}
+                </Flex>
+              ),
+              cellRenderer: (param: CellRendererInput) => {
                 return (
                   <div
                     onContextMenu={e => {
-                      this.props.model.onContextMenu(param, e, {
-                        type: 'Json',
-                      })
+                      this.props.model.onContextMenu(param, e)
                     }}
                   >
                     {param.valueFormatted}
@@ -259,8 +340,14 @@ export class Grid extends React.Component<GridProps> {
           return {
             editable: false,
             field: ass.model_name,
-            headerName: ass.display_name,
-            cellRenderer: (param: z.infer<typeof cellRendererInputSchema>) => {
+            // headerName: ass.display_name,
+            headerComponent: () => (
+              <Flex alignItems="center">
+                <FEuiIcon type="index" size="s" />
+                {ass.display_name}
+              </Flex>
+            ),
+            cellRenderer: (param: CellRendererInput) => {
               return (
                 <div
                   onContextMenu={e => {
@@ -289,32 +376,14 @@ export class Grid extends React.Component<GridProps> {
    todo 第一次调用之后 如果用户有调整过 则存储到 localStorage 优先用户本地存储
    */
   autoResizeAll() {
+    if (this.gridRef == null) {
+      console.warn(`gridRef is null, e.g. HMR`)
+      return
+    }
     const allColumnIds: string[] = []
-    this.gridRef!.api.getColumns()!.forEach(column => {
+    this.gridRef.api.getColumns()!.forEach(column => {
       allColumnIds.push(column.getId())
     })
-    this.gridRef!.api.autoSizeColumns(allColumnIds, false)
-  }
-
-  override render() {
-    return (
-      <AgGridReact
-        modules={[InfiniteRowModelModule]}
-        ref={ref => {
-          this.gridRef = ref
-        }}
-        defaultColDef={{
-          maxWidth: 400,
-        }}
-        rowHeight={42}
-        pagination={true}
-        paginationPageSize={20}
-        cacheBlockSize={20}
-        rowModelType={'infinite'}
-        getRowId={(params: GetRowIdParams) => params.data.id}
-        onGridReady={this.onGridReady}
-        onCellValueChanged={this.onCellValueChanged}
-      />
-    )
+    this.gridRef.api.autoSizeColumns(allColumnIds, false)
   }
 }

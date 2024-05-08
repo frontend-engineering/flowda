@@ -1,4 +1,4 @@
-import { getReferenceDisplay } from './grid-utils'
+import { getReferenceDisplay, shortenDatetime } from './grid-utils'
 
 describe('grid utils', () => {
   it('reference display', () => {
@@ -8,6 +8,7 @@ describe('grid utils', () => {
       reference_type: 'has_one',
       foreign_key: 'tenantId',
       primary_key: 'id',
+      visible: true,
     } as const
 
     const val = {
@@ -50,5 +51,13 @@ describe('grid utils', () => {
     }
     const ret = getReferenceDisplay(colUi, val)
     expect(ret).toMatchInlineSnapshot(`"has_one Menu#2"`)
+  })
+
+  it('shortenDatetime', () => {
+    const ret = shortenDatetime('2024-04-22 11:33:55')
+    expect(ret).toMatchInlineSnapshot(`"04-22 11:33"`)
+
+    const ret2 = shortenDatetime('2023-04-22 11:33:55')
+    expect(ret2).toMatchInlineSnapshot(`"23-04-22 11:33"`)
   })
 })

@@ -1,8 +1,9 @@
 import { URI } from '@theia/core'
+
 export interface ManageableModel {
-    getUri(): string
+  getUri(): string
 
-    setUri(uri: string | URI): void
+  setUri(uri: string | URI): void
 
-    resetIsFirstGetRows(): void
+  onCurrentEditorChanged(): Promise<void>
 }

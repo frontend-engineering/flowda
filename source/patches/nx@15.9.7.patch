@@ -1,0 +1,15 @@
+diff --git a/src/plugins/js/lock-file/pnpm-parser.js b/src/plugins/js/lock-file/pnpm-parser.js
+index 501f5f368ca19ce08b606e757d0a95e063b0e231..ada9e0a886c8b5b005d2d78f4ab4e365850b0b3a 100644
+--- a/src/plugins/js/lock-file/pnpm-parser.js
++++ b/src/plugins/js/lock-file/pnpm-parser.js
+@@ -139,6 +139,10 @@ function findOriginalKeys(packages, { data: { packageName, version } }, { return
+             key.startsWith(`/${version.slice(4, version.lastIndexOf('@'))}/${version.slice(version.lastIndexOf('@') + 1)}`)) {
+             matchedKeys.push([key, snapshot]);
+         }
++        // file:yalc package
++        if (version.startsWith('file:.yalc') && key.split('_')[0] === version) {
++            matchedKeys.push([key, snapshot]);
++        }
+     }
+     return matchedKeys;
+ }
