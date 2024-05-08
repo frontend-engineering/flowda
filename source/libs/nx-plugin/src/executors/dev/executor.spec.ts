@@ -16,20 +16,21 @@ describe('Dev Executor', () => {
         bundleAlias: {},
       }),
     )
-
-    const rollup$ = from(rollup.rollup(options)).pipe(
-      switchMap(bundle => {
-        const outputOptions = Array.isArray(options.output) ? options.output : [options.output]
-        return from(
-          Promise.all(
-            (<Array<rollup.OutputOptions>>outputOptions).map(o => {
-              // bundle.write(o)
-            }),
-          ),
-        )
-      }),
-      map(() => ({ success: true })),
-    )
-    rollup$.subscribe()
+    for (const option of options) {
+      const rollup$ = from(rollup.rollup(option)).pipe(
+        switchMap(bundle => {
+          const outputOptions = Array.isArray(option.output) ? option.output : [option.output]
+          return from(
+            Promise.all(
+              (<Array<rollup.OutputOptions>>outputOptions).map(o => {
+                // bundle.write(o)
+              }),
+            ),
+          )
+        }),
+        map(() => ({ success: true })),
+      )
+      rollup$.subscribe()
+    }
   })
 })

@@ -26,4 +26,4 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "source/pnpm-lock.yaml"
 
-      - run: ./scripts/ci.sh
+      - run: node ./scripts/ci.js

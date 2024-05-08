@@ -11,6 +11,7 @@ export const builtinPluginSchema = z.object({
   open_task: z.boolean().optional(),
 })
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore ignore test error
 declare module '@flowda/types' {
   interface PluginType {
