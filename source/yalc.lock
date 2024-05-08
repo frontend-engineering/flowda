@@ -6,7 +6,7 @@
       "link": true
     },
     "@anatine/zod-openapi": {
-      "signature": "8bd1f59823bd9a4c176bd6cdb5f0e5ca",
+      "signature": "a1a2108db4da650979cc2fdcab0e1c99",
       "file": true
     },
     "zod-prisma-types": {

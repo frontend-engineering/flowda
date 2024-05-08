@@ -28,7 +28,7 @@ export class ManageableService {
     return this.checkManageableFactory(scheme)
   }
 
-  getOrCreateGridModel<T>(uri: URI | string): ManageableModel {
+  getOrCreateGridModel(uri: URI | string): ManageableModel {
     if (typeof uri === 'string') {
       uri = new URI(uri)
     }

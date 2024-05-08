@@ -9,6 +9,10 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "bundleJs": true,
+        "externals": ["ts-deepmerge"],
+        "bundleAlias": {
+          "@anatine/zod-openapi": ".yalc/@anatine/zod-openapi/src/index.js"
+        },
         "outputPath": "dist/libs/schema"
       }
     },

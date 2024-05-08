@@ -54,8 +54,15 @@ export function buildRollupConfig(input: z.infer<typeof buildRollupConfigInputSc
         ...Object.keys(packageJson.peerDependencies),
         ...Object.keys(packageJson.dependencies),
         ...input.externals,
+      ].filter(k => {
+        return Object.keys(input.bundleAlias).indexOf(k) === -1
+      }),
+      plugins: [
+        alias({
+          entries: input.bundleAlias,
+        }),
+        nodeResolve(),
       ],
-      plugins: [nodeResolve()],
     })
   }
 

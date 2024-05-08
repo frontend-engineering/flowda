@@ -1,14 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateSchema = exports.extendApi = void 0;
-const ts_deepmerge_1 = require("ts-deepmerge");
-const zod_1 = require("zod");
-function extendApi(schema, SchemaObject = {}) {
+import merge from 'ts-deepmerge';
+import { z } from 'zod';
+export function extendApi(schema, SchemaObject = {}) {
     const openapi = Object.assign(Object.assign({}, schema._def.openapi), SchemaObject);
     const newSchema = new schema.constructor(Object.assign(Object.assign({}, schema._def), { openapi: openapi /* for zod-openapi */ }));
     return newSchema;
 }
-exports.extendApi = extendApi;
 function iterateZodObject({ zodRef, useOutput, }) {
     return Object.keys(zodRef.shape).reduce((carry, key) => (Object.assign(Object.assign({}, carry), { [key]: generateSchema(zodRef.shape[key], useOutput) })), {});
 }
@@ -39,7 +35,7 @@ function parseTransformation({ zodRef, schemas, useOutput, }) {
             }
         }
     }
-    return (0, ts_deepmerge_1.default)(Object.assign(Object.assign(Object.assign({}, (zodRef.description ? { description: zodRef.description } : {})), input), (['number', 'string', 'boolean', 'null'].includes(output)
+    return merge(Object.assign(Object.assign(Object.assign({}, (zodRef.description ? { description: zodRef.description } : {})), input), (['number', 'string', 'boolean', 'null'].includes(output)
         ? {
             type: output,
         }
@@ -82,7 +78,7 @@ function parseString({ zodRef, schemas, }) {
                 break;
         }
     });
-    return (0, ts_deepmerge_1.default)(baseSchema, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge(baseSchema, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseNumber({ zodRef, schemas, }) {
     const baseSchema = {
@@ -109,13 +105,13 @@ function parseNumber({ zodRef, schemas, }) {
                 baseSchema.multipleOf = item.value;
         }
     });
-    return (0, ts_deepmerge_1.default)(baseSchema, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge(baseSchema, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseObject({ zodRef, schemas, useOutput, }) {
     var _a;
     let additionalProperties;
     // `catchall` obviates `strict`, `strip`, and `passthrough`
-    if (!(zodRef._def.catchall instanceof zod_1.z.ZodNever ||
+    if (!(zodRef._def.catchall instanceof z.ZodNever ||
         ((_a = zodRef._def.catchall) === null || _a === void 0 ? void 0 : _a._def.typeName) === 'ZodNever'))
         additionalProperties = generateSchema(zodRef._def.catchall, useOutput);
     else if (zodRef._def.unknownKeys === 'passthrough')
@@ -127,46 +123,46 @@ function parseObject({ zodRef, schemas, useOutput, }) {
     const requiredProperties = Object.keys(zodRef.shape).filter((key) => {
         const item = zodRef.shape[key];
         return (!(item.isOptional() ||
-            item instanceof zod_1.z.ZodDefault ||
+            item instanceof z.ZodDefault ||
             item._def.typeName === 'ZodDefault') &&
-            !(item instanceof zod_1.z.ZodNever || item._def.typeName === 'ZodDefault'));
+            !(item instanceof z.ZodNever || item._def.typeName === 'ZodDefault'));
     });
     const required = requiredProperties.length > 0 ? { required: requiredProperties } : {};
-    return (0, ts_deepmerge_1.default)(Object.assign(Object.assign({ type: 'object', properties: iterateZodObject({
+    return merge(Object.assign(Object.assign({ type: 'object', properties: iterateZodObject({
             zodRef: zodRef,
             schemas,
             useOutput,
         }) }, required), additionalProperties), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseRecord({ zodRef, schemas, useOutput, }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         type: 'object',
-        additionalProperties: zodRef._def.valueType instanceof zod_1.z.ZodUnknown
+        additionalProperties: zodRef._def.valueType instanceof z.ZodUnknown
             ? {}
             : generateSchema(zodRef._def.valueType, useOutput),
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseBigInt({ zodRef, schemas, }) {
-    return (0, ts_deepmerge_1.default)({ type: 'integer', format: 'int64' }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge({ type: 'integer', format: 'int64' }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseBoolean({ zodRef, schemas, }) {
-    return (0, ts_deepmerge_1.default)({ type: 'boolean' }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge({ type: 'boolean' }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseDate({ zodRef, schemas }) {
-    return (0, ts_deepmerge_1.default)({ type: 'string', format: 'date-time' }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge({ type: 'string', format: 'date-time' }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseNull({ zodRef, schemas }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         type: 'string',
         format: 'null',
         nullable: true,
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseOptionalNullable({ schemas, zodRef, useOutput, }) {
-    return (0, ts_deepmerge_1.default)(generateSchema(zodRef.unwrap(), useOutput), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge(generateSchema(zodRef.unwrap(), useOutput), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseDefault({ schemas, zodRef, useOutput, }) {
-    return (0, ts_deepmerge_1.default)(Object.assign({ default: zodRef._def.defaultValue() }, generateSchema(zodRef._def.innerType, useOutput)), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge(Object.assign({ default: zodRef._def.defaultValue() }, generateSchema(zodRef._def.innerType, useOutput)), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseArray({ schemas, zodRef, useOutput, }) {
     const constraints = {};
@@ -178,22 +174,22 @@ function parseArray({ schemas, zodRef, useOutput, }) {
         constraints.minItems = zodRef._def.minLength.value;
     if (zodRef._def.maxLength != null)
         constraints.maxItems = zodRef._def.maxLength.value;
-    return (0, ts_deepmerge_1.default)(Object.assign({ type: 'array', items: generateSchema(zodRef.element, useOutput) }, constraints), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge(Object.assign({ type: 'array', items: generateSchema(zodRef.element, useOutput) }, constraints), zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseLiteral({ schemas, zodRef, }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         type: typeof zodRef._def.value,
         enum: [zodRef._def.value],
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseEnum({ schemas, zodRef, }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         type: typeof Object.values(zodRef._def.values)[0],
         enum: Object.values(zodRef._def.values),
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseIntersection({ schemas, zodRef, useOutput, }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         allOf: [
             generateSchema(zodRef._def.left, useOutput),
             generateSchema(zodRef._def.right, useOutput),
@@ -201,12 +197,12 @@ function parseIntersection({ schemas, zodRef, useOutput, }) {
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseUnion({ schemas, zodRef, useOutput, }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         oneOf: zodRef._def.options.map((schema) => generateSchema(schema, useOutput)),
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseDiscriminatedUnion({ schemas, zodRef, useOutput, }) {
-    return (0, ts_deepmerge_1.default)({
+    return merge({
         discriminator: {
             propertyName: zodRef._def.discriminator,
         },
@@ -214,13 +210,13 @@ function parseDiscriminatedUnion({ schemas, zodRef, useOutput, }) {
     }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseNever({ zodRef, schemas, }) {
-    return (0, ts_deepmerge_1.default)({ readOnly: true }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge({ readOnly: true }, zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 function parseBranded({ schemas, zodRef, }) {
-    return (0, ts_deepmerge_1.default)(generateSchema(zodRef._def.type), ...schemas);
+    return merge(generateSchema(zodRef._def.type), ...schemas);
 }
 function catchAllParser({ zodRef, schemas, }) {
-    return (0, ts_deepmerge_1.default)(zodRef.description ? { description: zodRef.description } : {}, ...schemas);
+    return merge(zodRef.description ? { description: zodRef.description } : {}, ...schemas);
 }
 const workerMap = {
     ZodObject: parseObject,
@@ -257,7 +253,7 @@ const workerMap = {
     ZodUnknown: catchAllParser,
     ZodVoid: catchAllParser,
 };
-function generateSchema(zodRef, useOutput) {
+export function generateSchema(zodRef, useOutput) {
     const { openapi = {} } = zodRef._def;
     const schemas = [
         zodRef.isNullable && zodRef.isNullable() ? { nullable: true } : {},
@@ -279,5 +275,4 @@ function generateSchema(zodRef, useOutput) {
         return catchAllParser({ zodRef, schemas });
     }
 }
-exports.generateSchema = generateSchema;
 //# sourceMappingURL=zod-openapi.js.map
