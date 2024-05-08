@@ -122,7 +122,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
           consola.start(`Bundling [${context.projectName}] ${rollupOption.input}...`)
           const bundle = await rollup.rollup(rollupOption)
           if (Array.isArray(rollupOption.output)) {
-            for (let output of rollupOption.output) {
+            for (const output of rollupOption.output) {
               await bundle.write(output)
             }
           } else {

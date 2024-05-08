@@ -12,6 +12,7 @@ describe('Dev Executor', () => {
         dtsBundleFile: path.join(__dirname, '__fixtures__/schema/index.bundle.d.ts'),
         bundleInput: path.join(__dirname, '__fixtures__/schema/src/index.js'),
         bundleFile: path.join(__dirname, '__fixtures__/schema/index.bundle.js'),
+        bundleFileCjs: path.join(__dirname, '__fixtures__/schema/index.bundle.cjs'),
         packageJsonPath: path.join(__dirname, '__fixtures__/schema/package.json'),
         bundleAlias: {},
       }),
