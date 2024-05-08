@@ -101,7 +101,8 @@
     "typescript": "~5.3.3",
     "url-loader": "^4.1.1",
     "yaml": "^2.4.1",
-    "zod-openapi": "2.14.0"
+    "zod-openapi": "2.14.0",
+    "zod-prisma-types": "file:.yalc/zod-prisma-types"
   },
   "engines": {
     "node": ">= 16",
@@ -151,12 +152,12 @@
     "tslib": "~2.6.2",
     "vscode-uri": "^3.0.8",
     "zod": "^3.22.4",
-    "zod-formik-adapter": "^1.2.0",
-    "zod-prisma-types": "file:.yalc/zod-prisma-types"
+    "zod-formik-adapter": "^1.2.0"
   },
   "pnpm": {
     "patchedDependencies": {
-      "zod-openapi@2.14.0": "patches/zod-openapi@2.14.0.patch"
+      "zod-openapi@2.14.0": "patches/zod-openapi@2.14.0.patch",
+      "nx@15.9.7": "patches/nx@15.9.7.patch"
     }
   }
 }

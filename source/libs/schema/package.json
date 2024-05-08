@@ -2,7 +2,7 @@
   "name": "@flowda/schema",
   "version": "0.0.1",
   "type": "commonjs",
-  "peerDependencies": {
-    "zod-prisma-types": "*"
+  "dependencies": {
+    "ts-deepmerge": "^4.0.0"
   }
 }
