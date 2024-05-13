@@ -23,7 +23,9 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
   consola.success('done (tar)')
 
   consola.start('scp')
-  const scpCmd = opt.pemPath ? `scp -i ${opt.pemPath}` : `scp`
+  const pemPath = opt.pemPath ?? process.env.PEM_PATH
+
+  const scpCmd = pemPath ? `scp -i ${pemPath}` : `scp`
 
   execSync(`${scpCmd} -r "./${TAR_NAME}" "${opt.user}@${opt.host}:${opt.path}"`, {
     cwd: workspaceRoot,
@@ -31,7 +33,7 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
   })
   consola.success('done (scp)')
 
-  const sshCmd = opt.pemPath ? `ssh -i ${opt.pemPath} "${opt.user}@${opt.host}"` : `ssh "${opt.user}@${opt.host}"`
+  const sshCmd = pemPath ? `ssh -i ${pemPath} "${opt.user}@${opt.host}"` : `ssh "${opt.user}@${opt.host}"`
   consola.start('untar')
   execSync(`${sshCmd} "cd ${opt.path} && tar -zxf ${TAR_NAME} -C ./release/"`, {
     cwd: workspaceRoot,
