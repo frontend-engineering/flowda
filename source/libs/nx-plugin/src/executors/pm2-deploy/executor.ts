@@ -7,70 +7,57 @@ import consola from 'consola'
 const TAR_NAME = 'pm2-deploy.tar.gz'
 
 export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2DeployInput>, context?: ExecutorContext) {
-  const options = pm2DeployInput.parse(_options)
-  consola.start(`run ${options.buildTarget}`)
-  execSync(`./node_modules/.bin/nx run ${options.buildTarget}`, {
+  const opt = pm2DeployInput.parse(_options)
+  consola.start(`run ${opt.buildTarget}`)
+  execSync(`./node_modules/.bin/nx run ${opt.buildTarget}`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success(`done run ${options.buildTarget}`)
+  consola.success(`done run ${opt.buildTarget}`)
 
   consola.start('tar')
-  execSync(
-    `tar --exclude "libquery_engine-*.node" -zcf ${TAR_NAME} ${options.buildOutput} ${options.extraOutput.join(' ')}`,
-    {
-      cwd: workspaceRoot,
-      stdio: 'inherit',
-    },
-  )
+  execSync(`tar --exclude "libquery_engine-*.node" -zcf ${TAR_NAME} ${opt.buildOutput} ${opt.extraOutput.join(' ')}`, {
+    cwd: workspaceRoot,
+    stdio: 'inherit',
+  })
   consola.success('done tar')
 
   consola.start('scp')
-  execSync(`scp -r "./${TAR_NAME}" "${options.user}@${options.host}:${options.path}"`, {
+  const scpCmd = opt.pemPath ? `scp -i ${opt.pemPath}` : `scp`
+
+  execSync(`${scpCmd} -r "./${TAR_NAME}" "${opt.user}@${opt.host}:${opt.path}"`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
   consola.success('done scp')
 
+  const sshCmd = opt.pemPath ? `ssh -i ${opt.pemPath} "${opt.user}@${opt.host}"` : `ssh "${opt.user}@${opt.host}"`
   consola.start('untar')
-  execSync(`ssh "${options.user}@${options.host}" "cd ${options.path} && tar -zxf ${TAR_NAME} -C ./release/"`, {
+  execSync(`${sshCmd} "cd ${opt.path} && tar -zxf ${TAR_NAME} -C ./release/"`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
   consola.success('done untar')
 
   consola.start('install deps')
-  execSync(
-    `ssh "${options.user}@${options.host}" "cd ${options.path}/release/${options.buildOutput} && mkdir -p node_modules/@prisma"`,
-    {
-      cwd: workspaceRoot,
-      stdio: 'inherit',
-    },
-  )
-  options.extraOutput.forEach(output => {
-    execSync(
-      `ssh "${options.user}@${options.host}" "cd ${options.path}/release && cp -r ${output} ${options.buildOutput}"`,
-      {
-        cwd: workspaceRoot,
-        stdio: 'inherit',
-      },
-    )
-  })
-  execSync(
-    `ssh "${options.user}@${options.host}" "cd ${options.path}/release/${options.buildOutput} && pnpm dlx pnpm@7.33.7 i --frozen-lockfile"`,
-    {
-      cwd: workspaceRoot,
-      stdio: 'inherit',
-    },
-  )
-  consola.success('done install deps')
-
-  consola.start('pm2 restart')
-  execSync(`ssh "${options.user}@${options.host}" "pm2 restart wms-api-uat"`, {
+  execSync(`${sshCmd} "cd ${opt.path}/release/${opt.buildOutput} && mkdir -p node_modules/@prisma"`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  execSync(`ssh "${options.user}@${options.host}" "pm2 restart ${options.pm2AppName}"`, {
+  opt.extraOutput.forEach(output => {
+    execSync(`${sshCmd} "cd ${opt.path}/release && cp -r ${output} ${opt.buildOutput}"`, {
+      cwd: workspaceRoot,
+      stdio: 'inherit',
+    })
+  })
+  execSync(`${sshCmd} "cd ${opt.path}/release/${opt.buildOutput} && pnpm dlx pnpm@7.33.7 i --frozen-lockfile"`, {
+    cwd: workspaceRoot,
+    stdio: 'inherit',
+  })
+  consola.success('done install deps')
+
+  consola.start('pm2 restart')
+  execSync(`${sshCmd} "pm2 restart ${opt.pm2AppName}"`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
@@ -78,7 +65,7 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  execSync(`ssh "${options.user}@${options.host}" "pm2 logs ${options.pm2AppName} --nostream"`, {
+  execSync(`${sshCmd} "pm2 logs ${opt.pm2AppName} --nostream"`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
