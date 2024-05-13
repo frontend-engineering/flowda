@@ -13,14 +13,14 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success(`done run ${opt.buildTarget}`)
+  consola.success(`done (run ${opt.buildTarget})`)
 
   consola.start('tar')
   execSync(`tar --exclude "libquery_engine-*.node" -zcf ${TAR_NAME} ${opt.buildOutput} ${opt.extraOutput.join(' ')}`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success('done tar')
+  consola.success('done (tar)')
 
   consola.start('scp')
   const scpCmd = opt.pemPath ? `scp -i ${opt.pemPath}` : `scp`
@@ -29,7 +29,7 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success('done scp')
+  consola.success('done (scp)')
 
   const sshCmd = opt.pemPath ? `ssh -i ${opt.pemPath} "${opt.user}@${opt.host}"` : `ssh "${opt.user}@${opt.host}"`
   consola.start('untar')
@@ -37,24 +37,34 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success('done untar')
+  consola.success('done (untar)')
 
   consola.start('install deps')
-  execSync(`${sshCmd} "cd ${opt.path}/release/${opt.buildOutput} && mkdir -p node_modules/@prisma"`, {
-    cwd: workspaceRoot,
-    stdio: 'inherit',
-  })
+  consola.start('  force remove .yalc in node_modules')
+  execSync(
+    `${sshCmd} "cd ${opt.path}/release/${opt.buildOutput} && find ./node_modules/.pnpm -type d -name "file+.yalc+*" -print -exec rm -r {} +"`,
+    {
+      cwd: workspaceRoot,
+      stdio: 'inherit',
+    },
+  )
+  consola.success('  done (force remove .yalc in node_modules)')
+
+  consola.start('  copy extra output')
   opt.extraOutput.forEach(output => {
     execSync(`${sshCmd} "cd ${opt.path}/release && cp -r ${output} ${opt.buildOutput}"`, {
       cwd: workspaceRoot,
       stdio: 'inherit',
     })
   })
+  consola.success('  done (copy extra output)')
+  consola.start('  pnpm i --frozen-lockfile')
   execSync(`${sshCmd} "cd ${opt.path}/release/${opt.buildOutput} && pnpm dlx pnpm@7.33.7 i --frozen-lockfile"`, {
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success('done install deps')
+  consola.success('  done (pnpm i --frozen-lockfile)')
+  consola.success('done (install deps)')
 
   consola.start('pm2 restart')
   execSync(`${sshCmd} "pm2 restart ${opt.pm2AppName}"`, {
@@ -69,7 +79,7 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
     cwd: workspaceRoot,
     stdio: 'inherit',
   })
-  consola.success('done pm2 restart')
+  consola.success('done (pm2 restart)')
   return {
     success: true,
   }
