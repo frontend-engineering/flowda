@@ -143,23 +143,25 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
     const packageJson = readJsonFile(packageJsonPath)
     if (options.bundleDts) {
       packageJson.types = './index.bundle.d.ts'
-      consola.info('  to update package.json#types: ./index.bundle.d.ts')
+      consola.info('  updated package.json#types: ./index.bundle.d.ts')
     } else {
       if (options.yalc) {
         // 如果不 bundle dts 则 yalc 不用支持 d.ts，因为 yalc 永远会 ignore src/**/*.d.ts
         delete packageJson.types
-        consola.info('  to delete package.json#types')
+        consola.info('  deleted package.json#types')
       }
     }
     if (options.mts && !options.bundleJs) {
       packageJson.main = './src/index.mjs'
-      consola.info('  to update package.json#main: ./src/index.mjs')
+      consola.info('  updated package.json#main: ./src/index.mjs')
     }
     if (options.bundleJs) {
       packageJson.main = './index.bundle.cjs'
+      consola.info('  updated package.json#main: ./index.bundle.cjs')
       packageJson.module = './index.bundle.js'
-      consola.info('  to update package.json#main: ./index.bundle.cjs')
-      consola.info('  to update package.json#module: ./index.bundle.js')
+      consola.info('  updated package.json#module: ./index.bundle.js')
+      delete packageJson.type
+      consola.info('  deleted package.json#type')
     }
 
     if (Object.keys(options.bundleAlias).length > 0) {
@@ -167,7 +169,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
         delete packageJson.dependencies[k]
         delete packageJson.peerDependencies[k]
       })
-      consola.info('  to delete bundleAlias in package.json#{peerDependencies,dependencies}')
+      consola.info('  deleted bundleAlias in package.json#{peerDependencies,dependencies}')
     }
 
     if (options.onlyTypes) {
@@ -175,7 +177,7 @@ export default async function* devExecutor(_options: z.infer<typeof devExecutorS
       delete packageJson.scripts
       delete packageJson.peerDependencies
       delete packageJson.dependencies
-      consola.info('  to delete package.json#{main,scripts,peerDependencies,dependencies}')
+      consola.info('  deleted package.json#{main,scripts,peerDependencies,dependencies}')
     }
     writeJsonFile(`${options.outputPath}/package.json`, packageJson)
     consola.success('Updated package.json')
