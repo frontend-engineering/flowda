@@ -67,9 +67,18 @@ export class Grid extends React.Component<GridProps> {
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {
-        // todo: 搞清楚为什么会出现这两个 warning
+        /*
+        如果 schemaName 为空
+        即还没有调用 getCol
+         */
         if (this.props.model.schemaName == null) {
-          console.warn('schemaName is null, ignored')
+          return
+        }
+        /*
+        如果 columnDefs 为空，则直接返回，后续 setColDefs
+        this.gridRef.api.setGridOption('columnDefs' 会重新调用 datasource.getRows
+         */
+        if (this.props.model.columnDefs.length === 0) {
           return
         }
         await this.props.model.schemaReadyPromise

@@ -149,21 +149,21 @@ export class GridModel implements ManageableModel {
       const schemaRes = await this.apiService.getResourceSchema({
         schemaName: this.schemaName,
       })
+      this.schema = schemaRes
       this.schemaReadyResolve!(true)
       if (schemaRes.columns.length > 0) {
         this.columnDefs = schemaRes.columns
+        if (this.refPromise == null)
+          throw new Error('refPromise is null, call resetRefPromise in getOrCreateGridModel()')
+        await this.refPromise
+        // @ts-expect-error invoke react ref
+        if (this.ref == null || typeof this.ref['setColDefs'] !== 'function') {
+          throw new Error('ref is null')
+        }
+        // @ts-expect-error invoke react ref
+        this.ref['setColDefs']()
       }
-      this.schema = schemaRes
     }
-
-    if (this.refPromise == null) throw new Error('refPromise is null, call resetRefPromise in getOrCreateGridModel()')
-    await this.refPromise
-    // @ts-expect-error invoke react ref
-    if (this.ref == null || typeof this.ref['setColDefs'] !== 'function') {
-      throw new Error('ref is null')
-    }
-    // @ts-expect-error invoke react ref
-    this.ref['setColDefs']()
   }
 
   isOpenTask(colName: string) {
