@@ -1,6 +1,7 @@
 import {
   type ApiService,
   ApiServiceSymbol,
+  ColumUI,
   type DefaultFormValueType,
   type ManageableModel,
   newFormUriSchema,
@@ -11,24 +12,18 @@ import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
 import { ThemeModel } from '../theme/theme.model'
 import * as _ from 'radash'
-import { computed, makeObservable, observable, runInAction } from 'mobx'
+import { makeObservable, observable, runInAction } from 'mobx'
 import { URI } from '@theia/core'
 import * as qs from 'qs'
+
+let count = 0
 
 @injectable()
 export class NewFormModel implements ManageableModel {
   formikProps: FormikProps<DefaultFormValueType> | undefined
 
   @observable schema: ResourceUI | undefined
-
-  @computed get formItemColumns() {
-    if (this.schema == null) return
-    return this.schema.columns.filter(col => {
-      if (this.schema?.primary_key === col.name) return false
-      if (!col.visible) return false
-      return col.access_type !== 'read_only'
-    })
-  }
+  @observable formItemColumns: ColumUI[] = []
 
   async onCurrentEditorChanged() {
     this.loadSchema(this.getUri())
@@ -89,6 +84,11 @@ export class NewFormModel implements ManageableModel {
     })
     runInAction(() => {
       this.schema = ret
+      this.formItemColumns = this.schema.columns.filter(col => {
+        if (this.schema?.primary_key === col.name) return false
+        if (!col.visible) return false
+        return col.access_type !== 'read_only'
+      })
     })
   }
 
