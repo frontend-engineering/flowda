@@ -63,7 +63,7 @@ export class Grid extends React.Component<GridProps> {
   }
 
   private readonly onGridReady = async (evt: GridReadyEvent) => {
-    this.props.model.gridApi = evt.api
+    this.props.model.setGridApi(evt.api)
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {

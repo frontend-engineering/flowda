@@ -74,6 +74,10 @@ export class GridModel implements ManageableModel {
     })
   }
 
+  setGridApi(api: GridApi<unknown>) {
+    this.gridApi = api
+  }
+
   getUri() {
     if (!this._uri) throw new Error('uri is null')
     return this._uri.toString(true)
@@ -84,7 +88,7 @@ export class GridModel implements ManageableModel {
     this._uri = uri
   }
 
-  refresh(fromToolbar = false) {
+  async refresh(fromToolbar = false) {
     if (this.gridApi == null) throw new Error('gridApi is null')
     if (this.gridApi.isDestroyed()) {
       throw new Error(`gridApi isDestroyed: ${this._uri}`)
@@ -147,7 +151,7 @@ export class GridModel implements ManageableModel {
     }
     if (this.columnDefs.length > 0) {
       console.warn(`columns is not empty, only refresh data, ${schemaName}`)
-      this.refresh()
+      await this.refresh()
     } else {
       const schemaRes = await this.apiService.getResourceSchema({
         schemaName: this.schemaName,
