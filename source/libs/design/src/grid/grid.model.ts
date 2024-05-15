@@ -84,11 +84,14 @@ export class GridModel implements ManageableModel {
     this._uri = uri
   }
 
-  refresh() {
+  refresh(fromToolbar = false) {
     if (this.gridApi == null) throw new Error('gridApi is null')
     if (this.gridApi.isDestroyed()) {
       throw new Error(`gridApi isDestroyed: ${this._uri}`)
     } else {
+      if (fromToolbar) {
+        this.gridApi.showLoadingOverlay()
+      }
       this.gridApi.refreshInfiniteCache()
     }
   }

@@ -127,7 +127,7 @@ export class TaskFormModel implements ManageableModel {
       this.getSchema(),
       axios.request({
         method: 'get',
-        url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${query.taskId}/form-variables`,
+        url: `https://api.webinfra.cloud/flowda-gateway-api/camunda/engine-rest/task/${query.taskId}/form-variables`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -183,7 +183,7 @@ export class TaskFormModel implements ManageableModel {
     // 2. invoke workflow rest api finish task
     const res = await axios.request({
       method: 'post',
-      url: `http://localhost:3310/flowda-gateway-api/camunda/engine-rest/task/${this.taskId}/complete`,
+      url: `https://api.webinfra.cloud/flowda-gateway-api/camunda/engine-rest/task/${this.taskId}/complete`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
