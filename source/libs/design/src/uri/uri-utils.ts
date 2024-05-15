@@ -103,6 +103,9 @@ export function getUriFilterModel(uri: URI | string): z.infer<typeof agFilterSch
   })
 }
 
+/**
+ * @deprecated @see smartMergeFilterModel
+ */
 export function mergeUriFilterModel(
   uri: URI | string,
   filterModel: z.infer<typeof agFilterSchema>,
@@ -124,14 +127,15 @@ export function mergeUriFilterModel(
   return ret2
 }
 
-export function updateUriFilterModel(uri: URI | string, filterModel: z.infer<typeof agFilterSchema>) {
+// todo 配合 grid.model 调用处简化
+export function updateUriFilterModel(uri: URI | string, paramsFilterModel: z.infer<typeof agFilterSchema>) {
   if (typeof uri === 'string') {
     uri = new URI(uri)
   }
-  const query = qs.parse(uri.query)
+  const { filterModel, ...rest } = qs.parse(uri.query) as qs.ParsedQs
   const query2 = {
-    ...query,
-    filterModel,
+    ...rest,
+    filterModel: paramsFilterModel,
   }
   const query3 = qs.stringify(query2, { encode: false })
   const ret = uri.withQuery(query3)

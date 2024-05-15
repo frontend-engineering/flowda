@@ -211,12 +211,8 @@ describe('uri utils', () => {
       },
     } as const
     const uri = 'grid://flowda?schemaName%3DTenantResourceSchema%26displayName%3D%E7%A7%9F%E6%88%B7%E4%BF%A1%E6%81%AF'
-    const uri_ = new URI(uri)
-    const ret = updateUriFilterModel(uri_, filterModel)
-    const uriRet = ret.toString(true)
-    // console.log(uriRet)
-    const uriRet_ = new URI(uriRet)
-    expect(qs.parse(uriRet_.query)['filterModel']).toMatchInlineSnapshot(`
+    const ret = updateUriFilterModel(uri, filterModel)
+    expect(qs.parse(ret.query)['filterModel']).toMatchInlineSnapshot(`
       {
         "id": {
           "filter": "1",

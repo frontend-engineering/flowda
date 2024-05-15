@@ -18,16 +18,11 @@ import {
   ThemeModelSymbol,
 } from '@flowda/types'
 import { z } from 'zod'
-import {
-  createNewFormUri,
-  getUriSchemaName,
-  isUriAsKeyLikeEqual,
-  mergeUriFilterModel,
-  updateUriFilterModel,
-} from '../uri/uri-utils'
+import { createNewFormUri, getUriSchemaName, isUriAsKeyLikeEqual, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
+import { smartMergeFilterModel } from './grid-utils'
 
 @injectable()
 export class GridModel implements ManageableModel {
@@ -36,6 +31,17 @@ export class GridModel implements ManageableModel {
   schema: ResourceUI | null = null
   isNotEmpty = false
   gridApi: GridApi | null = null
+
+  /**
+   * 是否是首次请求数据
+   * 首次请求数据 smartMergeFilterModel 则只返回 uri
+   * 否则根据 params.filterModel 进行合并
+   */
+  private _isFirstGetRows = false
+
+  get isFirstGetRows() {
+    return this._isFirstGetRows
+  }
 
   /**
    * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
@@ -141,7 +147,9 @@ export class GridModel implements ManageableModel {
   async onCurrentEditorChanged() {
     const uri = new URI(this.getUri())
     const schemaName = `${uri.authority}.${getUriSchemaName(uri)}`
+    this._isFirstGetRows = true
     await this.getCol(schemaName)
+    this._isFirstGetRows = false
   }
 
   async getCol(schemaName: string) {
@@ -208,7 +216,11 @@ export class GridModel implements ManageableModel {
         pagination: { total: res.data.length },
       }
     } else {
-      params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
+      // todo: 这块逻辑需要优化，核心逻辑不变，但是步骤繁琐了 又是合并 又是 set 又是更新 uri 可以简化的
+      // 因为 test pass 现在这个中间状态也是 work 的，所以有 test refactor 可以随时停下来
+      // 核心逻辑不变 是 grid filterModel 和 uri 有一个合并策略
+      // 然后更新到 uri
+      params.filterModel = smartMergeFilterModel(this.getUri(), params.filterModel, this.isFirstGetRows)
       if (this.gridApi == null) throw new Error('gridApi is null')
       this.gridApi.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
