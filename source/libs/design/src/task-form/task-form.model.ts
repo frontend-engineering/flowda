@@ -52,6 +52,7 @@ export class TaskFormModel implements ManageableModel {
   async getSchema() {
     if (this.wfCfg.resource.schemaName == null) throw new Error(`wfCfg.resource.schemaName is null`)
     const res = await this.apiService.getResourceSchema({
+      tenant: this.getTenant(),
       schemaName: this.wfCfg.resource.schemaName,
     })
     return res
@@ -100,6 +101,12 @@ export class TaskFormModel implements ManageableModel {
     return this.uri
   }
 
+  getTenant() {
+    if (!this.uri) throw new Error('uri is null')
+    const uri_ = new URI(this.uri)
+    return uri_.authority
+  }
+
   setUri(uri: string | URI) {
     if (typeof uri !== 'string') uri = uri.toString(true)
     if (uri != null) {
@@ -146,6 +153,7 @@ export class TaskFormModel implements ManageableModel {
 
     // todo: type infer 没有 work
     const ret = (await this.apiService.getResourceData({
+      tenant: this.getTenant(),
       schemaName: this.wfCfg.resource.schemaName,
       current: 0,
       pageSize: 1,
@@ -176,6 +184,7 @@ export class TaskFormModel implements ManageableModel {
     this.formikProps.setSubmitting(true)
     if (values.id == null) throw new Error('values.id is null')
     await this.apiService.putResourceData({
+      tenant: this.getTenant(),
       schemaName: this.wfCfg.resource.schemaName,
       id: values.id as number,
       updatedValue: changedValues,

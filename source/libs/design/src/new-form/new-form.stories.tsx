@@ -13,7 +13,7 @@ container.rebind<ApiService>(ApiServiceSymbol).to(StoryApiService).inSingletonSc
 
 const model = container.get<NewFormModel>(NewFormModelSymbol)
 
-const uri = `new-form://superadmin?schemaName=superadmin.TenantResourceSchema&displayName=新增租户`
+const uri = `new-form://superadmin?schemaName=TenantResourceSchema&displayName=新增租户`
 model.loadSchema(uri)
 
 const meta: Meta<typeof NewForm> = {

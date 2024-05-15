@@ -17,7 +17,10 @@ export function getUriDisplayName(uri: URI): string {
   return query.displayName
 }
 
-export function getUriSchemaName(uri: URI): string {
+export function getUriSchemaName(uri: string | URI): string {
+  if (typeof uri === 'string') {
+    uri = new URI(uri)
+  }
   const query = qs.parse(uri.query)
   if (!('schemaName' in query) || typeof query.schemaName !== 'string')
     throw new Error(`query must have schemaName and is string, ${uri.toString(true)}`)

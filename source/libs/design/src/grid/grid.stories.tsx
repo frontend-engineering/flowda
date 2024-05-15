@@ -15,6 +15,7 @@ import { GridModel } from './grid.model'
 import React from 'react'
 import { GridWrapper } from '../../stories/grid-wrapper'
 import { StoryApiService } from '../../stories/story-api-service'
+import { getUriSchemaName } from '../uri/uri-utils'
 
 const container = new Container()
 container.load(designModule)
@@ -50,18 +51,19 @@ const meta: Meta<typeof GridWrapper> = {
 export default meta
 
 class GridStory extends React.Component<{
-  schemaName: string
+  uri: string
 }> {
   private gridModel: GridModel
 
   constructor(props: any) {
     super(props)
     this.gridModel = container.get<GridModel>(GridModelSymbol)
-    this.gridModel.setUri(props.schemaName)
+    this.gridModel.setUri(props.uri)
   }
 
   componentDidMount() {
-    this.gridModel.getCol(this.props.schemaName)
+    const schemaName = getUriSchemaName(this.props.uri)
+    this.gridModel.getCol(schemaName)
   }
 
   render() {
@@ -76,24 +78,24 @@ class GridStory extends React.Component<{
 
 export const TenantResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory schemaName={'superadmin.TenantResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=TenantResourceSchema'} />,
   },
 }
 
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory schemaName={'superadmin.UserResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=UserResourceSchema'} />,
   },
 }
 
 export const MenuResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory schemaName={'superadmin.MenuResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=MenuResourceSchema'} />,
   },
 }
 
 export const TaskResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory schemaName={'superadmin.TaskResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=TaskResourceSchema'} />,
   },
 }

@@ -63,14 +63,14 @@ describe('grid utils', () => {
   })
   it('smartMergeFilterModel params.filter cover uri filterModel', () => {
     const uri =
-      'file:///superadmin.TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
+      'file:///TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
     const ret = smartMergeFilterModel(uri, {}, false)
     expect(ret).toMatchInlineSnapshot(`{}`)
   })
 
   it('smartMergeFilterModel params.filter cover uri filterModel case 2', () => {
     const uri =
-      'file:///superadmin.TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
+      'file:///TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
     const filterModel = {
       displayName: {
         filterType: 'text',
@@ -92,7 +92,7 @@ describe('grid utils', () => {
 
   it('smartMergeFilterModel params.filter use uri', () => {
     const uri =
-      'file:///superadmin.TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
+      'file:///TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
     const filterModel = {
       displayName: {
         filterType: 'text',

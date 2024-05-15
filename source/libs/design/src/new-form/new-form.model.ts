@@ -31,7 +31,7 @@ export class NewFormModel implements ManageableModel {
   }
 
   async onCurrentEditorChanged() {
-    //
+    this.loadSchema(this.getUri())
   }
 
   // suppress warning: uncontrolled input to be controlled
@@ -51,6 +51,12 @@ export class NewFormModel implements ManageableModel {
     @inject(ApiServiceSymbol) public apiService: ApiService,
   ) {
     makeObservable(this)
+  }
+
+  getTenant() {
+    if (!this.uri) throw new Error('uri is null')
+    const uri_ = new URI(this.uri)
+    return uri_.authority
   }
 
   getUri() {
@@ -78,6 +84,7 @@ export class NewFormModel implements ManageableModel {
     }
     const query = newFormUriSchema.parse(qs.parse(uri.query))
     const ret = await this.apiService.getResourceSchema({
+      tenant: this.getTenant(),
       schemaName: query.schemaName,
     })
     runInAction(() => {

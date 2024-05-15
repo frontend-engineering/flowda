@@ -89,6 +89,11 @@ export class GridModel implements ManageableModel {
     return this._uri.toString(true)
   }
 
+  getTenant() {
+    if (!this._uri) throw new Error('uri is null')
+    return this._uri.authority
+  }
+
   setUri(uri: string | URI) {
     if (typeof uri === 'string') uri = new URI(uri)
     this._uri = uri
@@ -146,7 +151,7 @@ export class GridModel implements ManageableModel {
 
   async onCurrentEditorChanged() {
     const uri = new URI(this.getUri())
-    const schemaName = `${uri.authority}.${getUriSchemaName(uri)}`
+    const schemaName = getUriSchemaName(uri)
     this._isFirstGetRows = true
     await this.getCol(schemaName)
     this._isFirstGetRows = false
@@ -162,6 +167,7 @@ export class GridModel implements ManageableModel {
       await this.refresh()
     } else {
       const schemaRes = await this.apiService.getResourceSchema({
+        tenant: this.getTenant(),
         schemaName: this.schemaName,
       })
       this.schema = schemaRes
@@ -225,7 +231,10 @@ export class GridModel implements ManageableModel {
       this.gridApi.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
       this.setUri(uri)
-      const dataRet = await this.apiService.getResourceData(params)
+      const dataRet = await this.apiService.getResourceData({
+        ...params,
+        tenant: this.getTenant(),
+      })
       const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
       if (parseRet.success) {
         return parseRet.data
@@ -239,6 +248,7 @@ export class GridModel implements ManageableModel {
 
   async putData(id: number, updatedValue: unknown) {
     await this.apiService.putResourceData({
+      tenant: this.getTenant(),
       schemaName: this.schemaName!,
       id: id,
       updatedValue: updatedValue,

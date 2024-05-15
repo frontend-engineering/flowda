@@ -33,10 +33,10 @@ scheme     authority       path        query   fragment
 */
 describe('uri utils', () => {
   it('create new task uri', () => {
-    const input = 'grid://flowda?schemaName=superadmin.TenantResourceSchema&displayName=租户'
+    const input = 'grid://flowda?schemaName=TenantResourceSchema&displayName=租户'
     const ret = createNewFormUri(input)
     expect(ret.toString(true)).toMatchInlineSnapshot(
-      `"new-form://flowda?schemaName=superadmin.TenantResourceSchema&displayName=新增租户"`,
+      `"new-form://flowda?schemaName=TenantResourceSchema&displayName=新增租户"`,
     )
   })
 
@@ -333,7 +333,6 @@ describe('uri utils', () => {
   })
 
   it('vscode uri', () => {
-    // const uri = 'resource.flowda.MenuResourceSchema:///菜单'
     const uri = 'urn:example:animal:ferret:nose'
     const output = Uri.parse(uri)
     // console.log(output)
@@ -360,7 +359,6 @@ describe('uri utils', () => {
   })
 
   it('@theia/core Uri', () => {
-    // resource.flowda.MenuResourceSchema:///菜单
     // todo: 目前 path 是给 displayName 用的，但是可以换成 LabelProvider.getName
     // 因为 path 目前其实用不到，没必要强行 adapt 到 path
     const rawUri = 'grid://flowda/menu?schema=MenuResourceSchema'
@@ -408,7 +406,6 @@ describe('uri utils', () => {
   })
 
   it('grid uri', () => {
-    // resource.flowda.MenuResourceSchema:///菜单
     const rawUri = 'grid://flowda?schema=MenuResourceSchema'
     const output = Uri.parse(rawUri)
     // console.log(output)
