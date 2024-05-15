@@ -1,42 +1,45 @@
 import {
-  type ApiService,
   ApiServiceSymbol,
-  ColumUI,
+  ThemeModelSymbol,
+  newFormUriSchema,
+  type ApiService,
+  type ColumUI,
   type DefaultFormValueType,
   type ManageableModel,
-  newFormUriSchema,
   type ResourceUI,
-  ThemeModelSymbol,
 } from '@flowda/types'
+import { URI } from '@theia/core'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
-import { ThemeModel } from '../theme/theme.model'
-import * as _ from 'radash'
 import { makeObservable, observable, runInAction } from 'mobx'
-import { URI } from '@theia/core'
 import * as qs from 'qs'
-
-let count = 0
+import * as _ from 'radash'
+import { ThemeModel } from '../theme/theme.model'
+import { getDefaultInitialValues, getFormItemColumns } from './new-form-utils'
 
 @injectable()
 export class NewFormModel implements ManageableModel {
-  formikProps: FormikProps<DefaultFormValueType> | undefined
+  formikProps?: FormikProps<DefaultFormValueType>
 
-  @observable schema: ResourceUI | undefined
+  @observable schema?: ResourceUI
+
   @observable formItemColumns: ColumUI[] = []
+  // 暂不清楚为何 computed 失效 先绕过
+  // 只有 theia 失效 storybook 没有问题
+  // @computed get formItemColumns() {
+  //   return this.schema == null ? [] : this.schema.columns.filter(col => {
+  //     if (this.schema?.primary_key === col.name) return false
+  //     if (!col.visible) return false
+  //     return col.access_type !== 'read_only'
+  //   })
+  // }
 
   async onCurrentEditorChanged() {
     this.loadSchema(this.getUri())
   }
 
-  // suppress warning: uncontrolled input to be controlled
   get defaultInitialValues() {
-    if (this.schema == null) return {}
-    return _.objectify(
-      this.schema.columns,
-      i => i.name,
-      i => '',
-    )
+    return getDefaultInitialValues(this.schema)
   }
 
   private uri?: string
@@ -84,11 +87,7 @@ export class NewFormModel implements ManageableModel {
     })
     runInAction(() => {
       this.schema = ret
-      this.formItemColumns = this.schema.columns.filter(col => {
-        if (this.schema?.primary_key === col.name) return false
-        if (!col.visible) return false
-        return col.access_type !== 'read_only'
-      })
+      this.formItemColumns = getFormItemColumns(this.schema)
     })
   }
 
