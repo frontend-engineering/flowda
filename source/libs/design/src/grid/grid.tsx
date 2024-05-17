@@ -9,11 +9,10 @@ import type {
   IDatasource,
   IGetRowsParams,
 } from 'ag-grid-community'
-import { getReferenceDisplay, shortenDatetime, smartMergeFilterModel } from './grid-utils'
+import { getReferenceDisplay, shortenDatetime } from './grid-utils'
 import { CellRendererInput } from '@flowda/types'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
-import { getUriFilterModel } from '../uri/uri-utils'
 import { EuiIcon, EuiThemeProvider } from '@elastic/eui'
 import { GridToolbar } from './grid-toolbar'
 import { Flex } from '@rebass/grid/emotion'
@@ -41,6 +40,8 @@ export class Grid extends React.Component<GridProps> {
         </EuiThemeProvider>
         <div style={{ height: 'calc(100% - 40px)' }}>
           <AgGridReact
+            rowSelection={'single'}
+            onRowSelected={evt => this.props.model.onRowSelected(evt)}
             modules={[InfiniteRowModelModule]}
             ref={ref => {
               this.gridRef = ref
@@ -148,6 +149,8 @@ export class Grid extends React.Component<GridProps> {
         // }
         if (item.name === this.props.model.schema?.primary_key) {
           return {
+            checkboxSelection: true,
+            headerCheckboxSelection: true,
             minWidth: 110,
             field: item.name,
             // headerName: item.display_name,

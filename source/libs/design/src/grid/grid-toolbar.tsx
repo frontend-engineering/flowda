@@ -4,6 +4,7 @@ import * as React from 'react'
 import { GridProps } from './grid'
 import { EUI_DARK_COLORS, EUI_LIGHT_COLORS } from '../theme/theme.model'
 import { FEuiButtonEmpty } from '../eui'
+import { getBtnTextColor } from '../theme/theme-utils'
 
 @observer
 export class GridToolbar extends React.Component<GridProps> {
@@ -56,11 +57,12 @@ export class GridToolbar extends React.Component<GridProps> {
         </Box>
         <Box mx={1}>
           <FEuiButtonEmpty
-            x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
-            onClick={() => {}}
+            x-color={getBtnTextColor(this.props.model.theme.colorMode, this.props.model.selectedRowPk == null)}
+            onClick={() => this.props.model.remove()}
             iconType="trash"
             size="xs"
             color="text"
+            isDisabled={this.props.model.selectedRowPk == null}
           >
             Delete
           </FEuiButtonEmpty>

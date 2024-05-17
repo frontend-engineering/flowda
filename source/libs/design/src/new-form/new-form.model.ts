@@ -1,19 +1,18 @@
 import {
-  ApiServiceSymbol,
-  ThemeModelSymbol,
-  newFormUriSchema,
   type ApiService,
+  ApiServiceSymbol,
   type ColumUI,
   type DefaultFormValueType,
   type ManageableModel,
+  newFormUriSchema,
   type ResourceUI,
+  ThemeModelSymbol,
 } from '@flowda/types'
 import { URI } from '@theia/core'
 import { FormikProps } from 'formik'
 import { inject, injectable } from 'inversify'
 import { makeObservable, observable, runInAction } from 'mobx'
 import * as qs from 'qs'
-import * as _ from 'radash'
 import { ThemeModel } from '../theme/theme.model'
 import { getDefaultInitialValues, getFormItemColumns } from './new-form-utils'
 
@@ -91,10 +90,16 @@ export class NewFormModel implements ManageableModel {
     })
   }
 
-  async submit(values: DefaultFormValueType) {
+  async submit() {
     if (!this.formikProps) throw new Error(`formikProps not set`)
     this.formikProps.setSubmitting(true)
-    console.log('submit', values)
+    const uri = new URI(this.getUri())
+    const query = newFormUriSchema.parse(qs.parse(uri.query))
+    await this.apiService.postResourceData({
+      tenant: this.getTenant(),
+      schemaName: query.schemaName,
+      value: this.formikProps.values,
+    })
     this.formikProps.setSubmitting(false)
   }
 }

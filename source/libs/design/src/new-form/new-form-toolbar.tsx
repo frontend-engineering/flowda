@@ -13,7 +13,7 @@ export class NewFormToolbar extends React.Component<NewFormProps> {
         <Box mx={1}>
           <FEuiButtonEmpty
             x-color={this.props.model.theme.colorMode === 'light' ? EUI_LIGHT_COLORS.text : EUI_DARK_COLORS.text}
-            onClick={() => {}}
+            onClick={() => this.props.model.submit()}
             iconType="save"
             size="xs"
             color="text"

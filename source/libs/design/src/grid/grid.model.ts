@@ -23,14 +23,18 @@ import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
 import { smartMergeFilterModel } from './grid-utils'
+import { makeObservable, observable } from 'mobx'
+import { RowSelectedEvent } from 'ag-grid-community/dist/lib/events'
 
 @injectable()
 export class GridModel implements ManageableModel {
+  @observable selectedRowPk: string | number | null = null
+
   columnDefs: z.infer<typeof ColumnUISchema>[] = []
   schemaName: string | null = null
   schema: ResourceUI | null = null
   isNotEmpty = false
-  gridApi: GridApi | null = null
+  _gridApi: GridApi | null = null
 
   /**
    * 是否是首次请求数据
@@ -38,6 +42,11 @@ export class GridModel implements ManageableModel {
    * 否则根据 params.filterModel 进行合并
    */
   private _isFirstGetRows = false
+
+  get gridApi() {
+    if (this._gridApi == null) throw new Error('gridApi is null')
+    return this._gridApi
+  }
 
   get isFirstGetRows() {
     return this._isFirstGetRows
@@ -75,13 +84,14 @@ export class GridModel implements ManageableModel {
     @inject(ApiServiceSymbol) public apiService: ApiService,
     @optional() @multiInject(CustomResourceSymbol) private customResources: ICustomResource[],
   ) {
+    makeObservable(this)
     this.refPromise = new Promise<boolean>(resolve => {
       this.refResolve = resolve
     })
   }
 
   setGridApi(api: GridApi<unknown>) {
-    this.gridApi = api
+    this._gridApi = api
   }
 
   getUri() {
@@ -100,7 +110,6 @@ export class GridModel implements ManageableModel {
   }
 
   async refresh(fromToolbar = false) {
-    if (this.gridApi == null) throw new Error('gridApi is null')
     if (this.gridApi.isDestroyed()) {
       throw new Error(`gridApi isDestroyed: ${this._uri}`)
     } else {
@@ -227,7 +236,6 @@ export class GridModel implements ManageableModel {
       // 核心逻辑不变 是 grid filterModel 和 uri 有一个合并策略
       // 然后更新到 uri
       params.filterModel = smartMergeFilterModel(this.getUri(), params.filterModel, this.isFirstGetRows)
-      if (this.gridApi == null) throw new Error('gridApi is null')
       this.gridApi.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
       this.setUri(uri)
@@ -317,5 +325,23 @@ export class GridModel implements ManageableModel {
       const uri = createNewFormUri(this.getUri())
       this.handlers.onClickNew(uri)
     }
+  }
+
+  onRowSelected(event: RowSelectedEvent<{ id: string | number }>) {
+    if (event.node.isSelected()) {
+      const data = event.node.data
+      if (data == null) throw new Error(`event.node.data is null, rowIndex: ${event.rowIndex}`)
+      this.selectedRowPk = data.id
+    } else {
+      this.selectedRowPk = null
+    }
+  }
+
+  remove() {
+    this.apiService.removeResourceData({
+      tenant: this.getTenant(),
+      schemaName: this.schemaName!,
+      id: this.selectedRowPk,
+    })
   }
 }

@@ -38,3 +38,15 @@ export const putResourceDataInputSchema = z.object({
   id: z.number(),
   updatedValue: z.any(),
 })
+
+export const postResourceDataInputSchema = z.object({
+  tenant: z.string(),
+  schemaName: z.string(),
+  value: z.any(),
+})
+
+export const removeResourceDataInputSchema = z.object({
+  tenant: z.string(),
+  schemaName: z.string(),
+  id: z.union([z.number(), z.string()]).nullable(),
+})

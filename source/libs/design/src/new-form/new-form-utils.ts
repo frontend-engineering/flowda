@@ -5,6 +5,7 @@ export function getFormItemColumns(schema: ResourceUI) {
   return schema.columns.filter(col => {
     if (schema?.primary_key === col.name) return false
     if (!col.visible) return false
+    if (col.column_type === 'reference' && col.reference?.reference_type === 'has_one') return false
     return col.access_type !== 'read_only'
   })
 }

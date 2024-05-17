@@ -22,5 +22,16 @@ export const getDataSchema = z.object({
 export const putDataSchema = z.object({
   user: z.any(),
   path: z.string(),
-  values: z.any(),
+  updatedValue: z.any(),
+})
+
+export const postDataSchema = z.object({
+  user: z.any(),
+  path: z.string(),
+  value: z.any(),
+})
+
+export const removeDataSchema = z.object({
+  user: z.any(),
+  path: z.string(),
 })

@@ -60,7 +60,6 @@ describe('new form utils', () => {
     expect(ret).toMatchInlineSnapshot(`
       {
         "displayName": "",
-        "menu": "",
         "name": "",
       }
     `)
