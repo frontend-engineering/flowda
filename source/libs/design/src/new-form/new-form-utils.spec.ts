@@ -31,26 +31,6 @@ describe('new form utils', () => {
           ],
           "visible": true,
         },
-        {
-          "access_type": "read_write",
-          "column_type": "reference",
-          "display_name": "Menu",
-          "name": "menu",
-          "reference": {
-            "display_name": "Menu",
-            "foreign_key": "tenantId",
-            "model_name": "Menu",
-            "primary_key": "id",
-            "reference_type": "has_one",
-            "visible": true,
-          },
-          "validators": [
-            {
-              "required": true,
-            },
-          ],
-          "visible": true,
-        },
       ]
     `)
   })

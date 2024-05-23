@@ -150,7 +150,6 @@ export class Grid extends React.Component<GridProps> {
         if (item.name === this.props.model.schema?.primary_key) {
           return {
             checkboxSelection: true,
-            headerCheckboxSelection: true,
             minWidth: 110,
             field: item.name,
             // headerName: item.display_name,

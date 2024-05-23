@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { execSync } from 'child_process'
 import { pm2DeployInput } from './zod-def'
 import consola from 'consola'
+import * as path from 'path'
 
 const TAR_NAME = 'pm2-deploy.tar.gz'
 
@@ -54,7 +55,8 @@ export default async function* pm2DeployExecutor(_options: z.infer<typeof pm2Dep
 
   consola.start('  copy extra output')
   opt.extraOutput.forEach(output => {
-    execSync(`${sshCmd} "cd ${opt.path}/release && cp -r ${output} ${opt.buildOutput}"`, {
+    const targetDir = path.join(opt.buildOutput, path.dirname(output))
+    execSync(`${sshCmd} "cd ${opt.path}/release && mkdir -p ${targetDir} && cp -r ${output} ${targetDir}"`, {
       cwd: workspaceRoot,
       stdio: 'inherit',
     })
