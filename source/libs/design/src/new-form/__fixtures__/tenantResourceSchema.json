@@ -1,0 +1,221 @@
+{
+  "type": "object",
+  "name": "Tenant",
+  "slug": "tenants",
+  "table_name": "Tenant",
+  "class_name": "Tenant",
+  "display_name": "租户信息",
+  "primary_key": "id",
+  "visible": true,
+  "display_primary_key": "true",
+  "display_column": "name",
+  "columns": [
+    {
+      "column_type": "Int",
+      "display_name": "Id",
+      "visible": true,
+      "access_type": "read_write",
+      "name": "id",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "DateTime",
+      "display_name": "Created At",
+      "visible": true,
+      "access_type": "read_only",
+      "name": "createdAt",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "DateTime",
+      "display_name": "Updated At",
+      "visible": true,
+      "access_type": "read_only",
+      "name": "updatedAt",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "String",
+      "display_name": "租户唯一名称",
+      "visible": true,
+      "access_type": "read_write",
+      "name": "name",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "String",
+      "display_name": "Hashed Password",
+      "visible": false,
+      "access_type": "read_write",
+      "name": "hashedPassword",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "String",
+      "display_name": "Hashed Refresh Token",
+      "visible": false,
+      "access_type": "read_write",
+      "name": "hashedRefreshToken",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "String",
+      "display_name": "租户显示名称",
+      "visible": true,
+      "access_type": "read_write",
+      "name": "displayName",
+      "validators": [
+        {
+          "required": true
+        }
+      ]
+    },
+    {
+      "column_type": "reference",
+      "display_name": "Menu",
+      "visible": true,
+      "access_type": "read_write",
+      "name": "menu",
+      "validators": [
+        {
+          "required": true
+        }
+      ],
+      "reference": {
+        "display_name": "Menu",
+        "model_name": "Menu",
+        "reference_type": "has_one",
+        "foreign_key": "tenantId",
+        "primary_key": "id",
+        "visible": true
+      }
+    }
+  ],
+  "associations": [
+    {
+      "display_name": "Users",
+      "slug": "users",
+      "model_name": "User",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": true,
+      "schema_name": "UserResourceSchema"
+    },
+    {
+      "display_name": "Dynamic Table Defs",
+      "slug": "dynamic_table_defs",
+      "model_name": "DynamicTableDef",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "DynamicTableDefResourceSchema"
+    },
+    {
+      "display_name": "Dynamic Table Def Columns",
+      "slug": "dynamic_table_def_columns",
+      "model_name": "DynamicTableDefColumn",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "DynamicTableDefColumnResourceSchema"
+    },
+    {
+      "display_name": "Dynamic Table Data",
+      "slug": "dynamic_table_data",
+      "model_name": "DynamicTableData",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "DynamicTableDataResourceSchema"
+    },
+    {
+      "display_name": "User Pre Signup",
+      "slug": "user_pre_signup",
+      "model_name": "UserPreSignup",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "UserPreSignupResourceSchema"
+    },
+    {
+      "display_name": "Order Profile",
+      "slug": "order_profile",
+      "model_name": "OrderProfile",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "OrderProfileResourceSchema"
+    },
+    {
+      "display_name": "User Profile",
+      "slug": "user_profile",
+      "model_name": "UserProfile",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "UserProfileResourceSchema"
+    },
+    {
+      "display_name": "Product Snapshots",
+      "slug": "product_snapshots",
+      "model_name": "ProductSnapshot",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": false,
+      "schema_name": "ProductSnapshotResourceSchema"
+    },
+    {
+      "display_name": "Orders",
+      "slug": "orders",
+      "model_name": "Order",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": true,
+      "schema_name": "OrderResourceSchema"
+    },
+    {
+      "display_name": "Pays",
+      "slug": "pays",
+      "model_name": "Pay",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": true,
+      "schema_name": "PayResourceSchema"
+    },
+    {
+      "display_name": "Products",
+      "slug": "products",
+      "model_name": "Product",
+      "foreign_key": "tenantId",
+      "primary_key": "id",
+      "visible": true,
+      "schema_name": "ProductResourceSchema"
+    }
+  ],
+  "schema_name": "TenantResourceSchema",
+  "namespace": "superadmin"
+}

@@ -1,4 +1,5 @@
-import { getReferenceDisplay, shortenDatetime } from './grid-utils'
+import 'reflect-metadata'
+import { getReferenceDisplay, shortenDatetime, smartMergeFilterModel } from './grid-utils'
 
 describe('grid utils', () => {
   it('reference display', () => {
@@ -59,5 +60,55 @@ describe('grid utils', () => {
 
     const ret2 = shortenDatetime('2023-04-22 11:33:55')
     expect(ret2).toMatchInlineSnapshot(`"23-04-22 11:33"`)
+  })
+  it('smartMergeFilterModel params.filter cover uri filterModel', () => {
+    const uri =
+      'file:///TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
+    const ret = smartMergeFilterModel(uri, {}, false)
+    expect(ret).toMatchInlineSnapshot(`{}`)
+  })
+
+  it('smartMergeFilterModel params.filter cover uri filterModel case 2', () => {
+    const uri =
+      'file:///TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
+    const filterModel = {
+      displayName: {
+        filterType: 'text',
+        type: 'contains',
+        filter: 'ccc',
+      },
+    } as const
+    const ret = smartMergeFilterModel(uri, filterModel, false)
+    expect(ret).toMatchInlineSnapshot(`
+      {
+        "displayName": {
+          "filter": "ccc",
+          "filterType": "text",
+          "type": "contains",
+        },
+      }
+    `)
+  })
+
+  it('smartMergeFilterModel params.filter use uri', () => {
+    const uri =
+      'file:///TenantResourceSchema?filterModel[displayName][filterType]=text&filterModel[displayName][type]=contains&filterModel[displayName][filter]=c'
+    const filterModel = {
+      displayName: {
+        filterType: 'text',
+        type: 'contains',
+        filter: 'ccc',
+      },
+    } as const
+    const ret = smartMergeFilterModel(uri, filterModel, true)
+    expect(ret).toMatchInlineSnapshot(`
+      {
+        "displayName": {
+          "filter": "c",
+          "filterType": "text",
+          "type": "contains",
+        },
+      }
+    `)
   })
 })

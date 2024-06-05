@@ -10,6 +10,7 @@ import {
 import { writeSingleFileModelStatements } from './utils/write-single-file-model-statements'
 import { createGeneratorOptions } from './utils/generator-options'
 import { DMMF, GeneratorOptions } from '@prisma/generator-helper'
+import * as db from '../__fixtures__/generated/prisma-02/@prisma/client-02'
 
 describe('prisma-02', function () {
   let dmmf: DMMF.Document
@@ -17,6 +18,20 @@ describe('prisma-02', function () {
   beforeAll(async () => {
     dmmf = await loadDMMF(path.join(__dirname, '../__fixtures__/prisma-02/prisma/schema.prisma'))
     generatorOptions = createGeneratorOptions({ dmmf })
+  })
+
+  it.skip('prisma client', async () => {
+    const client = new db.PrismaClient()
+    const ret = await client.tenant.findFirstOrThrow({
+      where: {
+        id: 0,
+      },
+      select: {
+        id: true,
+        users: true,
+      },
+    })
+    ret.users
   })
 
   it('writeModelOpenApi Tenant', async () => {

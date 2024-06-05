@@ -18,24 +18,39 @@ import {
   ThemeModelSymbol,
 } from '@flowda/types'
 import { z } from 'zod'
-import {
-  createNewFormUri,
-  getUriSchemaName,
-  isUriAsKeyLikeEqual,
-  mergeUriFilterModel,
-  updateUriFilterModel,
-} from '../uri/uri-utils'
+import { createNewFormUri, getUriSchemaName, isUriAsKeyLikeEqual, updateUriFilterModel } from '../uri/uri-utils'
 import { URI } from '@theia/core'
 import axios from 'axios'
 import { ThemeModel } from '../theme/theme.model'
+import { smartMergeFilterModel } from './grid-utils'
+import { makeObservable, observable } from 'mobx'
+import { RowSelectedEvent } from 'ag-grid-community/dist/lib/events'
 
 @injectable()
 export class GridModel implements ManageableModel {
+  @observable selectedRowPk: string | number | null = null
+
   columnDefs: z.infer<typeof ColumnUISchema>[] = []
   schemaName: string | null = null
   schema: ResourceUI | null = null
   isNotEmpty = false
-  gridApi: GridApi | null = null
+  _gridApi: GridApi | null = null
+
+  /**
+   * 是否是首次请求数据
+   * 首次请求数据 smartMergeFilterModel 则只返回 uri
+   * 否则根据 params.filterModel 进行合并
+   */
+  private _isFirstGetRows = false
+
+  get gridApi() {
+    if (this._gridApi == null) throw new Error('gridApi is null')
+    return this._gridApi
+  }
+
+  get isFirstGetRows() {
+    return this._isFirstGetRows
+  }
 
   /**
    * 等待 setRef 也就是 widget render 然后才能调用 this.ref.setColDefs
@@ -69,9 +84,14 @@ export class GridModel implements ManageableModel {
     @inject(ApiServiceSymbol) public apiService: ApiService,
     @optional() @multiInject(CustomResourceSymbol) private customResources: ICustomResource[],
   ) {
+    makeObservable(this)
     this.refPromise = new Promise<boolean>(resolve => {
       this.refResolve = resolve
     })
+  }
+
+  setGridApi(api: GridApi<unknown>) {
+    this._gridApi = api
   }
 
   getUri() {
@@ -79,16 +99,23 @@ export class GridModel implements ManageableModel {
     return this._uri.toString(true)
   }
 
+  getTenant() {
+    if (!this._uri) throw new Error('uri is null')
+    return this._uri.authority
+  }
+
   setUri(uri: string | URI) {
     if (typeof uri === 'string') uri = new URI(uri)
     this._uri = uri
   }
 
-  refresh() {
-    if (this.gridApi == null) throw new Error('gridApi is null')
+  async refresh(fromToolbar = false) {
     if (this.gridApi.isDestroyed()) {
       throw new Error(`gridApi isDestroyed: ${this._uri}`)
     } else {
+      if (fromToolbar) {
+        this.gridApi.showLoadingOverlay()
+      }
       this.gridApi.refreshInfiniteCache()
     }
   }
@@ -133,8 +160,10 @@ export class GridModel implements ManageableModel {
 
   async onCurrentEditorChanged() {
     const uri = new URI(this.getUri())
-    const schemaName = `${uri.authority}.${getUriSchemaName(uri)}`
+    const schemaName = getUriSchemaName(uri)
+    this._isFirstGetRows = true
     await this.getCol(schemaName)
+    this._isFirstGetRows = false
   }
 
   async getCol(schemaName: string) {
@@ -144,26 +173,27 @@ export class GridModel implements ManageableModel {
     }
     if (this.columnDefs.length > 0) {
       console.warn(`columns is not empty, only refresh data, ${schemaName}`)
-      this.refresh()
+      await this.refresh()
     } else {
       const schemaRes = await this.apiService.getResourceSchema({
+        tenant: this.getTenant(),
         schemaName: this.schemaName,
       })
+      this.schema = schemaRes
       this.schemaReadyResolve!(true)
       if (schemaRes.columns.length > 0) {
         this.columnDefs = schemaRes.columns
+        if (this.refPromise == null)
+          throw new Error('refPromise is null, call resetRefPromise in getOrCreateGridModel()')
+        await this.refPromise
+        // @ts-expect-error invoke react ref
+        if (this.ref == null || typeof this.ref['setColDefs'] !== 'function') {
+          throw new Error('ref is null')
+        }
+        // @ts-expect-error invoke react ref
+        this.ref['setColDefs']()
       }
-      this.schema = schemaRes
     }
-
-    if (this.refPromise == null) throw new Error('refPromise is null, call resetRefPromise in getOrCreateGridModel()')
-    await this.refPromise
-    // @ts-expect-error invoke react ref
-    if (this.ref == null || typeof this.ref['setColDefs'] !== 'function') {
-      throw new Error('ref is null')
-    }
-    // @ts-expect-error invoke react ref
-    this.ref['setColDefs']()
   }
 
   isOpenTask(colName: string) {
@@ -201,12 +231,18 @@ export class GridModel implements ManageableModel {
         pagination: { total: res.data.length },
       }
     } else {
-      params.filterModel = mergeUriFilterModel(this.getUri(), params.filterModel)
-      if (this.gridApi == null) throw new Error('gridApi is null')
+      // todo: 这块逻辑需要优化，核心逻辑不变，但是步骤繁琐了 又是合并 又是 set 又是更新 uri 可以简化的
+      // 因为 test pass 现在这个中间状态也是 work 的，所以有 test refactor 可以随时停下来
+      // 核心逻辑不变 是 grid filterModel 和 uri 有一个合并策略
+      // 然后更新到 uri
+      params.filterModel = smartMergeFilterModel(this.getUri(), params.filterModel, this.isFirstGetRows)
       this.gridApi.setFilterModel(params.filterModel)
       const uri = updateUriFilterModel(this.getUri(), params.filterModel)
       this.setUri(uri)
-      const dataRet = await this.apiService.getResourceData(params)
+      const dataRet = await this.apiService.getResourceData({
+        ...params,
+        tenant: this.getTenant(),
+      })
       const parseRet = getResourceDataOutputInnerSchema.safeParse(dataRet)
       if (parseRet.success) {
         return parseRet.data
@@ -220,6 +256,7 @@ export class GridModel implements ManageableModel {
 
   async putData(id: number, updatedValue: unknown) {
     await this.apiService.putResourceData({
+      tenant: this.getTenant(),
       schemaName: this.schemaName!,
       id: id,
       updatedValue: updatedValue,
@@ -288,5 +325,23 @@ export class GridModel implements ManageableModel {
       const uri = createNewFormUri(this.getUri())
       this.handlers.onClickNew(uri)
     }
+  }
+
+  onRowSelected(event: RowSelectedEvent<{ id: string | number }>) {
+    if (event.node.isSelected()) {
+      const data = event.node.data
+      if (data == null) throw new Error(`event.node.data is null, rowIndex: ${event.rowIndex}`)
+      this.selectedRowPk = data.id
+    } else {
+      this.selectedRowPk = null
+    }
+  }
+
+  remove() {
+    this.apiService.removeResourceData({
+      tenant: this.getTenant(),
+      schemaName: this.schemaName!,
+      id: this.selectedRowPk,
+    })
   }
 }

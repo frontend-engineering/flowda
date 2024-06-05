@@ -13,7 +13,6 @@ import { getReferenceDisplay, shortenDatetime } from './grid-utils'
 import { CellRendererInput } from '@flowda/types'
 import dayjs from 'dayjs'
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model'
-import { getUriFilterModel } from '../uri/uri-utils'
 import { EuiIcon, EuiThemeProvider } from '@elastic/eui'
 import { GridToolbar } from './grid-toolbar'
 import { Flex } from '@rebass/grid/emotion'
@@ -41,6 +40,8 @@ export class Grid extends React.Component<GridProps> {
         </EuiThemeProvider>
         <div style={{ height: 'calc(100% - 40px)' }}>
           <AgGridReact
+            rowSelection={'single'}
+            onRowSelected={evt => this.props.model.onRowSelected(evt)}
             modules={[InfiniteRowModelModule]}
             ref={ref => {
               this.gridRef = ref
@@ -63,13 +64,22 @@ export class Grid extends React.Component<GridProps> {
   }
 
   private readonly onGridReady = async (evt: GridReadyEvent) => {
-    this.props.model.gridApi = evt.api
+    this.props.model.setGridApi(evt.api)
 
     const datasource: IDatasource = {
       getRows: async (params: IGetRowsParams) => {
-        // todo: 搞清楚为什么会出现这两个 warning
+        /*
+        如果 schemaName 为空
+        即还没有调用 getCol
+         */
         if (this.props.model.schemaName == null) {
-          console.warn('schemaName is null, ignored')
+          return
+        }
+        /*
+        如果 columnDefs 为空，则直接返回，后续 setColDefs
+        this.gridRef.api.setGridOption('columnDefs' 会重新调用 datasource.getRows
+         */
+        if (this.props.model.columnDefs.length === 0) {
           return
         }
         await this.props.model.schemaReadyPromise
@@ -79,18 +89,7 @@ export class Grid extends React.Component<GridProps> {
           current: params.endRow / (params.endRow - params.startRow),
           pageSize: params.endRow - params.startRow,
           sort: params.sortModel,
-          filterModel: {
-            ...params.filterModel,
-            ...getUriFilterModel(this.props.model.getUri()),
-          },
-          // todo: 增加测试 确保 filterModel 每次都合并 uri
-          // 或者保持 filterModel 和 uri 同步 只用 uri
-          // filterModel: this.props.model.isFirstGetRows
-          //   ? {
-          //       ...params.filterModel,
-          //       ...getUriFilterModel(this.props.model.getUri()),
-          //     }
-          //   : params.filterModel,
+          filterModel: params.filterModel,
         })
 
         evt.api.hideOverlay() // 不清楚为什么，突然需要手动 hideOverlay
@@ -150,6 +149,7 @@ export class Grid extends React.Component<GridProps> {
         // }
         if (item.name === this.props.model.schema?.primary_key) {
           return {
+            checkboxSelection: true,
             minWidth: 110,
             field: item.name,
             // headerName: item.display_name,

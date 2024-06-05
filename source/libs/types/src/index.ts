@@ -5,3 +5,6 @@ export * from './constants'
 export * from './legacy-symbols'
 export * from './plugin-builtin'
 export * from './symbols'
+
+export * from './zod-openapi/extend-zod'
+export * from './zod-openapi/zod-utils'

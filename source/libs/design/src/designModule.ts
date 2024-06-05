@@ -9,8 +9,10 @@ import {
   GridModelSymbol,
   LoginModelSymbol,
   NewFormModelSymbol,
+  postResourceDataInputSchema,
   PreviewModelSymbol,
   putResourceDataInputSchema,
+  removeResourceDataInputSchema,
   ResourceUISchema,
   TaskFormModelSymbol,
   ThemeModelSymbol,
@@ -42,7 +44,15 @@ export class NotImplementedApiService implements ApiService {
   }
 
   putResourceData(input: z.infer<typeof putResourceDataInputSchema>): Promise<unknown> {
-    throw new Error('handlers.getResourceSchema is not implemented')
+    throw new Error('handlers.putResourceData is not implemented')
+  }
+
+  postResourceData(input: z.infer<typeof postResourceDataInputSchema>): Promise<unknown> {
+    throw new Error('handlers.postResourceData is not implemented')
+  }
+
+  removeResourceData(input: z.infer<typeof removeResourceDataInputSchema>): Promise<unknown> {
+    throw new Error('handlers.removeResourceData is not implemented')
   }
 }
 

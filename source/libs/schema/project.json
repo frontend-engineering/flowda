@@ -11,7 +11,7 @@
         "bundleJs": true,
         "externals": ["ts-deepmerge"],
         "bundleAlias": {
-          "@anatine/zod-openapi": ".yalc/@anatine/zod-openapi/index.bundle.js"
+          "@anatine/zod-openapi": ".yalc/@anatine/zod-openapi"
         },
         "outputPath": "dist/libs/schema"
       }

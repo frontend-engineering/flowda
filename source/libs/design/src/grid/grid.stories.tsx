@@ -15,6 +15,7 @@ import { GridModel } from './grid.model'
 import React from 'react'
 import { GridWrapper } from '../../stories/grid-wrapper'
 import { StoryApiService } from '../../stories/story-api-service'
+import { getUriSchemaName } from '../uri/uri-utils'
 
 const container = new Container()
 container.load(designModule)
@@ -34,55 +35,67 @@ container.bind(CustomResourceSymbol).to(TenantCustomResource).inSingletonScope()
 
 const meta: Meta<typeof GridWrapper> = {
   component: GridWrapper,
+  // decorators: [
+  //   (story, { parameters }) => {
+  //     useEffect(() => {
+  //       // build up
+  //       return () => {
+  //         // tear down
+  //       }
+  //     }, [])
+  //     return story()
+  //   },
+  // ],
 }
 
 export default meta
 
 class GridStory extends React.Component<{
-  gridModel: GridModel
-  schemaName: string
+  uri: string
 }> {
+  private gridModel: GridModel
+
+  constructor(props: any) {
+    super(props)
+    this.gridModel = container.get<GridModel>(GridModelSymbol)
+    this.gridModel.setUri(props.uri)
+  }
+
   componentDidMount() {
-    this.props.gridModel.getCol(this.props.schemaName)
+    const schemaName = getUriSchemaName(this.props.uri)
+    this.gridModel.getCol(schemaName)
   }
 
   render() {
     return (
       <>
         {/*<EuiButtonEmpty onClick={() => this.props.gridModel.refresh()}>Refresh</EuiButtonEmpty>*/}
-        <Grid ref={ref => this.props.gridModel.setRef(ref)} model={this.props.gridModel} />
+        <Grid ref={ref => this.gridModel.setRef(ref)} model={this.gridModel} />
       </>
     )
   }
 }
 
-const tenantGridModel = container.get<GridModel>(GridModelSymbol)
-tenantGridModel.setUri('grid://superadmin?schemaName=TenantResourceSchema')
 export const TenantResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory gridModel={tenantGridModel} schemaName={'superadmin.TenantResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=TenantResourceSchema'} />,
   },
 }
 
-const userGridModel = container.get<GridModel>(GridModelSymbol)
-userGridModel.setUri('grid://superadmin?schemaName=UserResourceSchema')
 export const UserResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory gridModel={userGridModel} schemaName={'superadmin.UserResourceSchema'} />,
-  },
-}
-const menuGridModel = container.get<GridModel>(GridModelSymbol)
-menuGridModel.setUri('grid://superadmin?schemaName=MenuResourceSchema')
-export const MenuResource: StoryObj<typeof GridWrapper> = {
-  args: {
-    children: <GridStory gridModel={menuGridModel} schemaName={'superadmin.MenuResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=UserResourceSchema'} />,
   },
 }
 
-const taskGridModel = container.get<GridModel>(GridModelSymbol)
-taskGridModel.setUri('grid://superadmin?schemaName=TaskResourceSchema')
+export const MenuResource: StoryObj<typeof GridWrapper> = {
+  args: {
+    children: <GridStory uri={'grid://superadmin?schemaName=MenuResourceSchema'} />,
+  },
+}
+
 export const TaskResource: StoryObj<typeof GridWrapper> = {
   args: {
-    children: <GridStory gridModel={taskGridModel} schemaName={'superadmin.TaskResourceSchema'} />,
+    children: <GridStory uri={'grid://superadmin?schemaName=TaskResourceSchema'} />,
   },
 }

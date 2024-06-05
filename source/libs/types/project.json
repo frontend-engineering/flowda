@@ -9,7 +9,11 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/types",
-        "bundleJs": true
+        "externals": ["ts-deepmerge"],
+        "bundleJs": true,
+        "bundleAlias": {
+          "@anatine/zod-openapi": ".yalc/@anatine/zod-openapi"
+        }
       }
     },
     "build": {
